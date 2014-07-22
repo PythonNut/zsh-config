@@ -1,4 +1,4 @@
 zsh-config
 ==========
 
-My personal 
+My personal ZSH config (to be put in `~/.zsh.d`)
