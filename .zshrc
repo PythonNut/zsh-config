@@ -186,7 +186,7 @@ touch ~/.zsh.d/startup.log
 raw_cdpath=(~/ /etc/ /run/media/$USER/)
 cdpath=(/etc/ /run/media/$USER/)
 
-HISTFILE=~/.histfile
+HISTFILE=~/.zsh.d/.histfile
 HISTSIZE=50000
 SAVEHIST=50000
 
