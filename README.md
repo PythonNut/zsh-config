@@ -1,0 +1,4 @@
+zsh-config
+==========
+
+My personal 
