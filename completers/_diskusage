@@ -1,0 +1,9 @@
+#compdef diskusage
+
+_arguments -s \
+  '(- *)-h[display help]' \
+  '(-c)-c[config file]:config:_files' \
+  '(-o)-o[output template]:template:' \
+  '*-d[additional template key=values]:template:' \
+  '-x[skip mounts with different device numbers]' \
+  '*:directory:_directories'

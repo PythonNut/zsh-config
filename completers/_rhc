@@ -1,0 +1,186 @@
+#compdef rhc
+# ------------------------------------------------------------------------------
+# Description
+# -----------
+#
+#  Completion script for Red Hat OpenShift service client rhc (https://openshift.redhat.com/).
+#  Based on: https://github.com/technolize/zsh-completion-funcs
+#
+# ------------------------------------------------------------------------------
+# Authors
+# -------
+#
+#  * pawlyk (https://github.com/pawlyk)
+#
+# ------------------------------------------------------------------------------
+
+#_rhc-alias(){
+  #_arguments -s : \
+      #'(add)add[Add a custom domain name for the application]' \
+      #'(remove)remove[Remove a custom domain name for the application]' \
+    #$nul_args && ret=0
+#}
+
+#_rhc-app(){
+  #_arguments -s : \
+      #'(add)add[Add a custom domain name for the application]' \
+      #'(remove)remove[Remove a custom domain name for the application]' \
+    #$nul_args && ret=0
+#}
+
+#_rhc-cartridge(){
+  #_arguments -s : \
+      #'(add)add[Add a custom domain name for the application]' \
+      #'(remove)remove[Remove a custom domain name for the application]' \
+    #$nul_args && ret=0
+#}
+
+#_rhc-domain(){
+  #_arguments -s : \
+      #'(add)add[Add a custom domain name for the application]' \
+      #'(remove)remove[Remove a custom domain name for the application]' \
+    #$nul_args && ret=0
+#}
+
+
+
+
+#_rhc-port-forward(){
+  #_arguments -s : \
+      #'(-n|--namespace)'{-n,--namespace}'[Namespace of the application you are port forwarding to]' \
+      #'(-a|--app)'{-a,--app}'[Application you are port forwarding to (required)]' \
+    #$nul_args && ret=0
+#}
+
+
+
+
+
+
+_rhc-server() {
+  _arguments -s : \
+    $nul_args && ret=0
+}
+
+_rhc-setup() {
+  _arguments -s : \
+    $nul_args && ret=0
+}
+
+#_rhc-snapshot(){
+  #_arguments -s : \
+      #'(add)add[Add a custom domain name for the application]' \
+      #'(remove)remove[Remove a custom domain name for the application]' \
+    #$nul_args && ret=0
+#}
+
+#_rhc-sshkey(){
+  #local state
+
+  #local fcgi_opts
+  #fcgi_opts=(
+      #'(add)add[Add a custom domain name for the application]' \
+      #'(remove)remove[Remove a custom domain name for the application]' \
+
+  #_arguments -s : \
+    #$nul_args && ret=0
+#}
+
+#_rhc-tail(){
+  #_arguments -s : \
+      #'(-n|--namespace)'{-n,--namespace}'[Namespace of your application]' \
+      #"(-o|--opts)'{-o,--opts}'[Options to pass to the server-side (linux based) tail command (applicable to tail command only) (-f is implicit.  See the linux tail man page full list of options.) (Ex: --opts '-n 100')]" \
+      #'(-f|--files)'{-f,--files}'[File glob relative to app (default <application_name>/logs/*) (optional)]' \
+      #'(-a|--app)'{-a,--app}'[Name of application you wish to view the logs of]' \
+    #$nul_args && ret=0
+#}
+
+_rhc-threaddump() {
+  _arguments -s : \
+    {-n,--namespace}'[Namespace of your application]' \
+    {-a,--app}'[Name of the application on which to execute the thread dump]' \
+    $nul_args && ret=0
+}
+
+#_managepy-runfcgi(){
+  #local state
+
+  #local fcgi_opts
+  #fcgi_opts=(
+    #'protocol[fcgi, scgi, ajp, ... (default fcgi)]:protocol:(fcgi scgi ajp)'
+    #'host[hostname to listen on..]:'
+    #'port[port to listen on.]:'
+    #'socket[UNIX socket to listen on.]::file:_files'
+    #'method[prefork or threaded (default prefork)]:method:(prefork threaded)'
+    #'maxrequests[number of requests a child handles before it is killed and a new child is forked (0 = no limit).]:'
+    #'maxspare[max number of spare processes / threads.]:'
+    #'minspare[min number of spare processes / threads.]:'
+    #'maxchildren[hard limit number of processes / threads.]:'
+    #'daemonize[whether to detach from terminal.]:boolean:(False True)'
+    #'pidfile[write the spawned process-id to this file.]:file:_files'
+    #'workdir[change to this directory when daemonizing.]:directory:_files'
+    #'debug[set to true to enable flup tracebacks.]:boolean:(False True)'
+    #'outlog[write stdout to this file.]:file:_files'
+    #'errlog[write stderr to this file.]:file:_files'
+    #'umask[umask to use when daemonizing, in octal notation (default 022).]:'
+  #)
+
+  #_arguments -s : \
+    #$nul_args \
+    #'*: :_values "FCGI Setting" $fcgi_opts' && ret=0
+#}
+
+_rhc-commands() {
+  local -a commands
+
+  commands=(
+    "alias:Add or remove a custom domain name for the applicationa"
+    "app:Commands for creating and managing applications"
+    "cartridge:Manage your application cartridges"
+    "domain:Manage the domain and namespace for your applications"
+    "port-forward:Forward remote ports to the workstation"
+    "server:Display information about the status of the OpenShift service"
+    "setup:Easy to use wizard for getting started with OpenShift"
+    "snapshot:Pull down application snapshot for a user"
+    "sshkey:Manage multiple keys for the registered rhcloud user"
+    "tail:Tail the logs of an application"
+    "threaddump:Trigger a thread dump for JBoss and Ruby applications"
+  )
+
+  _describe -t commands 'rhc command' commands && ret=0
+}
+
+_rhc() {
+  local -a nul_args
+  nul_args=(
+    {-l,--rhlogin}'[OpenShift login]'
+    {-p,--password}'[OpenShift password]'
+    {-d,--debug}'[Turn on debugging]'
+    '--noprompt[Suppress the interactive setup wizard from running before a comman]'
+    '--config[Path of a different config file]'
+    {-h,--help}'[Display help documentatio]'
+    {-v,--version}'[Display version informatio]'
+    '--timeout[Set the timeout in seconds for network command]'
+  )
+
+  local curcontext=$curcontext ret=1
+
+  if ((CURRENT == 2)); then
+    _rhc-commands
+  else
+    shift words
+    (( CURRENT -- ))
+    curcontext="${curcontext%:*:*}:rhc-$words[1]:"
+    _call_function ret _rhc-$words[1]
+  fi
+}
+
+_rhc "$@"
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

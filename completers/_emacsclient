@@ -1,0 +1,23 @@
+#compdef emacsclient
+
+_arguments -n : \
+  '(-a --alternate-editor)'{-a,--alternate-editor=}'[Run specified editor if Emacs server is not running]' \
+  '(-c --create-frame)'{-c,--create-frame}'[Create a new frame]' \
+  '(-F --frame-parameters)'{-F,--frame-parameters=}'[Set the parameters of a new frame]' \
+  '(-d --display)'{-d,--display=}'[Tell the server to display the files on the given display]' \
+  '(-e --eval)'{-e,--eval}'[Evaluate as Emacs Lisp expressions]' \
+  '(-f --server-file)'{-f,--server-file}'[Use configuration file]:conffile:_files' \
+  '(-n --no-wait)'{-n,--no-wait}'[Returns immediately without waiting for finish]' \
+  '(-nw -t --tty)'{-nw,-t--tty}'[Open a new Emacs frame on the current terminal]' \
+  '(-s --socket-name)'{-s,--socket-name}'[Use named socket]:sockfile:_files' \
+  '(-)'{-V,--version}'[Print version information and exit]' \
+  '(-)'{-H,--help}'[Print this usage information message and exit]' \
+  '*: :_files'
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

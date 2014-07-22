@@ -1,0 +1,24 @@
+#compdef watch
+
+_arguments -n : \
+  '(-d --difference)'{-d,--difference}'[Highlight the differences between successiv updates]' \
+  '(-n --interval)'{-n,--interval}'[Specify update interval]' \
+  '(-p --precise)'{-p,--precise}'[Make watch attempt to run command every interval second]' \
+  '(-t --no-title)'{-t,--no-title}'[Turn off the header at the top of the display]' \
+  '(-b --beep)'{-b,--beep}'[Beep if command has n non-zero exit]' \
+  '(-e,--errexit)'{-e,--errexit}'[Freeze updates on command error and exit]' \
+  '(-g,--chgexit)'{-g,--chgexit}'[Exit when the output of command changes]' \
+  '(-c,--color)'{-c,--color}'[Interpret ANSI color sequences]' \
+  '(-x --exec)'{-x,--exec}'[Use exec(2) instead of "sh -c"]' \
+  '(-)'{-h,--help}'[display help text and exit]' \
+  '(-)'{-v,--version}'[Display version information and exit]' \
+  '(-):command: _command_names -e' \
+  '*::arguments: _normal'
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

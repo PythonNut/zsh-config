@@ -1,0 +1,55 @@
+#compdef scons
+#
+# scons completion
+# Tatsuhiko Kubo <cubicdaiya@gmail.com>
+#
+_scons () {
+    local configs='auto force cache'
+    local debug_types='count explain findlibs includes memoizer memory objects pdb presub stacktrace time dtree tree stree nomemoizer'
+    local diskcheck_types='all none match rcs sccs'
+    local duplicates='hard-soft-copy soft-hard-copy hard-copy soft-copy copy'
+    local options='all derived prune status'
+    _arguments -s \
+	'(-c, --clean, --remove)'{-c,---clean,--remove}'[Remove specified targets and dependencies.]' \
+	'(-C DIR, --directory=)'{-C,--directory=}'[Change to DIR before doing anything.]:dir:_dirs' \
+	'--cache-debug=[Print CacheDir debug info to FILE.]:file:_files' \
+	'(--cache-disable, --no-cache)'{--cache-disable,--no-cache}'[Do not retrieve built targets from CacheDir.]' \
+	'(--cache-force, --cache-populate)'{--cache-force,--cache-populate}'[Copy already-built targets into the CacheDir.]' \
+	'--cache-show[Print build actions for files from CacheDir.]' \
+	'--config=[Controls Configure subsystem:'$configs']:argument:('$configs')' \
+	'-D[Search up directory tree for SConstruct, build all Default() targets.]' \
+	'--debug=[Print various types of debugging information]:argument:('$debug_types')' \
+	'--diskcheck=[Enable specific on-disk checks.]:argument:('$diskcheck_types')' \
+	'--duplicate=[Set the preferred duplication methods.]:argument:('$duplicates')' \
+	'(-f FILE, --file=FILE, --makefile=FILE, --sconstruct=FILE)'{-f,--file=,--makefile=,--sconstruct=}'[Read FILE as the top-level SConstruct file.]:file:_files' \
+	'(-h --help)'{--help,-h}'[Print defined help message, or this one.]' \
+	'(-H, --help-options)'{-H,--help-options}'[Print this message and exit.]' \
+	'(-i, --ignore-errors)'{-i,--ignore-errors}'[Ignore errors from build actions.]' \
+	'(-I DIR, --include-dir=DIR)'{-I,--include-dir=}'[Search DIR for imported Python modules.]:dir:_dirs' \
+	'--implicit-cache[Cache implicit dependencies]' \
+	'--implicit-deps-changed[Ignore cached implicit dependencies.]' \
+	'--implicit-deps-unchanged[Ignore changes in implicit dependencies.]' \
+	'(--interact, --interactive)'{--interact,--interactive}'[Run in interactive mode.]' \
+	'(-j N, --jobs=N)'{-j,--jobs=}'[Allow N jobs at once.]' \
+	'(-k, --keep-going)'{-k,--keep-going}"[Keep going when a target can't be made.]" \
+	'--max-drift=[Set maximum system clock drift to N seconds.]' \
+	'--md5-chunksize=[Set chunk-size for MD5 signature computation to N kilobytes.]' \
+	'(-n, --no-exec, --just-print, --dry-run, --recon)'{-n,--no-exec,--just-print,--dry-run,--recon}"[Don't build; just print commands.]" \
+	"--no-site-dir[Don't search or use the usual site_scons dir.]" \
+	'--profile=[Profile SCons and put results in FILE.]:file:_files' \
+	'(-q, --question)'{-q,--question}"[Don't build; exit status says if up to date.]" \
+	'-Q[Suppress "Reading/Building" progress messages.]' \
+	'--random[Build dependencies in random order.]' \
+	'(-s, --silent, --quiet)'{-s,--silent,--quiet}"[Don't print commands.]" \
+	'--site-dir=[Use DIR instead of the usual site_scons dir.]' \
+	'--stack-size=[Set the stack size of the threads used to run jobs to N kilobytes.]' \
+	'--taskmastertrace=[Trace Node evaluation to FILE.]:file:_files' \
+	'--tree=[Print a dependency tree in various formats:'$options']:argument:('$options')' \
+	'(-u, --up, --search-up)'{-u,--up,--search-up}'[Search up directory tree for SConstruct, build targets at or below current directory.]' \
+	'-U[Search up directory tree for SConstruct, build Default() targets from local SConscript.]' \
+	'(-v, --version)'{-v,--version}'[Print the SCons version number and exit.]' \
+	'(--warn=WARNING-SPEC, --warning=WARNING-SPEC)'{--warn=WARNING-SPEC,--warning=WARNING-SPEC}'[Enable or disable warnings.]' \
+	'(-Y REPOSITORY, --repository=REPOSITORY, --srcdir=REPOSITORY)'{-Y,--repository=,--srcdir=}'[Search REPOSITORY for source and target files.]:argument:_dirs'
+}
+
+_scons "$@"

@@ -1,0 +1,41 @@
+#compdef subtle
+
+# The MIT License (http://www.opensource.org/licenses/mit-license.php/)
+# Copyright © 2011 Kirill Silin <kyrylosilin@gmail.com>
+#
+# Homepage:
+#   Repository: http://www.github.com/kyrylo/zsh-completion-subtle/
+#
+# Description:
+#   Zsh completion script for 'subtle', the Subtle Window Manager.
+#   For more info see Subforge (http://www.subforge.org/projects/subtle/wiki/Subtle/).
+#
+# Installation:
+#   Add this file to one of the directories in $fpath. To check these
+#   directories, write 'echo $fpath' in console.
+#
+
+# Complete displays.
+#
+#   % subtle -d <TAB>
+#   :0 :1 :10
+#
+(( $+functions[_subtle_display] )) ||
+_subtle_display()
+{
+  local list expl displays
+  displays=$(ls /tmp/.X11-unix | sed 's/X/:/g' | egrep '^:')
+  _wanted list expl 'Available displays' compadd - ${(s: :)$(echo $displays)}
+}
+
+_arguments \
+  '(-)'{-h,--help}'[Show help information]' \
+  '(-)'{-k,--check}'[Config check syntax]' \
+  '(-)'{-D,--debug}'[Print debugging messages]' \
+  '(-)'{-v,--version}'[Show version info]' \
+  '(-h --help -k --check -D --debug -v --version -d --display)'{-d,--display}'[Connect to DISPLAY]:display list:_subtle_display' \
+  '(-c --config)'{-c,--config}'[Load config]:subtle configuration file:_files -g "*.(rb|RB)"' \
+  '(-n --no-randr)'{-n,--no-randr}'[Disable RandR extension (required for Twinview)]' \
+  '(-r --replace)'{-r,--replace}'[Replace current window manager]' \
+  '(-s --sublets)'{-s,--sublets}'[Load sublets from DIR]:sublets directory:_files -/' \
+  '(-l --level)'{-l,--level=}'[Self logging level]'

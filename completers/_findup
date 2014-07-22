@@ -1,0 +1,15 @@
+#compdef findup
+#
+# For my version of finding files in a back-to-/ file path search
+# (Amazon had a different implementation, and there are probably others
+# out there).
+
+local ret=1
+
+_arguments -s -w \
+  '-q[be quiet]' \
+  '-H[abort search if reach HOME]' \
+  '(-q -H)1:file:_files' \
+  && ret=0
+
+return $ret

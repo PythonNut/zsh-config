@@ -1,0 +1,667 @@
+#compdef subtler
+
+# The MIT License (http://www.opensource.org/licenses/mit-license.php/)
+# Copyright © 2011 Kirill Silin <kyrylosilin@gmail.com>
+#
+# Homepage:
+#   Repository: http://www.github.com/kyrylo/zsh-completion-subtle/
+#
+# Description:
+#   Zsh completion script for 'subtler', the Subtle WM's command line interface.
+#   For more info see Subforge (http://subforge.org/projects/subtle/wiki/Subtle/)
+#   and Subtler (http://subforge.org/projects/subtle/wiki/Subtler/).
+#
+# Installation:
+#   Add this file to one of the directories in $fpath. To check these
+#   directories, write 'echo $fpath' in console.
+#
+
+_subtler()
+{
+  local cmd="$words[2]"
+
+  if (( CURRENT > 2 )); then
+    if [[ "$PREFIX" = -p ]]; then
+      compset -P '*p'
+      compadd -Q -C "$@" ' "'
+    else
+      case "$cmd" in
+
+      # Normal options.
+      #
+        (-c|--Client)  _subtler_client  ;;
+        (-g|--Gravity) _subtler_gravity ;;
+        (-e|--Screen)  _subtler_screen  ;;
+        (-s|--Sublet)  _subtler_sublet  ;;
+        (-t|--Tag)     _subtler_tag     ;;
+        (-y|--Tray)    _subtler_tray    ;;
+        (-v|--View)    _subtler_view    ;;
+
+      # Combined options.
+      #
+      # - Client options.
+        (-c[foFOSNGELk])
+                  _subtler_choose_between \
+                    '_subtler_active_clients' ''                         ;;
+        (-cY)
+                  _subtler_choose_between \
+                   '_subtler_active_clients' '_subtler_active_gravities' ;;
+        (-c[TU])
+                  _subtler_choose_between \
+                    '_subtler_active_clients' '_subtler_active_tags'     ;;
+        (-c[CX]Y)
+                  _subtler_choose_between \
+                    '_subtler_active_gravities' ''                       ;;
+        (-c[CX][TU])
+                  _subtler_choose_between \
+                    '_subtler_active_tags' ''                            ;;
+
+      # - Gravity options.
+        (-ga)
+                  _message 'sample: test 0x0+100+100'                    ;;
+        (-g[fk])
+                  _subtler_active_gravities                              ;;
+
+      # - Screen options.
+        (-e[f])
+                  _subtler_choose_between \
+                    '_subtler_active_screens' ''                         ;;
+
+      # - Sublet options.
+        (-s[uDk])
+                  _subtler_choose_between \
+                    '_subtler_active_sublets' || _message 'text of data' ;;
+        (-sf)
+                  _subtler_choose_between \
+                    '_subtler_active_sublets' ''                         ;;
+
+      # - Tag options.
+        (-ta)
+                  _message 'name of the new tag'                         ;;
+        (-t[fIk])
+                  _subtler_choose_between \
+                    '_subtler_active_tags' ''                            ;;
+
+      # - Tray options.
+        (-y[fk])
+                  _subtler_choose_between \
+                    '_subtler_active_trays' ''                           ;;
+
+      # - View options.
+        (-va)
+                  _message 'name of the view'                            ;;
+        (-v[fGIk])
+                  _subtler_choose_between \
+                    '_subtler_active_views' ''                           ;;
+        (-v[TU])
+                  _subtler_choose_between \
+                    '_subtler_active_views' '_subtler_active_tags'       ;;
+
+      # Other options.
+      # TODO: Dirty hack. To be rewritten.
+      #
+        (-d|--display)
+          (( CURRENT == 3 )) && _subtler_display
+        ;;
+      esac
+    fi
+  else
+    _subtler_command
+  fi
+}
+
+# Dispatcher.
+#
+(( $+functions[_subtler_command] )) ||
+_subtler_command()
+{
+  _arguments -s \
+    '(-)'{-d,--display}'[Connect to DISPLAY]' \
+    '(-)'{-h,--help}'[Show help information]' \
+    '(-)'{-V,--version}'[Show version info]' \
+    '(-)'{-r,--reload}'[Reload subtle]' \
+    '(-)'{-R,--restart}'[Restart subtle]' \
+    '(-)'{-q,--quit}'[Quit subtle]' \
+    {-c-,--Client}'[Use client group]:client options:_subtler_client_short' \
+    {-g-,--Gravity}'[Use gravity group]:gravity options:_subtler_gravity_short' \
+    {-e-,--Screen}'[Use screen group]:screen options:_subtler_screen_short' \
+    {-s-,--Sublet}'[Use sublet group]:sublet options:_subtler_sublet_short' \
+    {-t-,--Tag}'[Use tag group]:tag options:_subtler_tag_short' \
+    {-y-,--Tray}'[Use tray group]:tray options:_subtler_tray_short' \
+    {-v-,--View}'[Use views group]:view options:_subtler_view_short'
+}
+
+# Complete client option (after hyphen).
+#
+#   % subtler -c -<TAB>
+#   --find  -f -- Find client
+#   --float -O -- Toggle float
+#   ... and so on.
+#
+(( $+functions[_subtler_client] )) ||
+_subtler_client()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (3)
+      local exclusion_opts="-o --focus -F --full -O --float -S --stick \
+                            -N --urgent -T --tag -U --untag -G --tags \
+                            -Y --gravity -E --raise -L --lower"
+    ;;
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-C --current -X --select -l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-X --select -C --current)'{-C,--current}'[Select current window/view]' \
+    '(-C --current -X --select)'{-X,--select}'[Select a window via pointer]' \
+    '(-)'{-f,--find}'[Find client]:find client:->clients' \
+    '(-)'{-o,--focus}'[Set focus to client]' \
+    '(-)'{-F,--full}'[Toggle full]' \
+    '(-)'{-O,--float}'[Toggle float]' \
+    '(-)'{-S,--stick}'[Toggle stick]' \
+    '(-)'{-N,--urgent}'[Toggle urgent]' \
+    '(-)'{-l,--list}'[List all clients]' \
+    '(-)'{-T,--tag}'[Add tag to client]:tag client:_subtler_active_tags' \
+    '(-)'{-U,--untag}'[Remove tag from client]:untag client:_subtler_active_client_tags' \
+    '(-)'{-G,--tags}'[Show client tags]' \
+    '(-)'{-Y,--gravity}'[Set client gravity]:set gravity:_subtler_active_gravities' \
+    '(-)'{-E,--raise}'[Raise client window]' \
+    '(-)'{-L,--lower}'[Lower client window]' \
+    '(-)'{-k,--kill}'[Kill client]:kill client:->clients' \
+    "($exclusion_opts -c --Client)"{-c,--Client}'::subtler active clients:_subtler_active_clients'
+
+  # TODO: make it complete after single-letter options (subtler -c -f<TAB>).
+  # Currently, you ought to insert a whitespace by hand for make it work.
+  case $state in
+    (clients)
+      (( CURRENT == 4 )) && _subtler_active_clients
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter client options.
+    #
+    (( $+functions[_subtler_client_short] )) ||
+    _subtler_client_short()
+    {
+      local delimiter
+
+      case "$PREFIX" in
+        ([foFOSNGELkTYU]) delimiter=' ' ;;
+        (*)               delimiter=''  ;;
+      esac
+
+      _values -s "$delimiter" 'Single-letter client options' \
+        '(  X               l            )C[Select current window/view]' \
+        '(C                 l            )X[Select a window via pointer]' \
+        '(C X   o F O S N l T U G Y E L k)f[Find client]' \
+        '(C X f o F O S N l T U G Y E L k)o[Set focus to client]' \
+        '(C X f o   O S N l T U G Y E L k)F[Toggle full]' \
+        '(C X f o F   S N l T U G Y E L k)O[Toggle float]' \
+        '(C X f o F O   N l T U G Y E L k)S[Toggle stick]' \
+        '(C X f o F O S   l T U G Y E L k)N[Toggle urgent]' \
+        '(C X f o F O S N   T U G Y E L k)l[List all clients]' \
+        '(C X f o F O S N l T U G Y E L k)T[Add tag to client]' \
+        '(C X f o F O S N l T U G Y E L k)U[Remove tag from client]' \
+        '(C X f o F O S N l T U G Y E L k)G[Show client tags]' \
+        '(C X f o F O S N l T U G Y E L k)Y[Set client gravity]' \
+        '(C X f o F O S N l T U G Y E L k)E[Raise client window]' \
+        '(C X f o F O S N l T U G Y E L k)L[Lower client window]' \
+        '(C X f o F O S N l T U G Y E L k)k[Kill client]'
+    }
+
+# Complete current clients.
+#
+#   % subtler --Client <TAB>
+#   chromium  gvim  urxvt
+#
+(( $+functions[_subtler_active_clients] )) ||
+_subtler_active_clients()
+{
+  local list expl clients
+  clients=$(subtler -c -l | awk '{ print $13 }' | tr '\n' ' ')
+  _wanted list expl 'List of clients' compadd - ${(s: :)$(echo $clients)}
+}
+
+# Complete gravity options (after hyphen).
+#
+#   % subtler -g -<TAB>
+#   --add  -a -- Create new gravity
+#   --find -f -- Find a gravity
+#   ... and so on.
+#
+(( $+functions[_subtler_gravity] )) ||
+_subtler_gravity()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-)'{-a,--add}'[Create new gravity]' \
+    '(-)'{-l,--list}'[List all gravities]' \
+    '(-)'{-f,--find}'[Find a gravity]:find a gravity:->gravities' \
+    '(-)'{-k,--kill}'[Kill gravity mode]:kill gravity mode:->gravities' \
+    "($exclusion_opts -g --Gravity)"{-g,--Gravity}'::subtler gravities:_subtler_active_gravities'
+
+  case $state in
+    (gravities)
+      (( CURRENT == 4 )) && _subtler_active_gravities
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter gravity options.
+    #
+    (( $+functions[_subtler_gravity_short] )) ||
+    _subtler_gravity_short()
+    {
+      _values -s ' ' 'Single-letter client options' \
+        '(C X a l f k)a[Create new gravity]' \
+        '(C X a l f k)l[List all gravities]' \
+        '(C X a l f k)f[Find a gravity]' \
+        '(C X a l f k)k[Kill gravity]'
+    }
+# Complete current gravities.
+#
+#   % subtler --Gravity <TAB>
+#   bottom  bottom33  bottom66  bottom_left
+#
+(( $+functions[_subtler_active_gravities] )) ||
+_subtler_active_gravities()
+{
+  local list expl gravities
+  gravities=$(subtler -g -l | awk '{ print $1 }' | tr '\n' ' ')
+  _wanted list expl 'List of gravities' compadd - ${(s: :)$(echo $gravities)}
+}
+
+# Complete screen options.
+#
+#   % subtler -e -<TAB>
+#   --list -l -- List all screens
+#   --find -f -- Find a screen
+#   ... and so on.
+#
+(( $+functions[_subtler_screen] )) ||
+_subtler_screen()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-)'{-l,--list}'[List all screens]' \
+    '(-)'{-f,--find}'[Find a screen]:find screen:->screens' \
+    "($exclusion_opts -e --Screen)"{-e,--Screen}'::subtler screens:_subtler_active_screens'
+
+  case $state in
+    (screens)
+      (( CURRENT == 4 )) && _subtler_active_screens
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter screen options.
+    #
+    (( $+functions[_subtler_screen_short] )) ||
+    _subtler_screen_short()
+    {
+      _values -s ' ' 'Single-letter screen options' \
+        '(f)l[List all screens]' \
+        '(l)f[Find a screen]'
+    }
+
+# Completes current screens.
+#
+#   % subtler -e <TAB>
+#   0  1  3
+#
+(( $+functions[_subtler_active_screens] )) ||
+_subtler_active_screens()
+{
+  local list expl screens
+  screens=$(subtler -e -l | awk '{ print $1 }' | tr '\n' ' ')
+  _wanted list expl 'List of screens' compadd - ${(s: :)$(echo $screens)}
+}
+
+# Complete sublet options.
+#
+#   % subtler -s -<TAB>
+#   --add  -a -- Create new sublet
+#   --list -l -- List all sublets
+#   ... and so on.
+#
+(( $+functions[_subtler_sublet] )) ||
+_subtler_sublet()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-)'{-f,--find}'[Find sublet]:find sublet:->sublets' \
+    '(-)'{-l,--list}'[List all sublets]' \
+    '(-)'{-u,--update}'[Updates value of sublet]:update value:->sublets' \
+    '(-)'{-D,--data}'[Send data to sublet]:send data:->sublets' \
+    '(-)'{-k,--kill}'[Kill sublet]:kill sublet:->sublets' \
+    "($exclusion_opts -s --Sublet)"{-s,--Sublet}'::subtler sublets:_subtler_active_sublets'
+
+  case $state in
+    (sublets)
+      (( CURRENT == 4 )) && _subtler_active_sublets
+      [[ CURRENT -eq 5 && "$words[4]" == (-u|--update|-D|--data) ]] && _message 'text of data'
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter sublet options.
+    #
+    (( $+functions[_subtler_sublet_short] )) ||
+    _subtler_sublet_short()
+    {
+      _values -s ' ' 'Single-letter sublet options' \
+        '(f l u D k)f[Find sublet]' \
+        '(f l u D k)l[List all sublets]' \
+        '(f l u D k)u[Update value of sublet]' \
+        '(f l u D k)D[Send data to sublet]' \
+        '(f l u D k)k[Kill sublet]'
+    }
+
+# Complete tag options (after hyphen).
+#
+#   % subtler -t -<TAB>
+#   --add     -a -- Create new tag
+#   --clients -l --Show clients with a tag
+#   ... and so on.
+#
+(( $+functions[_subtler_tag] )) ||
+_subtler_tag()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-)'{-a,--add}"[Create new tag]" \
+    '(-)'{-f,--find}'[Find all clients/views by tag]:find clients:->tags' \
+    '(-)'{-l,--list}'[List all tags]' \
+    '(-)'{-I,--clients}'[Show clients with a tag]:show clients:->tags' \
+    '(-)'{-k,--kill}'[Kill tag]:kill tag:->tags' \
+    "($exclusion_opts -t --Tag)"{-t,--Tag}'::tags:_subtler_active_tags'
+
+  case $state in
+    (tags)
+      (( CURRENT == 4 )) && _subtler_active_tags
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter tag options.
+    #
+    (( $+functions[_subtler_tag_short] )) ||
+    _subtler_tag_short()
+    {
+      _values -s ' ' 'Single-letter tag options' \
+        '(a f l I k)a[Create new tag]' \
+        '(a f l I k)f[Find all clients/views by tag]' \
+        '(a f l I k)l[List all tags]' \
+        '(a f l I k)I[Show clients with tag]' \
+        '(a f l I k)k[Kill tag]'
+    }
+
+# Complete current tags.
+# TODO: show only those tags, that don't belong to current client (exclusion).
+#
+#   % subtler --Tag <TAB>
+#   float  resize  stick
+#
+(( $+functions[_subtler_active_tags] )) ||
+_subtler_active_tags()
+{
+  local list expl tags
+  tags=$(subtler -t -l | tr '\n' ' ')
+  _wanted list expl 'List of tags' compadd - ${(s: :)$(echo $tags)}
+}
+
+# Complete only the tags of the current client.
+# TODO: completion is messed up, when you type in
+# something like 'subtler -c -U <TAB>'. That behaviour
+# should be handled.
+#
+#   % subtler --Client urxvt --untag <TAB>
+#   term  custom_tag  my_tag
+#
+(( $+functions[_subtler_active_client_tags] )) ||
+_subtler_active_client_tags()
+{
+  local list expl tags
+  local client="$words[3]"
+
+  tags=$(subtler -c $client -G | tr '\n' ' ')
+  _wanted list expl 'List of the tags of the client' compadd - ${(s: :)$(echo $tags)}
+}
+
+# Complete tray options.
+#
+#   % subtler -y -<TAB>
+#   --clients -k -- Kill view
+#   --find    -f -- Find all tray icons
+#   ... and so on.
+#
+(( $+functions[_subtler_tray] )) ||
+_subtler_tray()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-)'{-f,--find}'[Find all tray icons]:find tray icons:->trays' \
+    '(-)'{-l,--list}'[List all tray icons]' \
+    '(-)'{-k,--kill}'[Kill tray]:kill tray:->trays' \
+    "($exclusion_opts -y --Tray)"{-y,--Tray}'::trays:_subtler_active_trays'
+
+  case $state in
+    (trays)
+      (( CURRENT == 4 )) && _subtler_active_trays
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter tray options.
+    #
+    (( $+functions[_subtler_tray_short] )) ||
+    _subtler_tray_short()
+    {
+      _values -s ' ' 'Single-letter tray options' \
+        '(f l k)f[Find a tray]' \
+        '(f l k)l[List all trays]' \
+        '(f l k)k[Kill tray]'
+    }
+
+# Complete current trays.
+#
+#   % subtler --Tray <TAB>
+#   parcellite  skype  stardict
+#
+(( $+functions[_subtler_active_trays] )) ||
+_subtler_active_trays()
+{
+  local list expl trays
+  trays=$(subtler -y -l | awk '{ print $2 }' | tr '\n' ' ')
+  _wanted list expl 'List of trays' compadd - ${(s: :)$(echo $trays)}
+}
+
+# Complete view options (after hyphen).
+#
+#   % subtler -v -<TAB>
+#   --add     -a -- Create new view
+#   --clients -l -- Show clients on view
+#   ... and so on.
+#
+(( $+functions[_subtler_view] )) ||
+_subtler_view()
+{
+  local exclusion_opts
+
+  case $CURRENT in
+    (3)
+      local exclusion_opts=""
+    ;;
+    (4)
+      if [[ "$words[CURRENT-1]" != -* ]]; then
+        local exclusion_opts="-C --current -X --select -l --list"
+      fi
+    ;;
+  esac
+
+  _arguments \
+    '(-X --select -C --current)'{-C,--current}'[Select current window/view]' \
+    '(-C --current -X --select)'{-X,--select}'[Select a window via pointer]' \
+    '(-)'{-a,--add}'[Create new view]' \
+    '(-)'{-f,--find}'[Find a view]:find view:->views' \
+    '(-)'{-l,--list}'[List all views]' \
+    '(-)'{-T,--tag}'[Add tag to view]:tag view:_subtler_active_tags' \
+    '(-)'{-U,--untag}'[Remove tag from view]:untag view:_subtler_active_view_tags' \
+    '(-)'{-G,--tags}'[Show view tags]' \
+    '(-)'{-I,--clients}'[Show clients on view]:show clients:->views' \
+    '(-)'{-k,--kill}'[Kill view]:kill view:->views' \
+    "($exclusion_opts -v --View)"{-v,--View}'::views:_subtler_active_views'
+
+  case $state in
+    (views)
+      (( CURRENT == 4 )) && _subtler_active_views
+    ;;
+  esac
+}
+#
+#####
+    # A helper function. Completes only single-letter view options.
+    #
+    (( $+functions[_subtler_view_short] )) ||
+    _subtler_view_short()
+    {
+      _values -s ' ' 'Single-letter view options' \
+        '(a f l T U G I k)a[Create new view]' \
+        '(a f l T U G I k)f[Find a view]' \
+        '(a f l T U G I k)l[List all views]' \
+        '(a f l T U G I k)T[Add tag to view]' \
+        '(a f l T U G I k)U[Remove tag from view]' \
+        '(a f l T U G I k)G[Show view tags]' \
+        '(a f l T U G I k)I[Show clients on view]' \
+        '(a f l T U G I k)k[Kill view]'
+    }
+
+# Complete current views.
+#
+#   % subtler --View <TAB>
+#   terms  www  dev
+#
+(( $+functions[_subtler_active_views] )) ||
+_subtler_active_views()
+{
+  local list expl views
+  views=$(subtler -v -l | awk '{ print $3 }' | tr '\n' ' ')
+  _wanted list expl 'List of views' compadd - ${(s: :)$(echo $views)}
+}
+
+# Complete only the tags of the current view.
+#
+#   % subtler -v dev -U <TAB>
+#   browser  float  resize
+#
+(( $+functions[_subtler_active_view_tags] )) ||
+_subtler_active_view_tags()
+{
+  local list expl tags
+  local view="$words[3]"
+
+  tags=$(subtler -v $view -G | tr '\n' ' ')
+  _wanted list expl 'List of the tags of the view' compadd - ${(s: :)$(echo $tags)}
+}
+
+# Complete displays.
+#
+#   % subtler --display <TAB>
+#   :0  :1  :10
+#
+(( $+functions[_subtler_display] )) ||
+_subtler_display()
+{
+  local list expl displays
+  displays=$(ls /tmp/.X11-unix | sed 's/X/:/g' | egrep '^:')
+  _wanted list expl 'Available displays' compadd - ${(s: :)$(echo $displays)}
+}
+
+# Complete functioning sublets.
+#
+#   % subtler -s -k <TAB>
+#   cpu  clock  mpd
+#
+(( $+functions[_subtler_active_sublets] )) ||
+_subtler_active_sublets()
+{
+  local list expl sublets
+  sublets=$(subtler -sl | sed 's/\n/ /g')
+  _wanted list expl 'Available sublets' compadd - ${(s: :)$(echo $sublets)}
+}
+
+# Call a function, given as a first argument, if the previous word (relative to 
+# the cursor) starts with a hyphen. If not, call the second function, given as
+# a second argument. Both functions should be an existing function name.
+#
+#  @param [String] First method name
+#  @param [String] Second method name
+#
+(( $+functions[_subtler_choose_between] )) ||
+_subtler_choose_between()
+{
+  if [[ $words[CURRENT-1] = -* ]]; then
+    _call_function ret $1
+  else
+    _call_function ret $2
+  fi
+}
+
+_subtler "$@"

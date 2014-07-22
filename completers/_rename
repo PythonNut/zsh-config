@@ -1,0 +1,15 @@
+#compdef rename
+#
+# For my version (there are other, incompatible, implementations (RHEL
+# has a very wacky implementation, not even Perl)).
+
+_arguments \
+  '-0[null delimit files via stdin]' \
+  '(-m)-c[copy instead of rename]' \
+  '-M[make directories if necessary]' \
+  '(-c)-m[move instead of rename]' \
+  {-n,-p}'[dry run (preview only)]' \
+  '-v[verbose]' \
+  '1:perlexpr:' \
+  '*:file:_files' \
+  && return 0

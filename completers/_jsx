@@ -1,0 +1,70 @@
+#compdef jsx
+
+_jsx_warn() {
+  local expl warning
+  local -a jsx_warnings
+
+  jsx_warnings=(all deprecated none)
+
+  # Ignore existing values
+  compset -P '*,'
+
+  # Remove already-referenced warnings
+  for warning in ${(s:,:)${IPREFIX}}
+  do
+    jsx_warnings=( ${jsx_warnings:#$warning} )
+  done
+
+  _wanted jsx_warnings expl 'warnings' compadd -qS , -a jsx_warnings
+}
+
+_jsx_opts() {
+  local expl opt
+  local -a jsx_opts
+
+  jsx_opts=(
+    lto no-assert no-log no-debug staticize fold-const return-if
+    inline dce unbox fold-const lcse dce fold-const array-length unclassify
+  )
+
+  # Ignore existing values
+  compset -P '*,'
+
+  # Remove already-referenced warnings
+  for opt in ${(s:,:)${IPREFIX}}
+  do
+    jsx_opts=( ${jsx_opts:#$opt} )
+  done
+
+  _wanted jsx_opts expr 'optimizations' compadd -qS , -a jsx_opts
+}
+
+_arguments -n : \
+  '*--add-search-path[Adds a path to library search paths]:path:_files -/' \
+  '(--executable)--executable[Adds a launcher to call _Main.main]:runenv:(node commonjs web)' \
+  '(--run)--run[Runs _Main.main after compiling]' \
+  '(--test)--test[Runs _test#test* after compiling]' \
+  '(--output)--output[Outputs file name(Default: stdout)]:outfile:_files' \
+  '*--input-file[Names input filename]:inputfile:_files' \
+  '(--mode)--mode[Specifies compilation mode]:compmode:(compile parse doc)' \
+  '(--target)--target[Specifies target language]:targetlang:(javascript c++)' \
+  '(--release)--release[Disables run-time type checking and enables optiomizations]' \
+  '(--profile)--profile[Enables the profiler]' \
+  '(--optimize)--optimize[Enables optimization commands]:optimizations:_jsx_opts' \
+  '(--warn)--warn[Enables warnings]:warnings:_jsx_warn' \
+  '(--disable-type-check)--disable-type-check[Disables run-time type checking]' \
+  '(--minify)--minify[Compresses the target JavaScript code]' \
+  '(--enable-source-map)--enable-source-map[Enables source map debugging info]' \
+  '(--complete)--complete[Shows code completion at line:column]' \
+  '(-)--version[Displays the version and compiler identifier and exits]' \
+  '(-)--version-number[Displays the version as number and exits]' \
+  '(-)--help[Displays this help and exits]' \
+  '*: :_files -/ -g "*.jsx(-.)"'
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

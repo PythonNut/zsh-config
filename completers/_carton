@@ -1,0 +1,76 @@
+#compdef carton
+
+typeset -A opt_args
+local context state line
+
+local -a _carton_subcommands
+_carton_subcommands=(
+  "bundle:Bundle dependencies"
+  "check:Check if your cpanfile and local environment are in sync"
+  "exec:Execute your script in a carton local environment"
+  "help:Show document"
+  "install:Install dependencies"
+  "list:List dependencies tracked in the carton.lock file"
+  "show:Show the module information"
+  "tree:List dependencies in a tree structure"
+  "update:Update distribution"
+  "usage:Show usage"
+  "version:Show version"
+)
+
+_arguments '*:: :->subcmd'
+
+if [[ "$state" == "subcmd" ]];then
+
+  if (( CURRENT == 1)); then
+    _describe -t commands "carton command" _carton_subcommands -V1
+    return
+  else
+    local opts curcontext subcmds
+
+    case "$words[1]" in
+      check)
+        opts=('(--cpanfile)--cpanfile=[Specify cpanfile path]: :_files')
+        ;;
+      install)
+        opts=(
+          '(-p --path)'{-p,--path}'[Specify the path to install modules to]: :_files -/'
+          '(--cpanfile)--cpanfile[Specify the alternate path for cpanfile]: :_files'
+          '(--deployment --nodeployment)--deployment[Force the deployment mode]'
+          '(--deployment --nodeployment)--nodeployment[No deplyment mode]'
+          '(--without)--without[Specify phases or features to exclude]: :(development)'
+          '(--cached --nocached)--cached[Use mirror]'
+          '(--cached --nocached)--nocached[Not use mirror]'
+        )
+        ;;
+      list)
+        opts=(
+          '(--distfile)--distfile[Displays the list of distributions in a distfile format]'
+        )
+        ;;
+      help)
+        opts=()
+        subcmds=(
+          "bundle" "check" "exec" "FAQ" "install" "list" "show" "tree" "update" "version"
+        )
+        _arguments -s : "$opts[@]" "*::subcommands:($subcmds)" && return 0
+        ;;
+      exec)
+        opts=()
+        _arguments -s : "$opts[@]" '*::arguments:_normal' && return 0
+        ;;
+      *)
+        opts=()
+        ;;
+    esac
+    _arguments -s : "$opts[@]" '*:: :()'
+  fi
+fi
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

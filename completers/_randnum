@@ -1,0 +1,8 @@
+#compdef randnum
+
+_arguments \
+  '(- *)-h[display help and exit]' \
+  '-c+[count]:count:' \
+  '-p+[plus or minus]:count:' \
+  '-r+[random range]:count:' \
+  && return 0

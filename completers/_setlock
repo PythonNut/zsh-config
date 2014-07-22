@@ -1,0 +1,14 @@
+#compdef setlock
+#
+# setlock completion
+# Tatsuhiko Kubo <cubicdaiya@gmail.com>
+#
+_setlock () {
+    _arguments -s \
+    	'-n[No delay. If fn is locked by another process, setlock gives up.]' \
+    	'-N[(Default.) Delay. If fn is locked by another process, setlock waits until it can obtain a new lock.]' \
+    	'-x[If fn cannot be opened (or created) or locked, setlock exits zero.]' \
+    	'-X[(Default.) If fn cannot be opened (or created) or locked, setlock prints an error message and exits nonzero.]'
+}
+
+_setlock "$@"

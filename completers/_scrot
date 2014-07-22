@@ -1,0 +1,24 @@
+#compdef scrot
+#
+# For scrot-0.8p3 of OpenBSD ports as of 5.2.
+#
+# TODO not sure how to to deal with
+#
+#   -e 'feh <tab>
+#
+# not completing feh options because of the quote (which is necessary,
+# as otherwise options fed to scrot). Workaround: put the quotes around
+# -e argument options afterwards.
+
+_arguments \
+  '(- *)'{-h,--help}'[display help and exit]' \
+  '(- *)'{-v,--version}'[display version and exit]' \
+  {-b,--border}'[grab wm border with window]' \
+  {-c,--count}'[display countdown with delay]' \
+  {-d=,--delay=}'[seconds to delay before taking shot]:time:' \
+  {-e,--exec}'[exec program on saved image]:program: _command_names '{-e,--exec}':*::program arguments: _normal' \
+  {-q=,--quality=}'[image quality (1-100)]:quality:' \
+  {-m,--multidisp}'[capture and join multiple displays]' \
+  {-s,--select}'[interactively select window or rectangle]' \
+  {-t=,--thumb=}'[generate thumbnail as well (of num percentage)]:percentage:' \
+  && return 0

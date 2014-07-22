@@ -1,0 +1,458 @@
+#compdef VBoxManage vbm
+
+# Based on "Oracle VM VirtualBox Command Line Management Interface
+# Version 3.2.0" and a close reading of _cvs from the ZSH functions
+# directory. Options and arguments are manually specified, which may
+# cause drift should VBoxManage change.
+#
+# 'vbm' is my alias, as typing CamelCase hurts my fingers:
+# alias vbm='VBoxManage -q'
+#
+# NOTE this completion script is incomplete; see the various TODO. Also,
+# various improvements can likely be made, as I hardly understand the
+# ZSH completion system.
+
+_VBoxManage() {
+  _arguments -s \
+    '(-)'{-v,--version}'[print version number and exit]' \
+    '(-)'{-q,--nologo}'[suppress the logo]' \
+    '*::VBoxManage command:_VBoxManage_command'
+}
+
+########################################################################
+#
+# define VBoxManage command dispatch function.
+
+(( $+functions[_VBoxManage_command] )) ||
+_VBoxManage_command() {
+
+  (( $+_VBoxManage_cmds )) || _VBoxManage_cmds=(
+    'list:Show information about various objects' \
+    'showvminfo:Information about a VM' \
+    'registervm:Register a VM' \
+    'unregistervm:Unregister a VM' \
+    'createvm:Create a VM' \
+    'modifyvm:Change a VM' \
+    'import:Import an OVD image' \
+    'export:Export an OVD image' \
+    'startvm:Start a VM' \
+    'controlvm:Issue commands to a VM' \
+    'discardstate:Discard state for a VM' \
+    'adoptstate:Adopt a state file for a VM' \
+    'snapshot:Snapshot commands for a VM' \
+    'openmedium:Open a disk or CD-ROM' \
+    'closemedium:Close a disk or CD-ROM' \
+    'storageattach:Attach a device' \
+    'storagectl:Add or remove a device' \
+    'showhdinfo:Show information about a device' \
+    'createhd:Create a disk' \
+    'modifyhd:Modify a disk' \
+    'clonehd:Clone a disk' \
+    'convertfromraw:Convert a disk image' \
+    'addiscsidisk:Add an iSCSI disk' \
+    'getextradata:Get metadata' \
+    'setextradata:Set metadta' \
+    'setproperty:Set a property' \
+    'usbfilter:USB device commands' \
+    'sharedfolder:Shared folder commands' \
+    'vmstatistics:Show VM statistics' \
+    'guestproperty:Interact with guest properties' \
+    'guestcontrol:Execute a guest control' \
+    'metrics:Interact with metrics commands' \
+    'hostonlyif:Network interface command' \
+    'dhcpserver:Manage DHCP servers'
+  )
+
+  if (( CURRENT == 1 )); then
+    _describe -t commands 'VBoxManage command' _VBoxManage_cmds
+  else
+    local curcontext="$curcontext"
+
+    cmd="${_VBoxManage_cmds[(r)$words[1]:*]%%:*}"
+    if (( $#cmd )); then
+      curcontext="${curcontext%:*:*}:VBoxManage-${cmd}:"
+      _call_function ret _VBoxManage_$cmd || _message 'no more arguments'
+    else
+      _message "unknown VBoxManage command: $words[1]"
+    fi
+    return ret
+  fi
+}
+
+########################################################################
+#
+# utility functions
+
+# TODO figure out how to line up the name:UUID in completion display
+(( $+functions[_VBoxManage_list_vms] )) ||
+_VBoxManage_list_vms() {
+  compadd -M 'm:{a-zA-Z0-9-}={-0-9A-Za-z}' - \
+    $(_call_program listvbvirts VBoxManage -q list vms 2>&1 | sed 's/^"//; s/" {/ /; s/}$//')
+}
+
+(( $+functions[_VBoxManage_n] )) ||
+_VBoxManage_n() {
+  _message -e virtname "virt name"
+}
+
+########################################################################
+#
+# define completion functions for each VBoxManage command
+
+(( $+functions[_VBoxManage_list] )) ||
+_VBoxManage_list() {
+  _arguments -s \
+    '(-)'{-l,--long}'[be verbose]' \
+    '1:command:(vms runningvms ostypes hostdvds hostfloppies bridgedifs hostonlyifs dhcpservers hostinfo hostcpuids hddbackends hdds dvds floppies)'
+}
+
+# TODO --log exclusive of the other options?
+# TODO "Syntax error: unknown option: --statistics" -- so why listed as option by vbm?
+(( $+functions[_VBoxManage_showvminfo] )) ||
+_VBoxManage_showvminfo() {
+  _arguments -s \
+    '--details[Show details]' \
+    '--machinereadable[Output in key=value format]' \
+    '1:virtname:_VBoxManage_list_vms'
+}
+
+(( $+functions[_VBoxManage_registervm] )) ||
+_VBoxManage_registervm() {
+  _arguments -s \
+    '1:filename:_files'
+}
+
+(( $+functions[_VBoxManage_unregistervm] )) ||
+_VBoxManage_unregistervm() {
+  _arguments -s \
+    '--delete' \
+    '1:virtname:_VBoxManage_list_vms'
+}
+
+(( $+functions[_VBoxManage_createvm] )) ||
+_VBoxManage_createvm() {
+  _arguments -s \
+    '--register' \
+    '--name:virtname:_VBoxManage_n' \
+    '--ostype:os type:( )' \
+    '--basefolder:base folder:_files -/' \
+    '--settingsfile:settings file:_files' \
+    '--uuid:UUID:( )'
+}
+
+# TODO figure out how to support the --boot<1-4> and similar options
+(( $+functions[_VBoxManage_modifyvm] )) ||
+_VBoxManage_modifyvm() {
+  _arguments -s \
+    '--name:virtname:_VBoxManage_n' \
+    '--ostype:os type:( )' \
+    '--memory[memory size in MB]:memorysize:( )' \
+    '--pagefusion[on|off]:pagefusion:(on off)' \
+    '--vram[vram size in MB]:vramsize:( )' \
+    '--acpi[on|off]:acpi:(on off)' \
+    '--ioapic[on|off]:ioapic:(on off)' \
+    '--pae[on|off]:pae:(on off)' \
+    '--hpet[on|off]:hpet:(on off)' \
+    '--hwvirtex[on|off]:hwvirtex:(on off)' \
+    '--nestedpaging[on|off]:nestedpaging:(on off)' \
+    '--largepages[on|off]:largepages:(on off)' \
+    '--vtxvpid[on|off]:vtxvpid:(on off)' \
+    '--synthcpu[on|off]:synthcpu:(on off)' \
+    '--cpuidset:cpuidset:(leaf eax abx ecx edx)' \
+    '--cpuidremove:cpuidremove:(leaf)' \
+    '--cpuidremoveall' \
+    '--hardwareuuid:--hardwareuuid:( )' \
+    '--cpus[number]:cpus:( )' \
+    '--rtcuseutc' \
+    '--monitorcount[number]:monitorcount:( )' \
+    '--accelerate3d[on|off]:accelerate3d:(on off)' \
+    '--accelerate2dvideo[on|off]:accelerate2dvideo:(on off)' \
+    '--firmware:firmware:(bios efi efi32 efi64)' \
+    '--bioslogofadein[on|off]:bioslogofadein:(on off)' \
+    '--bioslogofadeout[on|off]:bioslogofadeout:(on off)' \
+    '--bioslogodisplaytime[msec]:bioslogodisplaytime:( )' \
+    '--bioslogoimagepath[imagepath]:bioslogoimagepath:_files' \
+    '--biosbootmenu:biosbootmenu:(disabled menuonly messageandmenu)' \
+    '--biossystemtimeoffset[msec]:biossystemtimeoffset:( )' \
+    '--biospxedebug[on|off]:biospxedebug:(on off)' \
+    '--mouse:mouse:(ps2 usb usbtablet)' \
+    '--keyboard:keyboard:(ps2 usb)' \
+    '--guestmemoryballoon[memory size in MB]:guestmemoryballoon:( )' \
+    '--gueststatisticsinterval[seconds]:gueststatisticsinterval:( )' \
+    '--audio:audio:(none null coreaudio)' \
+    '--audiocontroller:audiocontroller:(ac97 sb16)' \
+    '--clipboard:clipboard:(disabled hosttoguest guesttohost bidirectional)' \
+    '--vrdp[on|off]:vrdp:(on off)' \
+    '--vrdpport[default|<ports>]:vrdpport:( )' \
+    '--vrdpaddress[host]:vrdpaddress:( )' \
+    '--vrdpauthtype:vrdpauthtype:(null external guest)' \
+    '--vrdpmulticon[on|off]:vrdpmulticon:(on off)' \
+    '--vrdpreusecon[on|off]:vrdpreusecon:(on off)' \
+    '--vrdpvideochannel[on|off]:vrdpvideochannel:(on off)' \
+    '--vrdpvideochannelquality[percent]:vrdpvideochannelquality:( )' \
+    '--usb[on|off]:usb:(on off)' \
+    '--usbehci[on|off]:usbehci:(on off)' \
+    '--snapshotfolder[default|<path>]:vrdpport:_files -/' \
+    '--teleporter[on|off]:teleporter:(on off)' \
+    '--teleporterport[port]:teleporterport:( )' \
+    '--teleporteraddress[address|empty]:teleporteraddress:( )' \
+    '--teleporterpassword:teleporterport:( )' \
+    '1:virtname:_VBoxManage_list_vms'
+}
+
+# TODO what are the [more options] the help lists?
+(( $+functions[_VBoxManage_import] )) ||
+_VBoxManage_import() {
+  _arguments -s \
+    '(-)'{-n,--dry-run}'[preview]' \
+    '1:ovffile:_files -g "(#i)*.ovd(-.)"'
+}
+
+(( $+functions[_VBoxManage_export] )) ||
+_VBoxManage_export() {
+  _arguments -s \
+    '1:machines:( )' \
+    '(-)'{-o,--output}'[output file]:ovffile:_files' \
+    '--legacy09' \
+    '--vsys[number of virtual system]:vsys:( )' \
+    '--product[product name]:product:( )' \
+    '--producturl[product url]:producturl:( )' \
+    '--vendor[vendor name]:vendor:( )' \
+    '--vendorurl[vendor url]:vendorurl:( )' \
+    '--version[version info]:version:( )' \
+    '--eula[license text]:eula:( )' \
+    '--eulafile[eula file]:eulafile:_files' \
+}
+
+(( $+functions[_VBoxManage_startvm] )) ||
+_VBoxManage_startvm() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '--type[gui|vrdp|headless]:type:(gui vrdp headless)'
+}
+
+# TODO support all the various subcommands
+(( $+functions[_VBoxManage_controlvm] )) ||
+_VBoxManage_controlvm() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '2:control:(pause resume reset poweroff savestate acpipowerbutton acpisleepbutton)'
+}
+
+(( $+functions[_VBoxManage_discardstate] )) ||
+_VBoxManage_discardstate() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms'
+}
+
+(( $+functions[_VBoxManage_adoptstate] )) ||
+_VBoxManage_adoptstate() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '2:statefile:_files'
+}
+
+# TODO support all the various subcommands
+(( $+functions[_VBoxManage_snapshot] )) ||
+_VBoxManage_snapshot() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '2:control:(take delete restore restorecurrent edit showvminfo)'
+}
+
+(( $+functions[_VBoxManage_openmedium] )) ||
+_VBoxManage_openmedium() {
+  _arguments -s \
+    '1:devicetype:(disk dvd floppy)' \
+    '2:filename:_files' \
+    '--type[disk only]:type:(normal immutable writethrough)' \
+    '--uuid:UUID:( )' \
+    '--parentuuid[disk only]:parentuuid:( )'
+}
+
+(( $+functions[_VBoxManage_closemedium] )) ||
+_VBoxManage_closemedium() {
+  _arguments -s \
+    '1:devicetype:(disk dvd floppy)' \
+    '2:uuid-or-file[UUID|filename]:uuid-or-file:_files' \
+    '--delete'
+}
+
+# TODO support the various arguments to --medium
+(( $+functions[_VBoxManage_storageattach] )) ||
+_VBoxManage_storageattach() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '--storagectl[number]:storagectl:( )' \
+    '--port[number]:port:( )' \
+    '--device[number]:device:( )' \
+    '--type:type:(dvddrive hdd fdd)' \
+    '--medium:medium:(none emptydrive TODO)' \
+    '--passthrough:passthrough:(on off)' \
+    '--forceunmount'
+}
+
+# TODO support --sataideemulation<1-4> <1-30>
+(( $+functions[_VBoxManage_storagectl] )) ||
+_VBoxManage_storagectl() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '--name:virtname:_VBoxManage_n' \
+    '--add:add:(ide sata scsi floppy sas)' \
+    '--controller:controller:(LSILogic LSILogicSAS BusLogic IntelAHCI PIIX3 PIIX4 ICH6 I82078)' \
+    '--sataportcount[1-30]:sataportcount:()' \
+    '--hostiocache:hostiocache:(on off)' \
+    '--remove'
+}
+
+# TODO support UUID vs. filename
+(( $+functions[_VBoxManage_showhdinfo] )) ||
+_VBoxManage_showhdinfo() {
+  _arguments -s \
+    '1:uuid-or-filename:_files'
+}
+
+(( $+functions[_VBoxManage_createhd] )) ||
+_VBoxManage_createhd() {
+  _arguments -s \
+    '--filename:filename:_files' \
+    '--size[size in MB]:size:( )' \
+    '--format[default is VDI]:format:(VDI VMDK VHD)' \
+    '--variant:variant:(Standard Fixed Split2G Stream ESX)' \
+    '--type[default is normal]:type:(normal writethrough)' \
+    '--comment:comment:( )' \
+    '--remember'
+}
+
+# TODO support UUID vs. filename
+(( $+functions[_VBoxManage_modifyhd] )) ||
+_VBoxManage_modifyhd() {
+  _arguments -s \
+    '1:uuid-or-filename:_files' \
+    '--type:type:(normal writethrough immutable)' \
+    '--autoreset:autoreset:(on off)' \
+    '--compact'
+}
+
+# TODO support UUID vs. filename
+(( $+functions[_VBoxManage_clonehd] )) ||
+_VBoxManage_clonehd() {
+  _arguments -s \
+    '1:uuid-or-filename:_files' \
+    '2:outputfile:_files' \
+    '--format[VDI|VMDK|VHD|RAW|<other>]:format:( )' \
+    '--variant:variant:(Standard Fixed Split2G Stream ESX)' \
+    '--type:type:(normal writethrough immutable)' \
+    '--remember' \
+    '--existing'
+}
+
+# TODO different exclusive modes to this command as well?
+(( $+functions[_VBoxManage_convertfromraw] )) ||
+_VBoxManage_convertfromraw() {
+  _arguments -s \
+    'TODO' \
+}
+
+(( $+functions[_VBoxManage_addiscsidisk] )) ||
+_VBoxManage_addiscsidisk() {
+  _arguments -s \
+    '--server[name or ip]:server:( )' \
+    '--target:target:( )' \
+    '--port:port:( )' \
+    '--lun:lun:( )' \
+    '--encodedlun:encodedlun:( )' \
+    '--username:username:( )' \
+    '--password:password:( )' \
+    '--type:type:(normal writethrough immutable)' \
+    '--intnet'
+}
+
+# TODO support 'global' vs UUID vs name and so on
+(( $+functions[_VBoxManage_getextradata] )) ||
+_VBoxManage_getextradata() {
+  _arguments -s \
+    '1:object:(global)' \
+    '2:key:(enumerate)'
+}
+
+# TODO support 'global' vs UUID vs name and so on
+(( $+functions[_VBoxManage_setextradata] )) ||
+_VBoxManage_setextradata() {
+  _arguments -s \
+    '1:object:(global)' \
+    '2:key:( )' \
+    '3:value:( )'
+}
+
+# TODO support the arguments to the various subcommands
+(( $+functions[_VBoxManage_setproperty] )) ||
+_VBoxManage_setproperty() {
+  _arguments -s \
+    '1:object:(hdfolder machinefolder vrdpauthlibrary websrvauthlibrary loghistorycount)'
+}
+
+# TODO this has various exclusive subcommands
+(( $+functions[_VBoxManage_usbfilter] )) ||
+_VBoxManage_usbfilter() {
+  _arguments -s \
+    'TODO'
+}
+
+# TODO this has various exclusive subcommands
+(( $+functions[_VBoxManage_sharedfolder] )) ||
+_VBoxManage_sharedfolder() {
+  _arguments -s \
+    'TODO'
+}
+
+(( $+functions[_VBoxManage_vmstatistics] )) ||
+_VBoxManage_vmstatistics() {
+  _arguments -s \
+    '1:virtname:_VBoxManage_list_vms' \
+    '--reset' \
+    '--pattern:pattern:( )' \
+    '--descriptions'
+}
+
+# TODO this has various exclusive subcommands
+(( $+functions[_VBoxManage_guestproperty] )) ||
+_VBoxManage_guestproperty() {
+  _arguments -s \
+    'TODO'
+}
+
+(( $+functions[_VBoxManage_guestcontrol] )) ||
+_VBoxManage_guestcontrol() {
+  _arguments -s \
+    '1:execute:(execute)' \
+    '2:virtname:_VBoxManage_list_vms' \
+    '3:program:_files' \
+    '--username:username:( )' \
+    '--password:password:( )' \
+    '--arguments:arguments:( )' \
+    '--flags:flags:( )' \
+    '--timeout[msec]:timeout:( )' \
+    '--verbose' \
+    '--wait-for:wait-for:(exit stdout stderr)'
+}
+
+# TODO this has various exclusive subcommands
+(( $+functions[_VBoxManage_metrics] )) ||
+_VBoxManage_metrics() {
+  _arguments -s \
+    'TODO'
+}
+
+(( $+functions[_VBoxManage_hostonlyif] )) ||
+_VBoxManage_hostonlyif() {
+  _arguments -s \
+    'TODO'
+}
+
+# TODO this has various exclusive subcommands
+(( $+functions[_VBoxManage_dhcpserver] )) ||
+_VBoxManage_dhcpserver() {
+  _arguments -s \
+    'TODO'
+}

@@ -1,0 +1,10 @@
+#compdef randmac
+
+# TODO better generate MAC, but that would require keeping track of
+# where things are, etc.
+_arguments \
+  '(- *)-h[display help and exit]' \
+  '-m[set broadcast bit]' \
+  '-p[set private bit]' \
+  '1:macaddr:(0 1 2 3 4 5 6 7 8 9 a b c d e f X :)' \
+  && return 0

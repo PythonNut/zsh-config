@@ -1,0 +1,56 @@
+#compdef fab_manager
+typeset -ga _fab_hosts
+typeset -ga _fab_users
+
+_fab_hosts=(
+  lx3.lal.in2p3.fr
+  pc-nemo4.lal.in2p3.fr
+  pc-nemo5.lal.in2p3.fr
+  pc-nemo6.lal.in2p3.fr
+  pc-nemo8.lal.in2p3.fr
+  pc-nemo9.lal.in2p3.fr
+)
+
+_fab_users=(
+  garrido
+  nemo
+)
+
+__fab_commands () {
+  _fab_commands=($(fab --fabfile=${zsh_fabric_dir}/python-fabfile.py --list | grep -v commands))
+}
+
+_fab_manager () {
+  _arguments                                  \
+    {-h,--help}'[produce help message]'       \
+    {-d,--debug}'[produce debug logging]'     \
+    {-v,--verbose}'[produce verbose logging]' \
+    {-D,--devel}'[produce devel logging]'     \
+    '--parallel[run in parallel mode]'        \
+    '--password=[set root password]'          \
+    '--hosts=[set host names]:hosts:->hosts'  \
+    '--user=[set user names]:users:->users'   \
+    '*: :->args'                              \
+    && ret=0
+  case $state in
+    (hosts)
+      _describe -t hosts 'SSH machines' _fab_hosts && ret=0
+      ;;
+    (users)
+      _describe -t users 'User login' _fab_users && ret=0
+      ;;
+    (args)
+      __fab_commands
+      _wanted _fab_commands expl 'commands' compadd -a _fab_commands
+      ;;
+  esac
+}
+
+_fab_manager
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:

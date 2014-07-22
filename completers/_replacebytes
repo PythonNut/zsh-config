@@ -1,0 +1,15 @@
+#compdef replacebytes
+#
+# https://github.com/thrig/sial.org-scripts/blob/master/filesys/replacebytes.c
+
+_arguments \
+  '(- *)-h[display help and exit]' \
+  '(-m)-f+[source file]:file:_files' \
+  '-I+[source data offset]:number:' \
+  '(-f)-m+[replacement text]:message:' \
+  '-O+[alteration offset]:number:' \
+  '(-s)-S+[size of alteration]:number:' \
+  '(-S)-s[use all of source file]' \
+  '-t+[truncate to offset]:number:' \
+  '*:file:_files' \
+  && return 0

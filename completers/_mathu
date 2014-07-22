@@ -1,0 +1,10 @@
+#compdef mathu
+
+local expl ret=1
+
+if [[ CURRENT -eq 2 ]]; then
+  _wanted configurations expl 'configuration' compadd "$@" - \
+    $(_call_program mathu mathu -l) && ret=0
+fi
+
+return ret

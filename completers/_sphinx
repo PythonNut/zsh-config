@@ -1,0 +1,108 @@
+#compdef sphinx-build sphinx-apidoc sphinx-autogen
+
+local curcontext="$curcontext" state line ret=1
+typeset -A opt_args
+
+_sphinx_builders () {
+  local -a _sphinx_builder_list
+  _sphinx_builder_list=(
+    'html'
+    'dirhtml'
+    'singlehtml'
+    'pickle'
+    'json'
+    'htmlhelp'
+    'qthelp'
+    'devhelp'
+    'epub'
+    'latex'
+    'text'
+    'man'
+    'texinfo'
+    'gettext'
+    'changes'
+    'linkcheck'
+    'doctest'
+  )
+  _describe -t sphinx-builder 'Sphinx builder' _sphinx_builder_list
+}
+
+_sphinx_settings () {
+  local -a _sphinx_setting_list
+  _sphinx_setting_list=()
+  _describe -t sphinx-settings 'Sphinx settings' _sphinx_setting_list
+}
+
+_sphinx_template_params () {
+  local -a _sphinx_template_param_list
+  _sphinx_template_param_list=()
+  _describe -t sphinx-template-paras 'Sphinx template parameters' _sphinx_template_param_list
+}
+
+case "$service" in
+  sphinx-build)
+    _arguments -C \
+      '-b+[Builder to use]:builders:_sphinx_builders' \
+      '-a[Write all files]' \
+      '-E[Do not use saved environment]' \
+      '-t+[Include "only" blocks with "<tag>"]' \
+      '-d+[Path for the cached environment and doctree]:directory:_files -/' \
+      '(-C)'-c+'[Path for configuration file]:conf:_files' \
+      '(-c)'-C'[Use no config file at all]' \
+      '-D+[Override a setting in configuration]:settings:_sphinx_settings' \
+      '-A+[Pass a value into the template for HTML builder]:temlate params:_sphinx_template_params' \
+      '-n[Warn aboug all missing reference]' \
+      '-N[Do not do colored output]' \
+      '-q[Only warnings on stderr]' \
+      '-Q[No output at all]' \
+      '-w+[Write warnings to file]:file:_files' \
+      '-W[Trun warings into errors]' \
+      '-P[Run pdb on exception]' \
+      && return
+    ;;
+  sphinx-apidoc)
+    _arguments -C \
+      {--help,-h}'[Show this help message and exit]' \
+      {--output-dir=,-o+}'[Directory to place all output]:directory:_files -/' \
+      {--maxdepth,-d}'[Maximum depth of submodules to show in the TOC]' \
+      {--force,-f}'[Overwrite all files]' \
+      {--dry-run,-n}'[Run the script without creating files]' \
+      {--no-toc,-T}"[Don\'t create a table of contents file]" \
+      {--suffix=,-s+}'[file suffix]:suffix:(rst txt)' \
+      {--full,-F}'[Generate a full project with sphinx-quickstart]:fullspec:->fullspec' \
+      {--doc-project=,-H+}'[Project name]' \
+      && ret=0
+    ;;
+  sphinx-autogen)
+    _arguments -C \
+      {--help,-h}'[Show this help message and exit]' \
+      {--output-dir=,-o+}'[Directory to place all output]:directory:_files -/' \
+      {--suffix=,-s+}'[Default suffix for files]:suffix:(rst txt)' \
+      {--templates=,-T+}'[Custom template directory]' \
+      && ret=0
+    ;;
+esac
+
+[[ -n "$state" ]] &&
+case "$state" in
+  fullspec)
+    _arguments -C \
+      {--doc-author=,-A+}'[Project author(s), used when --full is given]' \
+      {--doc-version=,-V+}'[Project version, used when --full is given]' \
+      {--doc-release=,-R+}'[Project release, used when --full is given]' \
+      && ret=0
+    ;;
+  *)
+    _message "unknown state: $state"
+    ;;
+esac
+
+return ret
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 2
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: sw=2 ts=2 et filetype=sh

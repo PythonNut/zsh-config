@@ -1,0 +1,284 @@
+#compdef sur
+
+# The MIT License (http://www.opensource.org/licenses/mit-license.php/)
+# Copyright © 2011 Kirill Silin <kyrylosilin@gmail.com>
+#
+# Homepage:
+#   Repository: http://www.github.com/kyrylo/zsh-completion-subtle/
+#
+# Description:
+#   Zsh completion script for 'sur', the Subtle WM's sublet manager.
+#   For more info see Subforge (http://www.subforge.org/projects/subtle/wiki/Subtle/)
+#
+# Installation:
+#   Add this file to one of the directories in $fpath. To check these
+#   directories, write 'echo $fpath' in console.
+#
+
+_sur_command()
+{
+  local cmd="$words[1]"
+  local command_list
+
+  command_list=(
+    annotate:"Mark sublet to be reviewed"
+    build:"Create a sublet package"
+    config:"Show available config settings of a sublet"
+    fetch:"Download sublet to current directory"
+    help:"Show help and exit"
+    grabs:"Show available grabs provided by a sublet"
+    info:"Show info about an installed sublet"
+    install:"Install a sublet"
+    list:"List local/remote sublets"
+    notes:"Show notes about a sublet"
+    query:"Query for a sublet (e.g clock, clock -v 0.3)"
+    reorder:"Reorder installed sublets for loading order"
+    server:"Serve sublets (default: http://localhost:4567)"
+    submit:"Submit sublet to SUR"
+    template:"Create a new sublet template in current dir"
+    test:"Test sublets for syntax and functionality"
+    uninstall:"Uninstall a sublet"
+    unpack:"Unpack a sublet in current directory"
+    update:"Update local/remote sublet cache"
+    upgrade:"Upgrade all installed sublets"
+    version:"Show version info and exit"
+  )
+
+  if (( CURRENT == 1 )); then
+    _describe -t commands "Major sur commands" command_list
+  fi
+
+  _call_function ret _sur_$cmd
+}
+
+# Find sublets depending on the context.
+#
+#   % sur annotate <TAB>
+#   clock  -- Show the clock and date
+#   tasks  -- Show visible clients
+#
+#   % sur install t<TAB>
+#   tasks  -- Show visible clients
+#   temp   -- Show the temperature
+#
+(( $+functions[_sur_find_sublets] )) ||
+_sur_find_sublets()
+{
+  local cmd="$words[1]"
+  local info="Installed sublets"
+  local raw # Raw sublet names and descriptions.
+  local sublets names desc remote
+
+  # If user want to install a sublet, use
+  # remote flag and change the description.
+  case "$cmd" in
+    (install|unpack)
+      remote="-r"
+      info="Available sublets"
+  esac
+
+  raw=$(sur list -c $remote | egrep '^[\(\d\)+]' -n -A 1)
+  names=(${(s:/:)$(echo "$raw" | \
+                   awk '/^[0-9]+:\([0-9]+\)/{ print $2 }' | tr '\n' '/')})
+  desc=$(echo "$raw" | egrep '[0-9]+-' | sed 's/[0-9]\+-\s\+//g')
+
+  # Fill up sublets array with
+  # 'name:description' pairs.
+  while read -r line; do
+    sublets+=("$names[1]":"$line")
+    names=("${names[@]:1}")
+  done <<< "$desc"
+
+  _describe -t sublets $info sublets
+}
+
+# Complete port number in range of 0 to 65535.
+#
+#   % sur server -p 1234
+#   1234 12340 12341 12342 12343... and so on.
+#
+(( $+functions[_sur_port] )) ||
+_sur_port()
+{
+  local list expl
+  _wanted list expl 'Valid port numbers' compadd $expl - {0..65535}
+}
+
+# Search for specific sublet's version.
+#
+#   % sur install cpu -v <TAB>
+#   0.1 0.2 0.3 0.4
+#
+(( $+functions[_sur_version] )) ||
+_sur_version()
+{
+  local cmd="$words[1]"
+  local sublet="$words[CURRENT-2]"
+  local versions remote expl list
+
+  # Use remote list of sublets, if
+  # user have chosen specific commands.
+  case "$cmd" in
+    (install|unpack)
+      remote="-r"
+  esac
+
+  versions=$(sur list -c "$remote" | egrep "^\([0-9]+\) $sublet" | \
+             cut -d'(' -f3- | cut -d')' -f1 | sed 's/,//g')
+
+  _wanted list expl 'Available versions of sublet' compadd - ${(s: :)$(echo $versions)}
+}
+
+# Complete 'specs' for 'build' command.
+#
+#   % sur build ~/code/specs/<TAB>
+#   ~/code/specs/fry.spec  ~/code/specs/leela.spec  ~/code/specs/zoidberg.SPEC
+#
+(( $+functions[_sur_spec_files] )) ||
+_sur_spec_files()
+{
+  _arguments "(-):spec file:_files -g '*.(spec|SPEC)'"
+}
+
+# Complete Ruby language sources.
+#
+#   % sur submit ~/sublets/<TAB>
+#   ~/sublets/spaceship.rb  ~/sublets/quirkysublet.rb  ~/sublets/dontaskme.RB
+#
+(( $+functions[_sur_ruby_files] )) ||
+_sur_ruby_files()
+{
+  _arguments "*:ruby source:_files -g '*.(rb|RB)'"
+}
+
+_sur_annotate()
+{
+  _arguments \
+    '(-)'{-h,--help}'[Show help information]' \
+    '*'{-v,--version}'[Annotate a specific version]:version of sublet:_sur_version' \
+    '*: :_sur_find_sublets' && ret=0
+}
+
+_sur_build()
+{
+  _sur_spec_files
+}
+
+_sur_config()
+{
+  _sur_find_sublets
+}
+
+_sur_fetch()
+{
+  _sur_find_sublets
+}
+
+_sur_grabs()
+{
+  _sur_find_sublets
+}
+
+_sur_info()
+{
+  _sur_find_sublets
+}
+
+_sur_install()
+{
+  # TODO: Enable reload option only when sublet provided.
+  _arguments \
+    '(-R --reload)'{-R,--reload}'[Reload sublets after install]' \
+    '(-t --tags)'{-t,--tags}'[Include tags in search]' \
+    '*'{-v,--version}'[Search for a specific version]:version of sublet:_sur_version' \
+    '(-)'{-h,--help}'[Show help information]' \
+    '*: :_sur_find_sublets' && ret=0
+}
+
+_sur_list()
+{
+  _arguments \
+    '(-)'{-l,--local}'[Select local repository (default)]' \
+    '(-)'{-r,--remote}'[Select remote repository]' \
+    '(-)'{-h,--help}'[Show help information]'
+}
+
+_sur_notes()
+{
+  _sur_find_sublets
+}
+
+_sur_query()
+{
+  _arguments \
+    '(-e --regex)'{-e,--regex}'[Use regex for query]' \
+    '(-r --remote -l --local)'{-l,--local}'[Select local repository (default)]' \
+    '(-l --local -r --remote)'{-r,--remote}'[Select remote repository]' \
+    '(-t --tags)'{-t,--tags}'[Include tags in search]' \
+    '*'{-v,--version}'[Search for a specific version]:version of sublet:_sur_version' \
+    '(-)'{-h,--help}'[Show help information]' \
+    '*: :_sur_find_sublets' && ret=0
+}
+
+_sur_server()
+{
+  _arguments \
+    '(-)'{-p,--port}'[Select a specific port]:port number:_sur_port' \
+    '(-)'{-h,--help}'[Show help information]'
+}
+
+_sur_submit()
+{
+  _sur_ruby_files
+}
+
+_sur_template()
+{
+  _sur_ruby_files
+}
+
+_sur_test()
+{
+  _arguments \
+    '*'{-C,--config}'[Add config value]' \
+    '(-)'{-h,--help}'[Show help information]' \
+    '*: :_sur_find_sublets' && ret=0
+}
+
+_sur_uninstall()
+{
+  _arguments \
+    '(-R --reload)'{-R,--reload}'[Reload sublets after uninstall]' \
+    '(-t --tags)'{-t,--tags}'[Include tags in search]' \
+    '*'{-v,--version}'[Select a specific version]:version of sublet:_sur_version' \
+    '(-)'{-h,--help}'[Show help information]' \
+    '*: :_sur_find_sublets' && ret=0
+}
+
+
+_sur_unpack()
+{
+  _arguments \
+    '(-t --tags)'{-t,--tags}'[Include tags in search]' \
+    '*'{-v,--version}'[Search for a specific version]:version of sublet:_sur_version' \
+    '(-)'{-h,--help}'[Show help information]' \
+    '*: :_sur_find_sublets' && ret=0
+}
+
+_sur_update()
+{
+  _arguments \
+    '(-r --remote -l --local)'{-l,--local}'[Select local repository (default)]' \
+    '(-l --local -r --remote)'{-r,--remote}'[Select remote repository]' \
+    '(-)'{-h,--help}'[Show help informationl]'
+}
+
+_sur_upgrade()
+{
+  _arguments \
+    '(-R --reload)'{-R,--reload}'[Reload sublets after upgrading]' \
+    '(-y --yes)'{-y,--yes}'[Assume yes to questions]' \
+    '(-)'{-h,--help}'[Show help informationl]'
+}
+
+_arguments '*::sur command:_sur_command'

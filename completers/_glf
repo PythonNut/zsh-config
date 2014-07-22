@@ -1,0 +1,10 @@
+#compdef glf
+
+local ret=1
+
+_arguments \
+  '1:regex:' \
+  '*:directory:_directories' \
+  && ret=0
+
+return $ret

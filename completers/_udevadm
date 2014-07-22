@@ -1,0 +1,122 @@
+#compdef udevadm
+
+typeset -A opt_args
+local context state line
+
+local -a _udevadm_subcommands
+_udevadm_subcommands=(
+  'info:Queries the udev database for device information'
+  'trigger:Request device events from the kernel'
+  'settle:Watchhes the udev event queue'
+  'control:Modify the internal state of the running udev daemon'
+  'monitor:Listens to the kernel uevents'
+  'test:Simulate a udev event run for the given device'
+  'test-builtin:Run a built-in command for the given device'
+)
+
+_arguments \
+  '(--debug)--debug[Print debug messages to stderr]' \
+  '(-)--version[Print version number]' \
+  '(-)--help[Print help text]' \
+  '*:: :->subcmd'
+
+if [[ "$state" == "subcmd" ]];then
+
+  if (( CURRENT == 1)); then
+    _describe -t commands "udevadm command" _udevadm_subcommands -V1
+    return
+  else
+    local opts curcontext
+
+    case "$words[1]" in
+      info)
+        opts=(
+          '--query=[Query the database for specified type of device data]::(name symlink path property all)'
+          '--path=[devpath of the device to query]:devpath:_files'
+          '--name=[name of the device node or symlink to query]:node_or_symlink:_files'
+          '--root[The udev root directory(Default /dev)]'
+          '--run[The udev runtime directory(Default /run/udev)]'
+          '--attribute-walk[Print all sysfs properties of the specified device]'
+          '--export[Print output as key/value pairs]'
+          '--export-prefix=[Add a prefix to the key name of exported values]:prefix:'
+          '--device-id-of-file=[Print major/minor numbers of underlying device]:devfile:_files'
+          '--export-db[Export the content of the udev database]'
+          '--cleanup-db[Cleanup the udev database]'
+          '(-)--version[Print version]'
+          '(-)--help[Print help text]'
+        )
+        ;;
+      trigger)
+        opts=(
+          '--verbose[Print the list of devices]'
+          '--dry-run[Do not actually trigger the event]'
+          '--type=[Trigger a specific type of devices]:type:(devices subsystems)'
+          '--action=[Type of event to be triggered]:action:'
+          '*--subsystem-match=[Trigger events for devices which belong to a matching subsystem]:subsystem:'
+          '*--subsystem-nomatch=[Do not trigger events for devices which belong to a matching subsystem]:subsystem:'
+          '*--attr-match=[Trigger events for devices with a matching sysfs attribute]:attrs:'
+          '*--attr-nomatch=[Do not trigger events for devices with a matching sysfs attribute]:attrs:'
+          '*--property-match=[Trigger events for devices with a matching property value]:props:'
+          '*--tag-match=[Trigger events for devices with a matching tag]:props:'
+          '*--sysname-match=[Trigger events for devices with a matching sys device name]:sysname:'
+          '*--parent-match=[Trigger events for all children of a given device]:syspath:'
+        )
+        ;;
+      settle)
+        opts=(
+          '(--timeout)--timeout=[Maximum number of seconds to wait for event queue to be empty]:second:'
+          '--seq-start=[Wait only for events after the given sequence number]:seqnum:'
+          '--seq-end=[Wait only for events before the given sequence number]:seqnum:'
+          '--exit-if-exists=[Stop watching if file exists]:file:_files'
+          '--quiet[Do not print any output]'
+          '(-)--help[Print help text]'
+        )
+        ;;
+      control)
+        opts=(
+          '(--exit)--exit[Signal and wait for udevd to exit]'
+          '--log-priority=[Set the internal log level of udevd]:pri:'
+          '--stop-exec-queue[Signal udevd to stop executing new events]'
+          '--start-exec-queue[Signal udevd to enable the execution of events]'
+          '--reload-rules[Signal udevd to reload the rules files]'
+          '*--property=[Set a global property for all events]:props:'
+          '--children-max=[Set the maximum number of events at the same time]:value:'
+          '--timeout=[The maximum number seconds to wait for a reply from udevd]:seconds:'
+          '--help[Print help text]'
+        )
+        ;;
+      monitor)
+        opts=(
+          '(--kernel)--kernel[Print the kernel uevents]'
+          '--udev[Print the udev event after the rule processing]'
+          '--property[Also print the properties of the event]'
+          '--subsystem-match=[Filter events by subsystem]:subsystem:'
+          '--tag-match=[Filter events by property]:tag:'
+          '(-)--help[Print help text]'
+        )
+        ;;
+      test)
+        opts=(
+          '--action=[Action string]:action:'
+          '--subsystem=[Substring string]:sussystem:'
+          '--help[Print help text]'
+        )
+        ;;
+      test-builtin)
+        opts=('(-)--help[Print help text]')
+        ;;
+      *)
+        opts=()
+        ;;
+    esac
+    _arguments -s : "$opts[@]" '*::Files:_files'
+  fi
+fi
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

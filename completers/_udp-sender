@@ -1,0 +1,19 @@
+#compdef udp-sender
+
+local ret=1
+
+_arguments -S \
+  '(-6)-4[family AF_INET]' \
+  '(-4)-6[family AF_INET6]' \
+  '-C+[max packets to send]:count:' \
+  '-c+[stats interval]:count:' \
+  '(-f)-d+[delay in milliseconds between sends]:ms:' \
+  '(-d)-f[flood send packets]' \
+  '-l[line buffer stdout]' \
+  '-N[delay of nanoseconds not ms]' \
+  '-P+[packet size in bytes]:bytes:' \
+  '-p+[port to connect to]:port:_ports' \
+  '*:host:_hosts' \
+  && ret=0
+
+return $ret
