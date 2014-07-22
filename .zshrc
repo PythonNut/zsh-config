@@ -221,15 +221,8 @@ eval $(dircolors $DIRCOLORS | sed "s/di=36/di=1;30/")
 # ======
 # Colors
 # ======
-typeset -Ag FX FG BG
+typeset -Ag FX
 colors
-clr() {
-  if [[ -n $3 ]]; then
-    echo ${fg[$1]}${FX[$2]}$3${fg[default]}${FX[reset]}
-  else
-    echo "${fg[$1]}$2${fg[default]}"
-  fi
-}
 
 # effects
 FX=(
@@ -240,12 +233,6 @@ FX=(
   blink     "[05m" no-blink     "[25m"
   reverse   "[07m" no-reverse   "[27m"
 )
-
-# the whole pallete
-for color in {000..255}; do
-  FG[$color]="[38;5;${color}m"
-  BG[$color]="[48;5;${color}m"
-done
 
 # ==================
 # unified key system
@@ -1074,11 +1061,6 @@ function compute_prompt () {
 
 compute_prompt
 
-# PS1=$(print "%{${fg[red]}%}%(?..Error: (%?%)\n)") # errors
-# PS1+="%{$fg[default]$FX[bold]%}[%{%(#~$fg[red]~$fg[grey])$FX[bold]%}"  # root or not
-# PS1+="%n%{$fg[default]$bg[default]$FX[reset]%} %c"  # Username
-# PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")❯$nbsp" # shell depth
-
 function precmd() {
   cur_command="zsh"
   chpwd
@@ -1123,7 +1105,7 @@ function go() {
 
   elif [[ -d "$1" ]]; then \cd "$1" # directory, cd to it
   elif [[ "" = "$1" ]]; then \cd    # nothing, go home
-
+    
     # if it's a program, launch it in a seperate process in the background
   elif [[ $(type ${cmd[1]}) != *not* ]]; then
     ($@&)>/dev/null
