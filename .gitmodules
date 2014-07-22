@@ -1,0 +1,12 @@
+[submodule "auto-fu"]
+	path = auto-fu
+	url = https://github.com/hchbaw/auto-fu.zsh.git
+[submodule "zsh-syntax-highlighting"]
+	path = zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "history-substring"]
+	path = history-substring
+	url = https://github.com/zsh-users/zsh-history-substring-search.git
+[submodule "fasd"]
+	path = fasd
+	url = https://github.com/clvv/fasd.git
