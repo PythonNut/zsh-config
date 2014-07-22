@@ -246,10 +246,7 @@ if [[ ! -f ${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE ]]; then
     export TERM=$_OLD_TERM
     zkbd
     echo "Keys generated ... exiting"
-    export zkbd_d=${ZDOTDIR:-$HOME}/.zkbd/
-    mv $zkbd_d$TERM.tmp $zkbd_d$TERM-$VENDOR-$OSTYPE
-    sleep 2
-    source $zkbd_d$TERM-$VENDOR-$OSTYPE
+    source ${ZDOTDIR:-$HOME}$TERM-$VENDOR-$OSTYPE
   else
     key[Home]=${terminfo[khome]}
     key[End]=${terminfo[kend]}
