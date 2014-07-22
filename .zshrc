@@ -214,6 +214,9 @@ case $_OLD_TERM in
     };;
 esac
 
+# color files in ls
+eval $(dircolors)
+
 # ======
 # Colors
 # ======
