@@ -10,3 +10,6 @@
 [submodule "fasd"]
 	path = fasd
 	url = https://github.com/clvv/fasd
+[submodule "dircolors-solarized"]
+	path = dircolors-solarized
+	url = https://github.com/seebi/dircolors-solarized
