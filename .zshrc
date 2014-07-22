@@ -238,7 +238,6 @@ FX=(
 # unified key system
 # ==================
 typeset -A key
-autoload zkbd # adaptively set up key bindings for each terminal using a map
 if [[ ! -f ${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE ]]; then
   read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
   if [[ $REPLY =~ ^[Yy]$ ]]; then
