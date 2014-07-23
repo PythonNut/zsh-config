@@ -990,29 +990,16 @@ alias EXIT="builtin exit"
 # ======================
 # Version Control System
 # ======================
-zstyle ':vcs_info:*' enable git svn hg bzr
-zstyle ':vcs_info:git*' formats "%s %r/%S %b %m%u%c "
+# zstyle ':vcs_info:*' enable git svn hg bzr
+# zstyle ':vcs_info:git*' formats "%s %r/%S %b %m%u%c "
 
-zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
-zstyle ':vcs_info:git*' formats " %{$FX[underline]$fg[white]%}%b%{$reset_color%}%m%u%c%{$reset_color%}"
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*:*' unstagedstr '!'
-zstyle ':vcs_info:*:*' stagedstr "%B%{$fg[green]%} ✚%{$reset_color%}"
-#zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F:%f%r%f'
+# zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+# zstyle ':vcs_info:git*' formats " %{$FX[underline]$fg[white]%}%b%{$reset_color%}%m%u%c%{$reset_color%}"
+# zstyle ':vcs_info:*' check-for-changes true
+# zstyle ':vcs_info:*:*' unstagedstr '!'
+# zstyle ':vcs_info:*:*' stagedstr "%B%{$fg[green]%} ✚%{$reset_color%}"
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F:%f%r%f'
 zstyle ':vcs_info:svn:*' formats "%{$FX[underline]%}%b%{$FX[no-underline]%}%f%u%c"
-
-source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
-ZSH_VCS_PROMPT_ENABLE_CACHING='false'
-ZSH_VCS_PROMPT_USING_PYTHON='true'
-
-ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
-ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
-ZSH_VCS_PROMPT_STAGED_SIGIL='●'
-ZSH_VCS_PROMPT_CONFLICTS_SIGIL='✖'
-ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
-ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
-ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
-ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
 
 function +vi-git-untracked() {
   if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
@@ -1032,6 +1019,19 @@ function +vi-svn-untracked-and-modified() {
     hook_com[unstaged]+='?'
   fi
 }
+
+source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
+ZSH_VCS_PROMPT_ENABLE_CACHING='false'
+ZSH_VCS_PROMPT_USING_PYTHON='false'
+
+ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
+ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
+ZSH_VCS_PROMPT_STAGED_SIGIL='●'
+ZSH_VCS_PROMPT_CONFLICTS_SIGIL='✖'
+ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
+ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
+ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
+ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
 
 function async_vcs_info () {
   # Save the prompt in a temp file so the parent shell can read it.
@@ -1353,15 +1353,6 @@ function preexec() {
 
 function precmd() {
   chpwd
-  
-  # version control info
-  zstyle ':vcs_info:git*' formats " %{$FX[underline]$fg[white]%}%b%{$reset_color%}%m%u%c%{$reset_color%}"
-  zstyle ':vcs_info:*' check-for-changes true
-  zstyle ':vcs_info:*:*' unstagedstr '!'
-  zstyle ':vcs_info:*:*' stagedstr "%B%{$fg[green]%} ✚%{$reset_color%}"
-  #zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F:%f%r%f'
-  zstyle ':vcs_info:svn:*' formats "%{$FX[underline]%}%b%{$FX[no-underline]%}%f%u%c"
-  
   async_vcs_info &!
   compute_prompt
 }
