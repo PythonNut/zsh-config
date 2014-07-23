@@ -1001,6 +1001,19 @@ zstyle ':vcs_info:*:*' stagedstr "%B%{$fg[green]%} ✚%{$reset_color%}"
 #zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F:%f%r%f'
 zstyle ':vcs_info:svn:*' formats "%{$FX[underline]%}%b%{$FX[no-underline]%}%f%u%c"
 
+source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
+ZSH_VCS_PROMPT_ENABLE_CACHING='false'
+ZSH_VCS_PROMPT_USING_PYTHON='true'
+
+ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
+ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
+ZSH_VCS_PROMPT_STAGED_SIGIL='●'
+ZSH_VCS_PROMPT_CONFLICTS_SIGIL='✖'
+ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
+ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
+ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
+ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
+
 function +vi-git-untracked() {
   if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
     git status --porcelain | grep '??' &> /dev/null ; then
@@ -1021,9 +1034,8 @@ function +vi-svn-untracked-and-modified() {
 }
 
 function async_vcs_info () {
-  vcs_info
   # Save the prompt in a temp file so the parent shell can read it.
-  printf "%s" $vcs_info_msg_0_ >! ${TMPPREFIX}/vcs-prompt.$$
+  printf "%s" "$(vcs_super_info)" >! ${TMPPREFIX}/vcs-prompt.$$
 
   # Signal the parent shell to update the prompt.
   kill -USR1 $$
