@@ -990,16 +990,8 @@ alias EXIT="builtin exit"
 # ======================
 # Version Control System
 # ======================
-# zstyle ':vcs_info:*' enable git svn hg bzr
-# zstyle ':vcs_info:git*' formats "%s %r/%S %b %m%u%c "
-
-# zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
-# zstyle ':vcs_info:git*' formats " %{$FX[underline]$fg[white]%}%b%{$reset_color%}%m%u%c%{$reset_color%}"
-# zstyle ':vcs_info:*' check-for-changes true
-# zstyle ':vcs_info:*:*' unstagedstr '!'
-# zstyle ':vcs_info:*:*' stagedstr "%B%{$fg[green]%} ✚%{$reset_color%}"
-zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F:%f%r%f'
-zstyle ':vcs_info:svn:*' formats "%{$FX[underline]%}%b%{$FX[no-underline]%}%f%u%c"
+zstyle ':vcs_info:*' enable git svn hg bzr
+zstyle ':vcs_info:*' check-for-changes true
 
 function +vi-git-untracked() {
   if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
@@ -1037,15 +1029,79 @@ function async_vcs_info () {
   # Save the prompt in a temp file so the parent shell can read it.
   printf "%s" "$(vcs_super_info)" >! ${TMPPREFIX}/vcs-prompt.$$
 
+  local vcs_raw_data
+
+  vcs_raw_data="$(vcs_super_info_raw_data)"
+
+  if [[ -n $vcs_raw_data ]]; then
+    echo $vcs_raw_data >! ${TMPPREFIX}/vcs-data.$$
+    case "${${(f)vcs_raw_data}[2]}" in
+      (git)
+        git rev-parse --show-toplevel >> ${TMPPREFIX}/vcs-data.$$;;
+
+      (hg)
+        hg root >> ${TMPPREFIX}/vcs-data.$$;;
+
+      (svn)
+        local cur_path="."
+        if [[ -d .svn ]]; then
+          while [[ -d $cur_path/.svn ]]; do
+            cur_path="$cur_path/.."
+          done
+          echo ${${cur_path%%/..}:A} >> ${TMPPREFIX}/vcs-data.$$
+        else
+          while [[ ! -d $cur_path/.svn && $cur_path:A != / ]]; do
+            cur_path=$cur_path/..
+          done
+          echo ${cur_path:A} >> ${TMPPREFIX}/vcs-data.$$
+        fi;;
+
+      (*)
+        echo >> ${TMPPREFIX}/vcs-data.$$;;
+
+      esac
+  else
+    command rm -f ${TMPPREFIX}/vcs-data.$$
+  fi
+  
   # Signal the parent shell to update the prompt.
   kill -USR1 $$
+}
+
+function compute_context_aliases () {
+  if [[ -f ${TMPPREFIX}/vcs-data.$$ ]]; then
+    local vcs_data
+    vcs_data=$(cat ${TMPPREFIX}/vcs-data.$$);
+    alias -g .B=${vcs_data[4]};
+    
+    case "${${(f)vcs_raw_data}[2]}" in
+      (git)
+        # git has more data
+        if [[ -n ${${(f)vcs_data}[14]} ]]; then
+          alias -g .R="${${(f)vcs_data}[14]}"
+        fi;;
+      (*)
+        if [[ -n ${${(f)vcs_data}[5]} ]]; then
+          alias -g .R="${${(f)vcs_data}[5]}"
+        fi;;
+    esac
+    
+  else
+    if [[ $(type ".B") == *alias* ]]; then
+      unalias .B
+    fi
+    if [[ $(type ".R") == *alias* ]]; then
+      unalias .R
+    fi
+  fi
 }
 
 function TRAPUSR1 {
   vcs_info_msg_0_=$(cat "${TMPPREFIX}/vcs-prompt.$$" 2> /dev/null)
   command rm ${TMPPREFIX}/vcs-prompt.$$ 2> /dev/null
-  # [[ $_titleManual == 0 ]] && _setTitle $chpwd_str
 
+  compute_context_aliases
+    
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
 }
