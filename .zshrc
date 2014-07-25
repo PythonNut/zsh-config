@@ -216,8 +216,13 @@ case $_OLD_TERM in
 esac
 
 # color files in ls
-DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
-eval $(dircolors $DIRCOLORS | sed "s/di=36/di=1;30/")
+{
+  DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
+  eval $(dircolors $DIRCOLORS | sed "s/di=36/di=1;30/")
+} always {
+  // make sure DIRCOLORS does not pollute the environment
+  unset DIRCOLORS
+}
 
 # ======
 # Colors
