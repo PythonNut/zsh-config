@@ -993,13 +993,6 @@ alias EXIT="builtin exit"
 zstyle ':vcs_info:*' enable git svn hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
-function +vi-git-untracked() {
-  if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
-    git status --porcelain | grep '??' &> /dev/null ; then
-    hook_com[unstaged]+='?'
-  fi  
-}
-
 zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked-and-modified
 function +vi-svn-untracked-and-modified() {
   local svn_status
