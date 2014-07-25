@@ -196,6 +196,7 @@ export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
 export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
+export PATH=$PATH:~/bin:~/usr/bin
 
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
