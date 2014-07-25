@@ -1235,40 +1235,7 @@ zle -N accept-line _accept-line
 command_not_found=1
 
 function process() {
-  redir=(">>&" "<<<" ">>|" ">>!" ">>" ">!" ">|" ">&" "<&" ">")
-  if [[ -n $(_glob "$redir" "$1") ]]; then
-    sub=$1
-    for io in $redir; do
-      sub=$(eval "echo \"\${(s/$io/)sub}\"")
-    done
-    sub=("${(s/ /)sub}")
-    parse=${sub[1]}
-    # if it's a file, read it
-    if [[ -f "$parse" ]]; then
-      alias "$parse"="cat $parse"
-      _preAlias+=($parse)
-
-      # if it's a directory, list it
-    elif [[ -d "$parse" ]]; then
-      alias "$parse"="\ls -A $parse"
-      _preAlias+=($parse)
-
-      # if it's a string use it
-    elif [[ $parse =~ "^\w*\".*\"\w*$" ]]; then
-      alias "$parse"="echo \"$parse\""
-      _preAlias+=($parse)
-
-    elif [[ $parse = (*\**) && parse != (* *) ]]; then
-      alias "$parse"="zargs $parse -- ls -1"
-      _preAlias+=($parse)
-
-      # if it's a variable, read it
-    elif [[ ${(P)parse} != "" ]]; then
-      alias "$parse"="echo ${(P)parse}"
-      _preAlias+=($parse)
-    fi
-
-  elif [[ $(type $1) == (*not*|*suffix*) ]]; then
+  if [[ $(type $1) == (*not*|*suffix*) ]]; then
     # skip assignments until I find something smarter to do.
     if [[ $1 == (*=*) ]]; then
       return 0
@@ -1285,7 +1252,7 @@ function process() {
       _preAlias+=($1)
       
       # if it contains math special characters, try to evaluate it
-    elif [[ ! -f "$1" && ! -d "$1" && -n $(_glob "( ) [ ] / * - + % ^" $1) ]]; then
+    elif [[ ! -f "$1" && ! -d "$1" && $1 == *[\(\)\[\]/*-+%^]* ]]; then
       local s
       # check if it compiles
       s=$(python3 -c "print(compile('$1','','eval').co_names)" 2> /dev/null)
@@ -1294,7 +1261,7 @@ function process() {
         alias "$1"="python -c 'print($1)'"
         _preAlias+=($1)
 
-      elif [[ $(_glob "[ ] - + % ^ = \"" $1 | \wc -c ) == 1 ]]; then
+      elif [[ $1 == *[\(\)*+~^&\[\]]* ]]; then
         # it didn't. it must be some kind of glob
         if [[ $options[globdots] == "on" ]]; then
           alias "$1"="unsetopt globdots;LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first;setopt globdots"
@@ -1366,23 +1333,6 @@ function command_not_found_handler() {
     echo "zsh: command not found:" $1
   fi
   command_not_found=1
-}
-
-function _glob() {
-  local z c
-  # like a shortcut for searching
-  z=()
-  c=(${(s/ /)1})
-  # split omits dashes
-  if [[ $1 == (*-*) ]]; then
-    c[(($#c+1))]="-"
-  fi
-  for a in $c; do
-    if [[ "$2" == (*$a*) ]]; then;
-      z[((${#z}+1))]="$a"
-    fi
-  done
-  echo $z
 }
 
 # ================================
@@ -1709,20 +1659,3 @@ function extract() {
     shift
   done
 }
-
-# muscle memory fixer, force cd to be annoying, so that AUTO_CD is used
-# function cd () {
-#   if [[ -n $@ ]]; then
-#     echo Oh, my you seem to have typed \"cd\" when you shouldn\'t have.
-#     sleep 3
-#     read -q "REPLY?Knowing that AUTO_CD is set, will you do this again [yn]? "
-#     echo
-#     if [[ $REPLY == n* ]]; then
-#       builtin cd $@
-#     else
-#       cd $@
-#     fi
-#   else
-#     builtin cd $@
-#   fi
-# }
