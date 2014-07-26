@@ -627,7 +627,7 @@ DIRSTACKSIZE=30
 if [[ -f ~/.zsh.d/zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
   dirstack=( ${(uf)"$(< ~/.zsh.d/zdirs)"} )
   # "cd -" won't work after login by just setting $OLDPWD, so
-  if [[ -n $(setopt | grep autopushd) ]]; then
+  if setopt | \grep autopushd &>/dev/null; then
     unsetopt AUTO_PUSHD
     cd $dirstack[0] && cd - > /dev/null
     setopt AUTO_PUSHD
