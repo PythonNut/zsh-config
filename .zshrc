@@ -198,6 +198,9 @@ export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
 export PATH=$PATH:~/bin:~/usr/bin
 
+NULLCMD="cat"
+READNULLCMD="less"
+
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
   (dumb)
