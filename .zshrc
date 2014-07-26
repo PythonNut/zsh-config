@@ -1586,6 +1586,24 @@ function after-first-word() {
 zle -N after-first-word
 global_bindkey "^X1" after-first-word
 
+# rationalize dots
+rationalise_dot () {
+  # typing .... becomes ../../../ etc.
+  local MATCH # keep the regex match from leaking to the environment
+  if [[ $LBUFFER =~ '(^|/| |      |'$'\n''|\||;|&)\.\.$' ]]; then
+    LBUFFER+=/
+    zle self-insert
+    zle self-insert
+  else
+    zle self-insert
+  fi
+}
+
+zle -N rationalise_dot
+bindkey . rationalise_dot
+# without this, typing a "." aborts incremental history search
+bindkey -M isearch . self-insert
+
 # =====================
 # Convenience functions
 # =====================
