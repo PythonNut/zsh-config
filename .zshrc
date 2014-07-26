@@ -1138,13 +1138,13 @@ function precmd() {
 
 alias go="nocorrect go"
 function go() {
-  setopt local_options no_case_glob no_case_match
+  setopt local_options no_case_glob no_case_match equals
   cmd=(${(s/ /)1})
   # if it's a file and it's not binary and I don't need to be root
   if [[ -f "$1" ]]; then
-    if [[ -n "`file $1 | grep '\(ASCII text\|Unicode text\|no magic\)'`" ]]; then
+    if file $1 |& grep '\(ASCII text\|Unicode text\|no magic\)' &>/dev/null; then
       if [[ -w "$1" ]]; then
-        if [[ $(ps ax |& egrep -i 'emacs --daemon' | wc -l) > 1 ]]; then # && "$console" == 1
+        if ps ax |& egrep -i 'emacs --daemon' &>/dev/null; then
           # launch GUI editor
           #($GEDITOR&) >&/dev/null
           emacsclient -t -a "emacs" $1
@@ -1157,8 +1157,7 @@ function go() {
       fi
     else
       # it's binary, open it with xdg-open
-      if [[ -e "`which xdg-open`" && -n "$DISPLAY" ]] &&
-        [[ $(file $1 | grep 'executable' | wc -l) == 0 ]]; then
+      if [[ -n =xdg-open && -n "$DISPLAY" && ! -x $1 ]]; then
         (xdg-open "$1" &) &> /dev/null
       else
         # without x we try suffix aliases
