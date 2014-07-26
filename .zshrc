@@ -1322,7 +1322,7 @@ function process() {
         alias "$1"="python -c 'print($1)'"
         _preAlias+=($1)
 
-      elif [[ $1 == *[\(\)*+~^&\[\]]* ]]; then
+      elif [[ $1 == *[\(\)*+~^\&\[\]]* ]]; then
         # it didn't. it must be some kind of glob
         if [[ $options[globdots] == "on" ]]; then
           alias "$1"="unsetopt globdots;LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first;setopt globdots"
