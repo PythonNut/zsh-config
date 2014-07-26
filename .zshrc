@@ -1473,17 +1473,17 @@ function chpwd() {
 function chpwd_force() {
   setopt LOCAL_OPTIONS EQUALS
   if [[ -n $(ps $PPID 2> /dev/null | grep =mc) ]]; then
-    chpwd_s_str=$(basename $(pwd))
+    chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
     zle && zle reset-prompt
   else
-    chpwd_str=$(minify_path $(pwd))
+    chpwd_str=$(minify_path .)
     if [[ $_titleManual == 0 ]]; then 
       LAST_TITLE="$(minify_path $(pwd)) [$(minify_path_fasd $(pwd))]"
       _setTitle $LAST_TITLE
     fi
     (async_chpwd_worker &!) 2> /dev/null
   fi
-  LAST_PWD=$(pwd)
+  LAST_PWD=${${:-.}:A}
 }
 
 # set the title
