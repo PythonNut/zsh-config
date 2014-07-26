@@ -1337,7 +1337,7 @@ function process() {
       fi
       
       # it's a file forward to go
-    elif [[ -f $(print "$1" | sed -e 's/^ *//g;s/ *$//g') && $(type $1) == (*not*)  && ! -x $1 ]]; then
+    elif [[ -f "$1" && $(type $1) == (*not*)  && ! -x $1 ]]; then
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
 
