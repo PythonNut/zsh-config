@@ -1342,12 +1342,12 @@ function process() {
       _preAlias+=("$1")
 
       # If it's an option and it's set, unset it
-    elif [[ -n $(setopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' | tr -d '_')" 2>/dev/null) ]]; then
+    elif [[ -n $(setopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
       alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
       _preAlias+=($1)
 
       # If it's an option and it's unset, set it
-    elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' | tr -d '_')" 2>/dev/null) ]]; then
+    elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
       alias "$1"="echo \"setopt: $1\"; setopt $1"
       _preAlias+=($1)
       
