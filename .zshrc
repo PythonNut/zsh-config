@@ -1309,7 +1309,7 @@ function process() {
       
       # if it's in CDPATH, teleport there
     elif [[ ${${${$(echo $cdpath*(/))%/}##*/}[(r)${1%/}]} == ${1%/} ]]; then
-      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg[blue]\$FX[bold]\$(pwd)\$reset_color"
+      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg[blue]\$FX[bold]\${${:-.}:A}\$reset_color"
       _preAlias+=($1)
       
       # if it contains math special characters, try to evaluate it
@@ -1337,17 +1337,17 @@ function process() {
       fi
       
       # it's a file forward to go
-    elif [[ -f $(print "$1" | sed -e 's/^ *//g;s/ *$//g') && $(type $1) == (*not*)  && ! -x $1 ]]; then
+    elif [[ -f "$1" && $(type $1) == (*not*)  && ! -x $1 ]]; then
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
 
       # If it's an option and it's set, unset it
-    elif [[ -n $(setopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' | tr -d '_')" 2>/dev/null) ]]; then
+    elif [[ -n $(setopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
       alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
       _preAlias+=($1)
 
       # If it's an option and it's unset, set it
-    elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' | tr -d '_')" 2>/dev/null) ]]; then
+    elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
       alias "$1"="echo \"setopt: $1\"; setopt $1"
       _preAlias+=($1)
       
@@ -1365,11 +1365,7 @@ function process() {
 function preexec() {
   chpwd
 
-  for a in $_preAlias; do
-    if [[ -n $(alias "$a") ]]; then
-      unalias "$a"
-    fi
-  done
+  unalias ${(j: :)_preAlias} &> /dev/null
   _preAlias=( )
 }
 
@@ -1427,10 +1423,10 @@ compdef "_cmd" "-command-"
 _titleManual=0
 
 TMPPREFIX=/dev/shm/ # use shared memory
-LAST_PWD=$(pwd)
+LAST_PWD=${${:-.}:A}
 LAST_TITLE=""
 function async_chpwd_worker () {
-  chpwd_s_str=$(minify_path_smart $(pwd))
+  chpwd_s_str=$(minify_path_smart .)
 
   printf "%s" $chpwd_s_str >! ${TMPPREFIX}/zsh-s-prompt.$$
 
@@ -1463,8 +1459,8 @@ function TRAPUSR2 {
 # Build the prompt in a background job.
 async_chpwd_worker &!
 function chpwd() {
-  cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${$(pwd)}/}"))}")
-  if [[ $(pwd) != $LAST_PWD ]]; then
+  cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${${:-.}:A}/}"))}")
+  if [[ ${${:-.}:A} != $LAST_PWD ]]; then
     chpwd_force
   elif [[ $LAST_TITLE == "" ]]; then
     chpwd_force
@@ -1476,17 +1472,17 @@ function chpwd() {
 function chpwd_force() {
   setopt LOCAL_OPTIONS EQUALS
   if [[ -n $(ps $PPID 2> /dev/null | grep =mc) ]]; then
-    chpwd_s_str=$(basename $(pwd))
+    chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
     zle && zle reset-prompt
   else
-    chpwd_str=$(minify_path $(pwd))
+    chpwd_str=$(minify_path .)
     if [[ $_titleManual == 0 ]]; then 
-      LAST_TITLE="$(minify_path $(pwd)) [$(minify_path_fasd $(pwd))]"
+      LAST_TITLE="$(minify_path .) [$(minify_path_fasd .)]"
       _setTitle $LAST_TITLE
     fi
     (async_chpwd_worker &!) 2> /dev/null
   fi
-  LAST_PWD=$(pwd)
+  LAST_PWD=${${:-.}:A}
 }
 
 # set the title
@@ -1541,7 +1537,7 @@ function settitle() {
 {
   # let's initialize the title
   alias settitle="nocorrect settitle"
-  _setTitle $(minify_path $(pwd))
+  _setTitle $(minify_path .)
 } &>> ~/.zsh.d/startup.log
 
 # ====================
