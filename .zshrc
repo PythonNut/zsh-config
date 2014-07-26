@@ -1003,10 +1003,10 @@ zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked-and-modified
 function +vi-svn-untracked-and-modified() {
   local svn_status
   svn_status=$(svn status | cut -f1 -d ' ')
-  if [[ -n $(echo $svn_status | grep "M") ]]; then
+  if [[ $svn_status == *M* ]]; then
     hook_com[staged]+=" %{$fg[green]%}+%{$reset_color%}"
   fi
-  if [[ -n $(echo $svn_status | grep \?) ]]; then
+  if [[ $svn_status == *\?* ]]; then
     hook_com[unstaged]+='?'
   fi
 }
