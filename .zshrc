@@ -1365,11 +1365,7 @@ function process() {
 function preexec() {
   chpwd
 
-  for a in $_preAlias; do
-    if [[ -n $(alias "$a") ]]; then
-      unalias "$a"
-    fi
-  done
+  unalias ${(j: :)_preAlias} &> /dev/null
   _preAlias=( )
 }
 
