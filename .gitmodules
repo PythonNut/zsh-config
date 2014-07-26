@@ -16,3 +16,12 @@
 [submodule "zsh-vcs-prompt"]
 	path = zsh-vcs-prompt
 	url = https://github.com/yonchu/zsh-vcs-prompt
+[submodule "zsh-vim-pattern-search"]
+	path = zsh-vim-pattern-search
+	url = https://github.com/hchbaw/en.zsh
+[submodule "zsh-vim-ex"]
+	path = zsh-vim-ex
+	url = https://github.com/hchbaw/zex.zsh
+[submodule "zsh-vim-textobjects"]
+	path = zsh-vim-textobjects
+	url = https://github.com/hchbaw/opp.zsh
