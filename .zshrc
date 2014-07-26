@@ -1426,7 +1426,7 @@ TMPPREFIX=/dev/shm/ # use shared memory
 LAST_PWD=$(pwd)
 LAST_TITLE=""
 function async_chpwd_worker () {
-  chpwd_s_str=$(minify_path_smart $(pwd))
+  chpwd_s_str=$(minify_path_smart .)
 
   printf "%s" $chpwd_s_str >! ${TMPPREFIX}/zsh-s-prompt.$$
 
@@ -1435,8 +1435,8 @@ function async_chpwd_worker () {
 }
 
 function async_chpwd_worker_subshell () {
-  chpwd_s_str=$(minify_path_smart $(pwd))
-  echo $(minify_path_full $(pwd)) $chpwd_s_str
+  chpwd_s_str=$(minify_path_smart .)
+  echo $(minify_path_full .) $chpwd_s_str
   typeset -f minify_path_smart
   local GPID
   #chpwd_j_str=$(minify_path_fasd $(pwd))
