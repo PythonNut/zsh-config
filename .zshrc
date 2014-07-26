@@ -1349,7 +1349,12 @@ function process() {
     elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
       alias "$1"="echo \"setopt: $1\"; setopt $1"
       _preAlias+=($1)
-      
+
+      # if it's a parameter, echo it
+    elif [[ -n ${(P)1} ]]; then
+      alias "$1"="echo ${(P)1}"
+      _preAlias+=($1)
+
       # last resort, forward to teleport handler
       # elif [[ -n $(j --stat | cut -f2 | sed -e '$d' | fgrep -i $1) ]]; then
     elif [[ -n $(fasd -d $@) ]]; then
@@ -1405,6 +1410,7 @@ function _cmd() {
   _command
   _functions
   _parameters
+  _hosts
   #_cd
   _tilde
   _directory_stack
