@@ -443,9 +443,9 @@ bindkey -M vicmd 'j' history-substring-search-down
 # Reduce path to shortest prefixes. Heavily Optimized
 function minify_path () {
   local ppath="" full_path="/" cur_path matches revise dir
-  eval "1=\${\${1:A}:gs/${$(echo ~):gs/\//\\\//}/\~}"
+  eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
   for token in ${(s:/:)1}; do
-    cur_path=${full_path:s/\~/$(echo ~)/}
+    cur_path=${full_path:s/\~/$HOME/}
     local col=1 glob=${token[0,1]}
     cur_path=($cur_path/*(/))
     # prune the single dir case
@@ -532,9 +532,9 @@ function minify_path_full () {
 # Highlight the path's shortest prefixes. Heavily optimized
 function highlight_path () {
   local ppath="" full_path="/" cur_path matches revise dir
-  eval "1=\${\${1:A}:gs/${$(echo ~):gs/\//\\\//}/\~}"
+  eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
   for token in ${(@s:/:)1}; do
-    cur_path=${full_path:s/\~/$(echo ~)/}
+    cur_path=${full_path:s/\~/$HOME/}
     local col=1 glob=${token[0,1]}
     cur_path=($cur_path/*(/))
     # prune the single dir case
