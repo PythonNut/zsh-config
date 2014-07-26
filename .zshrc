@@ -1440,7 +1440,6 @@ function async_chpwd_worker () {
 
 function async_chpwd_worker_subshell () {
   chpwd_s_str=$(minify_path_smart $(pwd))
-  echo $(minify_path_full $(pwd)) $chpwd_s_str
   typeset -f minify_path_smart
   local GPID
   #chpwd_j_str=$(minify_path_fasd $(pwd))
