@@ -3,7 +3,7 @@
 # core zsh setup
 zstyle :compinstall filename '~/.zshrc'
 skip_global_compinit=1
-fpath=($fpath ~/.zsh.d/completers)
+fpath=(~/.zsh.d/completers $fpath)
 autoload -Uz compinit  && compinit
 echo -n > ~/.zsh.d/startup.log
 setopt function_argzero
