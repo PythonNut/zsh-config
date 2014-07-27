@@ -1146,7 +1146,7 @@ function go() {
   # if it's a file and it's not binary and I don't need to be root
   if [[ -f "$1" ]]; then
     if file $1 |& grep '\(ASCII text\|Unicode text\|no magic\)' &>/dev/null; then
-      if [[ -w "$1" ]]; then
+      if [[ -r "$1" ]]; then
         if ps ax |& egrep -i 'emacs --daemon' &>/dev/null; then
           # launch GUI editor
           #($GEDITOR&) >&/dev/null
