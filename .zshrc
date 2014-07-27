@@ -247,7 +247,7 @@ FX=(
 # unified key system
 # ==================
 typeset -A key
-if [[ ! -f ${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE ]]; then
+if [[ ! -f ${ZDOTDIR:-$HOME}/zkbd/$_OLD_TERM-$VENDOR-$OSTYPE ]]; then
   read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo
@@ -268,7 +268,7 @@ if [[ ! -f ${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE ]]; then
     key[PageDown]=${terminfo[knp]}
   fi
 else
-  source ${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
+  source ${ZDOTDIR:-$HOME}/zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
 fi
 
 [[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char
