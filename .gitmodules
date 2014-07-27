@@ -22,3 +22,6 @@
 [submodule "zsh-vim-textobjects"]
 	path = zsh-vim-textobjects
 	url = https://github.com/hchbaw/opp.zsh
+[submodule "zsh-macro"]
+	path = zsh-macro
+	url = https://github.com/edgarklerks/zsh-macro

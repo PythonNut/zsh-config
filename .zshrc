@@ -1576,6 +1576,16 @@ function settitle() {
   _setTitle $(minify_path .)
 } &>> ~/.zsh.d/startup.log
 
+# ============
+# Shell macros
+# ============
+
+source ~/.zsh.d/zsh-macro/macro.zsh
+export MACRO_DIR="~/.zsh.d/macros"
+if [[ ! -d $MACRO_DIR ]]; then
+  mkdir $MACRO_DIR
+fi
+
 # ====================
 # Interactive commands
 # ====================
