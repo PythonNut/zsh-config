@@ -419,6 +419,24 @@ function global_bindkey () {
   bindkey            $@
 }
 
+# ========
+# VIM MODE
+# ========
+
+bindkey -M afu   jj vi-cmd-mode
+bindkey -M emacs jj vi-cmd-mode
+
+function _vi-insert () {
+  # hack to enable Auto-FU during vi-insert
+  zle .vi-insert
+  zle zle-line-init
+}
+zle -N vi-insert _vi-insert
+
+source ~/.zsh.d/zsh-vim-pattern-search/en.zsh
+source ~/.zsh.d/zsh-vim-textobjects/opp.zsh
+source ~/.zsh.d/zsh-vim-textobjects/opp/surround.zsh
+
 # ========================
 # History substring search
 # ========================
@@ -1121,7 +1139,10 @@ function compute_prompt () {
   PS1+="%{${fg[default]}%}[%{%(#~$fg[red]~$black)$FX[bold]%}"  # root or not
   PS1+='%n%{${fg[default]}${bg[default]}$FX[reset]%} $chpwd_s_str'  # Username
   PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")]%#$nbsp" # shell depth
-  RPS1="\${vcs_info_msg_0_}"
+
+  VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
+  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins|afu)/}"
+  RPS1=$RPS1"\${vcs_info_msg_0_}"
   #❯
 }
 
@@ -1134,6 +1155,13 @@ function precmd() {
   async_vcs_info &!
   compute_prompt
 }
+
+# intercept keymap selection
+function zle-keymap-select () {
+  compute_prompt
+  zle reset-prompt
+}
+zle -N zle-keymap-select
 
 # ======================
 # BEGIN HOLISTIC HANDLER
