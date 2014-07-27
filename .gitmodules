@@ -22,3 +22,6 @@
 [submodule "zsh-vim-textobjects"]
 	path = zsh-vim-textobjects
 	url = https://github.com/hchbaw/opp.zsh
+[submodule "zsh-url-httplink"]
+	path = zsh-url-httplink
+	url = https://github.com/Valodim/zsh-_url-httplink
