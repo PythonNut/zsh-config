@@ -976,7 +976,7 @@ zstyle ':completion:*:processes-names' command 'ps -e -o comm='
 zstyle ':completion:*:processes-names' ignored-patterns ".*"
 
 zstyle ':completion:history-words:*' remove-all-dups yes
-
+zstyle ':completion:*:urls' urls ~/.zsh.d/urls/urls
 # =============
 # Adaptive Exit
 # =============
