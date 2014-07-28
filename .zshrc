@@ -174,6 +174,7 @@ touch ~/.zsh.d/startup.log
   a vcs_info           # integrate with version control
   a copy-earlier-word  # navigate backwards with C-. C-,
   a url-quote-magic    # automatically%20escape%20characters
+  a add-zsh-hook       # a more modular way to hook
   
 } always {
   unfunction a
@@ -1575,6 +1576,18 @@ function settitle() {
   alias settitle="nocorrect settitle"
   _setTitle $(minify_path .)
 } &>> ~/.zsh.d/startup.log
+
+# ============
+# Shell macros
+# ============
+
+source ~/.zsh.d/zsh-macro/macro.zsh
+export MACRO_DIR="$HOME/.zsh.d/macros"
+if [[ ! -d $MACRO_DIR ]]; then
+  mkdir $MACRO_DIR
+fi
+
+add-zsh-hook preexec macro
 
 # ====================
 # Interactive commands

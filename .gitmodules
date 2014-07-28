@@ -1,27 +1,30 @@
 [submodule "auto-fu"]
-	path = auto-fu
-	url = https://github.com/hchbaw/auto-fu.zsh
+    path = auto-fu
+    url = https://github.com/hchbaw/auto-fu.zsh
 [submodule "zsh-syntax-highlighting"]
-	path = zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting
+    path = zsh-syntax-highlighting
+    url = https://github.com/zsh-users/zsh-syntax-highlighting
 [submodule "history-substring"]
-	path = history-substring
-	url = https://github.com/zsh-users/zsh-history-substring-search
+    path = history-substring
+    url = https://github.com/zsh-users/zsh-history-substring-search
 [submodule "fasd"]
-	path = fasd
-	url = https://github.com/clvv/fasd
+    path = fasd
+    url = https://github.com/clvv/fasd
 [submodule "dircolors-solarized"]
-	path = dircolors-solarized
-	url = https://github.com/seebi/dircolors-solarized
+    path = dircolors-solarized
+    url = https://github.com/seebi/dircolors-solarized
 [submodule "zsh-vcs-prompt"]
-	path = zsh-vcs-prompt
-	url = https://github.com/yonchu/zsh-vcs-prompt
+    path = zsh-vcs-prompt
+    url = https://github.com/yonchu/zsh-vcs-prompt
 [submodule "zsh-vim-pattern-search"]
-	path = zsh-vim-pattern-search
-	url = https://github.com/hchbaw/en.zsh
+    path = zsh-vim-pattern-search
+    url = https://github.com/hchbaw/en.zsh
 [submodule "zsh-vim-textobjects"]
-	path = zsh-vim-textobjects
-	url = https://github.com/hchbaw/opp.zsh
+    path = zsh-vim-textobjects
+    url = https://github.com/hchbaw/opp.zsh
 [submodule "zsh-url-httplink"]
-	path = zsh-url-httplink
-	url = https://github.com/Valodim/zsh-_url-httplink
+    path = zsh-url-httplink
+    url = https://github.com/Valodim/zsh-_url-httplink
+[submodule "zsh-macro"]
+    path = zsh-macro
+    url = https://github.com/edgarklerks/zsh-macro
