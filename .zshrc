@@ -338,7 +338,7 @@ alias zz='fasd -e cd -d -i' # cd with interactive selection
   ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
   ZSH_HIGHLIGHT_STYLES[path]='fg=magenta,bold'
   ZSH_HIGHLIGHT_STYLES[globbing]='fg=cyan'
-  ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=blue,bold'
+  ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=blue,bold,underline'
   ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=yellow,bold'
   ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=yellow,bold'
   ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='fg=cyan,bold'
@@ -1767,7 +1767,7 @@ function extract() {
         success=1
         ;;
     esac
-
+    
     (( success = $success > 0 ? $success : $? ))
     (( $success == 0 )) && (( $remove_archive == 0 )) && rm "$1"
     shift
