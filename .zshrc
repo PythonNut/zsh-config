@@ -1149,7 +1149,6 @@ function compute_prompt () {
   VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
   RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins|afu)/}"
   RPS1=$RPS1"\${vcs_info_msg_0_}"
-  #❯
 }
 
 compute_prompt
@@ -1658,6 +1657,11 @@ zle -N rationalise_dot
 bindkey . rationalise_dot
 # without this, typing a "." aborts incremental history search
 bindkey -M isearch . self-insert
+
+# ^Z to foreground the last suspended job.
+foreground-current-job() { fg; }
+zle -N foreground-current-job
+global_bindkey '^z' foreground-current-job
 
 # =====================
 # Convenience functions
