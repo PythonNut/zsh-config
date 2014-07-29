@@ -621,7 +621,7 @@ function minify_path_smart () {
 function minify_path_fasd () {
   if [[ $(type fasd) == *function* ]]; then
     local dirs index above higher base i k test escape
-    1=${1%(/##)}
+    1=${${1:A}%(/##)}
     dirs=$(fasd | cut -f2- -d/ | sed -e 's:.*:/&:' -e '1!G;h;$!d')
     if [[ ${dirs[(i)$1]} -le $#dirs ]]; then
       dirs=($(print ${(f)dirs}))
