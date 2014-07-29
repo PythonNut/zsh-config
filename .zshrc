@@ -248,29 +248,34 @@ FX=(
 # unified key system
 # ==================
 typeset -A key
-if [[ ! -f ${ZDOTDIR:-$HOME}/zkbd/$_OLD_TERM-$VENDOR-$OSTYPE ]]; then
-  read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo
-    export TERM=$_OLD_TERM
-    zkbd
-    echo "Keys generated ... exiting"
-    source ${ZDOTDIR:-$HOME}$TERM-$VENDOR-$OSTYPE
+function {
+  local zkbd_dest
+  zkbd_dest=${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
+  if [[ ! -f $zkbd_dest ]]; then
+    read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      echo
+      export TERM=$_OLD_TERM
+      zkbd
+      echo "Keys generated ... exiting"
+      mv ${ZDOTDIR:-$HOME}/.zkbd/$TERM-:0 $zkbd_dest &> /dev/null
+      source $zkbd_dest
+    else
+      key[Home]=${terminfo[khome]}
+      key[End]=${terminfo[kend]}
+      key[Insert]=${terminfo[kich1]}
+      key[Delete]=${terminfo[kdch1]}
+      key[Up]=${terminfo[kcuu1]}
+      key[Down]=${terminfo[kcud1]}
+      key[Left]=${terminfo[kcub1]}
+      key[Right]=${terminfo[kcuf1]}
+      key[PageUp]=${terminfo[kpp]}
+      key[PageDown]=${terminfo[knp]}
+    fi
   else
-    key[Home]=${terminfo[khome]}
-    key[End]=${terminfo[kend]}
-    key[Insert]=${terminfo[kich1]}
-    key[Delete]=${terminfo[kdch1]}
-    key[Up]=${terminfo[kcuu1]}
-    key[Down]=${terminfo[kcud1]}
-    key[Left]=${terminfo[kcub1]}
-    key[Right]=${terminfo[kcuf1]}
-    key[PageUp]=${terminfo[kpp]}
-    key[PageDown]=${terminfo[knp]}
+    source $zkbd_dest
   fi
-else
-  source ${ZDOTDIR:-$HOME}/zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
-fi
+}
 
 [[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char
 [[ -n ${key[Insert]}    ]] && bindkey "${key[Insert]}"    overwrite-mode
