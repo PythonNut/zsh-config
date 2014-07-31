@@ -761,7 +761,7 @@ function pcomplete() {
             $0
           fi
         fi
-        if [[ $LBUFFER[-2] == " " ]]; then
+        if [[ $LBUFFER[-1] == " " ]]; then
           zle .backward-delete-char
         fi
       else
@@ -769,7 +769,7 @@ function pcomplete() {
         cur_rbuffer=$RBUFFER
         zle expand-or-complete
         RBUFFER=$cur_rbuffer
-        if [[ $LBUFFER[-1] == " " && $RBUFFER[1] == " " ]]; then
+        if [[ $LBUFFER[-1] == " " || $LBUFFER[-2] == " " ]]; then
           zle .backward-delete-char
         fi
       fi
@@ -789,6 +789,19 @@ function pcomplete() {
 zle -N pcomplete
 
 global_bindkey "^i" pcomplete
+
+function _magic-space () {
+  if [[ $LBUFFER[-1] != " "  ]]; then
+    zle magic-space
+    if [[ $LBUFFER[-2] == " " ]]; then
+      zle backward-delete-char
+    fi
+  else
+    zle magic-space
+  fi
+}
+
+zle -N magic-space _magic-space
 
 # ========================================
 # Autogen Options - manfile/GNUdoc scraper
