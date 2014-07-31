@@ -1654,7 +1654,7 @@ rationalise_dot () {
 }
 
 zle -N rationalise_dot
-bindkey . rationalise_dot
+global_bindkey . rationalise_dot
 # without this, typing a "." aborts incremental history search
 bindkey -M isearch . self-insert
 
