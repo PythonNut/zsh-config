@@ -15,5 +15,4 @@ touch ~/.zsh.d/startup.log
 # let us begin
 for zsh_module in ~/.zsh.d/modules/*(n); do
   source $zsh_module
-  echo $zsh_module
 done
