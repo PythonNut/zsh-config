@@ -2,57 +2,55 @@
 # Aliases
 # =======
 {
-  function a(){ alias $@}
-
   # proxy aliases
   BORING_FILES="*\~|*.elc|*.pyc|!*|_*|*.swp"
-  a lsa="\ls --color --group-directories-first"
-  a lst="lsa -I \"${BORING_FILES:gs/\|/\" -I \"/}\""
-  a egrep="nocorrect noglob \egrep --line-buffered --color=auto"
+  alias lsa="\ls --color --group-directories-first"
+  alias lst="lsa -I \"${BORING_FILES:gs/\|/\" -I \"/}\""
+  alias egrep="nocorrect noglob \egrep --line-buffered --color=auto"
   
   # ls aes
-  a ls="lst -BFx"
-  a l='lst -lFBGh'
-  a ll='lsa -lAFGh'
-  a lss="lst -BFshx"
-  a lsp="\ls"
+  alias ls="lst -BFx"
+  alias l='lst -lFBGh'
+  alias ll='lsa -lAFGh'
+  alias lss="lst -BFshx"
+  alias lsp="\ls"
   
   # saftey a
-  a rm="rm -i" cp="cp -i"
-  a rmf="\rm" cpf="\cp"
+  alias rm="rm -i" cp="cp -i"
+  alias rmf="\rm" cpf="\cp"
   
   # global aes
-  a -g G="|& egrep -i"
-  a -g L="|& less -R"
-  a -g Lr="|& less"
-  a -g D=">&/dev/null"
-  a -g W="|& wc -l -c"
-  a -g Q=">&/dev/null&"
-  a -g ,,=";=read -n1 -rp 'Press any key to continue...'"
+  alias -g G="|& egrep -i"
+  alias -g L="|& less -R"
+  alias -g Lr="|& less"
+  alias -g D=">&/dev/null"
+  alias -g W="|& wc -l -c"
+  alias -g Q=">&/dev/null&"
+  alias -g ,,=";=read -n1 -rp 'Press any key to continue...'"
   
   # regular aes
-  a su="su -"          
-  a watch="\watch -n 1 -d "    
-  a emacs="\emacs -nw"       
-  a df='\df -h'          
-  a ping="\ping -c 10"       
-  a exi="exit"           
-  a locate="\locate -ib"     
-  a exit=" exit"         
-  a tail='\tail -n $(tput lines)'
-  a y="yaourt"
-  a yi="yaourt -Sa"
-  a yu="yaourt -Syyua --noconfirm"
-  a yuu="yaourt --sucre"
+  alias su="su -"          
+  alias watch="\watch -n 1 -d "    
+  alias emacs="\emacs -nw"       
+  alias df='\df -h'          
+  alias ping="\ping -c 10"       
+  alias exi="exit"           
+  alias locate="\locate -ib"     
+  alias exit=" exit"         
+  alias tail='\tail -n $(tput lines)'
+  alias y="yaourt"
+  alias yi="yaourt -Sa"
+  alias yu="yaourt -Syyua --noconfirm"
+  alias yuu="yaourt --sucre"
   
   # supression aes
-  a yum="nocorrect noglob \yum"  
-  a man="nocorrect noglob \man"  
-  a find="noglob find"       
-  a touch="nocorrect \touch"   
-  a mkdir="nocorrect \mkdir"   
-  a killall="nocorrect \killall" 
-  a yum-config-manager="nocorrect noglob \yum-config-manager"
+  alias yum="nocorrect noglob \yum"  
+  alias man="nocorrect noglob \man"  
+  alias find="noglob find"       
+  alias touch="nocorrect \touch"   
+  alias mkdir="nocorrect \mkdir"   
+  alias killall="nocorrect \killall" 
+  alias yum-config-manager="nocorrect noglob \yum-config-manager"
 } always {
   unfunction a
 } &>> ~/.zsh.d/startup.log

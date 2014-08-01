@@ -29,9 +29,7 @@ function _accept-line() {
   # expand all aliases on return
   cmd=(${(s/ /)BUFFER})
   if (( ${(e)expand[(i)${cmd[-1]}]} > ${#expand} )) && [[ ${cmd[-1]} != (\\*) ]]; then
-    if [[ $#RBUFFER == "1" ]]; then
-      zle _expand_alias
-    fi
+    zle _expand_alias
   fi
 
   # ignore prefix commands
