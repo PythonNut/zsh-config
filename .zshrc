@@ -13,6 +13,6 @@ touch ~/.zsh.d/startup.log
 
 
 # let us begin
-for zsh_module in ~/.zsh.d/modules/*(n); do
+for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
   source $zsh_module
 done
