@@ -61,3 +61,27 @@ FX=(
    blink     "[05m" no-blink     "[25m"
    reverse   "[07m" no-reverse   "[27m"
 )
+
+# ==========================
+# Persistent directory stack
+# ==========================
+DIRSTACKSIZE=30
+if [[ -f ~/.zsh.d/zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
+    dirstack=( ${(uf)"$(< ~/.zsh.d/zdirs)"} )
+    # "cd -" won't work after login by just setting $OLDPWD, so
+    if setopt | \grep autopushd &>/dev/null; then
+        unsetopt AUTO_PUSHD
+        cd $dirstack[0] && cd - > /dev/null
+        setopt AUTO_PUSHD
+    else
+        cd $dirstack[0] && cd - > /dev/null
+    fi
+fi
+
+# see chpwd declaration
+function zshexit() {
+    if [[ ! -f ~/.zsh.d/zdirs ]]; then
+        touch ~/.zsh.d/zdirs
+    fi
+    dirs -pl >! ~/.zsh.d/zdirs
+}
