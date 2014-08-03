@@ -51,6 +51,23 @@
   alias mkdir="nocorrect \mkdir"   
   alias killall="nocorrect \killall" 
   alias yum-config-manager="nocorrect noglob \yum-config-manager"
+
+  # git aliases
+  alias gs='git status -s'
+  alias gst='git status'
+  alias ga='git add'
+
+  alias gc='git commit -v'
+  alias gcm='git commit -v -m'
+  alias gc!='git commit -v --amend'
+  alias gca='git commit -v -a'
+  alias gcam='git commit -v -a -m' 
+  alias gca!='git commit -v -a --amend'
+
+  alias gck='git checkout'
+  alias gb='git branch'
+  alias gm='git merge'
+
 } always {
   unfunction a
 } &>> ~/.zsh.d/startup.log
