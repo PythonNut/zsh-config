@@ -8,18 +8,18 @@
   alias lst="lsa -I \"${BORING_FILES:gs/\|/\" -I \"/}\""
   alias egrep="nocorrect noglob \egrep --line-buffered --color=auto"
   
-  # ls aes
+  # ls aliases
   alias ls="lst -BFx"
   alias l='lst -lFBGh'
   alias ll='lsa -lAFGh'
   alias lss="lst -BFshx"
   alias lsp="\ls"
   
-  # saftey a
+  # saftey aliases
   alias rm="rm -i" cp="cp -i"
   alias rmf="\rm" cpf="\cp"
   
-  # global aes
+  # global aliases
   alias -g G="|& egrep -i"
   alias -g L="|& less -R"
   alias -g Lr="|& less"
@@ -28,7 +28,7 @@
   alias -g Q=">&/dev/null&"
   alias -g ,,=";=read -n1 -rp 'Press any key to continue...'"
   
-  # regular aes
+  # regular aliases
   alias su="su -"          
   alias watch="\watch -n 1 -d "    
   alias emacs="\emacs -nw"       
@@ -43,7 +43,7 @@
   alias yu="yaourt -Syyua --noconfirm"
   alias yuu="yaourt --sucre"
   
-  # supression aes
+  # suppression aliases
   alias yum="nocorrect noglob \yum"  
   alias man="nocorrect noglob \man"  
   alias find="noglob find"       
