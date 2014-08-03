@@ -39,31 +39,6 @@ function async_vcs_info () {
 
   if [[ -n $vcs_raw_data ]]; then
     echo $vcs_raw_data >! ${TMPPREFIX}/vcs-data.$$
-    case "${${(f)vcs_raw_data}[2]}" in
-      (git)
-        git rev-parse --show-toplevel >> ${TMPPREFIX}/vcs-data.$$;;
-
-      (hg)
-        hg root >> ${TMPPREFIX}/vcs-data.$$;;
-
-      (svn)
-        local cur_path="."
-        if [[ -d .svn ]]; then
-          while [[ -d $cur_path/.svn ]]; do
-            cur_path="$cur_path/.."
-          done
-          echo ${${cur_path%%/..}:A} >> ${TMPPREFIX}/vcs-data.$$
-        else
-          while [[ ! -d $cur_path/.svn && $cur_path:A != / ]]; do
-            cur_path=$cur_path/..
-          done
-          echo ${cur_path:A} >> ${TMPPREFIX}/vcs-data.$$
-        fi;;
-
-      (*)
-        echo >> ${TMPPREFIX}/vcs-data.$$;;
-
-      esac
   else
     command rm -f ${TMPPREFIX}/vcs-data.$$
   fi
@@ -78,24 +53,9 @@ function compute_context_aliases () {
     vcs_data=$(cat ${TMPPREFIX}/vcs-data.$$);
     alias -g .B=${${(f)vcs_data}[4]};
     
-    case "${${(f)vcs_raw_data}[2]}" in
-      (git)
-        # git has more data
-        if [[ -n ${${(f)vcs_data}[14]} ]]; then
-          alias -g .R="${${(f)vcs_data}[14]}"
-        fi;;
-      (*)
-        if [[ -n ${${(f)vcs_data}[5]} ]]; then
-          alias -g .R="${${(f)vcs_data}[5]}"
-        fi;;
-    esac
-    
   else
     if [[ $(type ".B") == *alias* ]]; then
       unalias .B
-    fi
-    if [[ $(type ".R") == *alias* ]]; then
-      unalias .R
     fi
   fi
 }
