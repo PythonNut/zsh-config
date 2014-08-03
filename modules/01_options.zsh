@@ -3,84 +3,82 @@
 # ===========
 
 {
-  function s(){ setopt $@}
-
   # general
-  s zle                    # magic stuff
-  s no_beep                # beep is annoying
-  s rm_star_wait           # are you REALLY sure?
-  s auto_resume            # running a suspended program
-  s check_jobs             # check jobs before exiting
-  s auto_continue          # send CONT to disowned processes
-  s function_argzero       # $0 contains the function name
-  s interactive_comments   # shell comments (for presenting)
+  setopt zle                    # magic stuff
+  setopt no_beep                # beep is annoying
+  setopt rm_star_wait           # are you REALLY sure?
+  setopt auto_resume            # running a suspended program
+  setopt check_jobs             # check jobs before exiting
+  setopt auto_continue          # send CONT to disowned processes
+  setopt function_argzero       # $0 contains the function name
+  setopt interactive_comments   # shell comments (for presenting)
 
   # correction
-  s correct_all            # autocorrect misspelled command
-  s auto_list              # list if multiple matches
-  s complete_in_word       # complete at cursor
-  s menu_complete          # add first of multiple
-  s auto_remove_slash      # remove extra slashes if needed
-  s auto_param_slash       # completed directory ends in /
-  s auto_param_keys        # smart insert spaces " "
-  s list_packed            # conserve space
+  setopt correct_all            # autocorrect misspelled command
+  setopt auto_list              # list if multiple matches
+  setopt complete_in_word       # complete at cursor
+  setopt menu_complete          # add first of multiple
+  setopt auto_remove_slash      # remove extra slashes if needed
+  setopt auto_param_slash       # completed directory ends in /
+  setopt auto_param_keys        # smart insert spaces " "
+  setopt list_packed            # conserve space
 
   # globbing
-  s numeric_glob_sort      # sort globs numerically
-  s extended_glob          # awesome globs
-  s ksh_glob               # allow modifiers before regex ()
-  s rc_expand_param        # a$abc ==> aa ab ac
-  s no_case_glob           # lazy case for globs
-  s glob_dots              # don't require a dot
-  s no_case_match          # lazy case for regex matches
-  s bare_glob_qual         # can use qualifirs by themselves
-  s mark_dirs              # glob directories end in "/"
-  s list_types             # append type chars to files
-  s null_glob              # don't err on null globs
-  s brace_ccl              # extended brace expansion
+  setopt numeric_glob_sort      # sort globs numerically
+  setopt extended_glob          # awesome globs
+  setopt ksh_glob               # allow modifiers before regex ()
+  setopt rc_expand_param        # a$abc ==> aa ab ac
+  setopt no_case_glob           # lazy case for globs
+  setopt glob_dots              # don't require a dot
+  setopt no_case_match          # lazy case for regex matches
+  setopt bare_glob_qual         # can use qualifirs by themselves
+  setopt mark_dirs              # glob directories end in "/"
+  setopt list_types             # append type chars to files
+  setopt null_glob              # don't err on null globs
+  setopt brace_ccl              # extended brace expansion
 
   # history
-  s hist_reduce_blanks     # collapse extra whitespace
-  s hist_ignore_space      # ignore lines starting with " "
-  s hist_ignore_dups       # ignore immediate duplicates
-  s hist_find_no_dups      # ignore all search duplicates
-  s extended_history       # timestamps are nice, really
-  s append_history         # append is good, append!
-  s inc_append_history     # append in real time
-  s share_history          # share history between terminals
-  s hist_no_store          # don't store history commands
-  s hist_expire_dups_first # kill the dups! kill the dups!
-  s hist_verify            # verify history expansions
+  setopt hist_reduce_blanks     # collapse extra whitespace
+  setopt hist_ignore_space      # ignore lines starting with " "
+  setopt hist_ignore_dups       # ignore immediate duplicates
+  setopt hist_find_no_dups      # ignore all search duplicates
+  setopt extended_history       # timestamps are nice, really
+  setopt append_history         # append is good, append!
+  setopt inc_append_history     # append in real time
+  setopt share_history          # share history between terminals
+  setopt hist_no_store          # don't store history commands
+  setopt hist_expire_dups_first # kill the dups! kill the dups!
+  setopt hist_verify            # verify history expansions
 
   # i/o and syntax
-  s multios                # redirect to globs!
-  s multibyte              # Unicode!
-  s noclobber              # don't overwrite with > use !>
-  s rc_quotes              # 'Isn''t' ==> Isn't
-  s equals                 # "=ps" ==> "/usr/bin/ps"
-  s hash_list_all          # more accurate correction
-  s list_rows_first        # rows are way better
-  s hash_cmds              # don't search for commands
-  s cdable_vars            # in p, cd x ==> ~/x if x not p
-  s short_loops            # sooo lazy: for x in y do cmd
-  s chase_links            # resolve links to their location
-  s notify                 # I want to know NOW!
+  setopt multios                # redirect to globs!
+  setopt multibyte              # Unicode!
+  setopt noclobber              # don't overwrite with > use !>
+  setopt rc_quotes              # 'Isn''t' ==> Isn't
+  setopt equals                 # "=ps" ==> "/usr/bin/ps"
+  setopt hash_list_all          # more accurate correction
+  setopt list_rows_first        # rows are way better
+  setopt hash_cmds              # don't search for commands
+  setopt cdable_vars            # in p, cd x ==> ~/x if x not p
+  setopt short_loops            # sooo lazy: for x in y do cmd
+  setopt chase_links            # resolve links to their location
+  setopt notify                 # I want to know NOW!
 
   # navigation
-  s auto_cd                # just "dir" instead of "cd dir"
-  s auto_pushd             # push everything to the dirstack
-  s pushd_silent           # don't tell me though, I know.
-  s pushd_ignore_dups      # duplicates are redundant (duh)
-  s pushd_minus            # invert pushd behavior
-  s pushd_to_home          # pushd == pushd ~
-  s auto_name_dirs         # if I set a=/usr/bin, cd a works
-  s magic_equal_subst      # expand expressions after =
+  setopt auto_cd                # just "dir" instead of "cd dir"
+  setopt auto_pushd             # push everything to the dirstack
+  setopt pushd_silent           # don't tell me though, I know.
+  setopt pushd_ignore_dups      # duplicates are redundant (duh)
+  setopt pushd_minus            # invert pushd behavior
+  setopt pushd_to_home          # pushd == pushd ~
+  setopt auto_name_dirs         # if I set a=/usr/bin, cd a works
+  setopt magic_equal_subst      # expand expressions after =
 
-  s prompt_subst           # Preform live prompt substitution
-  s transient_rprompt      # Get rid of old rprompts
-  s csh_junkie_history     # single instead of dual bang
-  s csh_junkie_loops       # use end instead of done
-  s continue_on_error      # don't stop! stop = bad
+  setopt prompt_subst           # Preform live prompt substitution
+  setopt transient_rprompt      # Get rid of old rprompts
+  setopt csh_junkie_history     # single instead of dual bang
+  setopt csh_junkie_loops       # use end instead of done
+  setopt continue_on_error      # don't stop! stop = bad
 
 } always {
   unfunction s
