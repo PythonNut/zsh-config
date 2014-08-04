@@ -107,9 +107,9 @@ function alias () {
 # Expand aliases
 # ==============
 # typeset -A abbrevs
-expand=("cd" "grep" "fgrep" "mc" "lst" ",," "lsa" "exit" "px")
+expand=('cd' 'grep' 'fgrep' 'egrep' 'mc' 'lst' ',,' 'lsa' 'exit' 'px')
 
-for supressed in $(alias |& egrep -i '(nocorrect|noglob)' | cut -f1 -d "="); do
+for supressed in $(alias |& egrep -i '(nocorrect|noglob)' | cut -f1 -d=); do
   expand+=($supressed)
 done
 
@@ -119,7 +119,7 @@ function expandAlias() {
     setopt local_options function_argzero
     # hack a local function scope using unfuction
     function $0_smart_space () {
-      if [[ $RBUFFER[1] != " " ]]; then
+      if [[ $RBUFFER[1] != ' ' ]]; then
         # zle self-insert
         zle magic-space
       else
