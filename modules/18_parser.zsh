@@ -4,6 +4,7 @@
 _preAlias=()
 
 function _accept-line() {
+  setopt local_options extended_glob
   local cmd
 
   # if buffer is effectively empty, clear instead
@@ -20,7 +21,7 @@ function _accept-line() {
 
   # remove black completion "suggestions"
   for i in $region_highlight; do
-    i=("${(s/ /)i}")
+    local i=("${(@s/ /)i}")
     if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 2)); then
       BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
     fi
@@ -40,9 +41,9 @@ function _accept-line() {
   # split it by command seperation delimiters
   if [[ $BUFFER != (*\$\{*\}*) ]]; then
     cmd=(${(ps:;:e)${(ps:|:e)${(ps:|&:e)${(ps:&&:e)${(ps:||:)BUFFER}}}}})
-    for c in $cmd; do
+    for token in $cmd; do
       # process the command, strip whitespace
-      process "$(echo $c | awk '{$1=$1}1')"
+      process ${${token##[[:space:]]#}%%[[:space:]]#}
     done
   fi
 
