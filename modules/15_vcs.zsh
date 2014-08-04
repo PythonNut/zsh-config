@@ -56,25 +56,16 @@ function vcs_async_info_worker () {
   kill -USR1 $$
 }
 
-function compute_context_aliases () {
-  if [[ -f ${TMPPREFIX}/vcs-data.$$ ]]; then
-    local vcs_data
-    vcs_data=$(cat ${TMPPREFIX}/vcs-data.$$);
-    alias -g .B=${${(f)vcs_data}[4]};
-    
-  else
-    if [[ $(type ".B") == *alias* ]]; then
-      unalias .B
-    fi
-  fi
-}
-
 function TRAPUSR1 {
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$(cat "${TMPPREFIX}/vcs-prompt.$$" 2> /dev/null)
   command rm ${TMPPREFIX}/vcs-prompt.$$ 2> /dev/null
 
-  compute_context_aliases
+  if [[ -f "${TMPPREFIX}/vcs-data.$$" ]]; then
+    vcs_raw_data=$(cat "${TMPPREFIX}/vcs-data.$$" 2> /dev/null)
+  else
+    unset vcs_raw_data
+  fi
     
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
