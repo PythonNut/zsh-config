@@ -140,7 +140,7 @@ function preexec() {
 
 function precmd() {
   chpwd
-  async_vcs_info &!
+  vcs_async_info
   compute_prompt
 }
 

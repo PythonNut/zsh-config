@@ -23,7 +23,7 @@ function precmd() {
   cur_command="zsh"
   chpwd
   
-  async_vcs_info &!
+  vcs_async_info
   compute_prompt
 }
 
