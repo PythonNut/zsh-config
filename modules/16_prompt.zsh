@@ -11,8 +11,8 @@ function compute_prompt () {
   PS1+="%{${fg[default]}%}[%{%(#~$fg[red]~$black)$FX[bold]%}"  # root or not
   PS1+='%n%{${fg[default]}${bg[default]}$FX[reset]%} $chpwd_s_str'  # Username
   PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")]%#$nbsp" # shell depth
-
-  VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
+  
+  local VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
   RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins|afu)/}"
   RPS1=$RPS1"\${vcs_info_msg_0_}"
 }
