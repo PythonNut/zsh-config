@@ -98,6 +98,7 @@ function alias () {
   alias gd!='git diff --word-diff'
   alias gdc!='git diff --word-diff --cached'
 
+  alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
 } always {
   unfunction a
 } &>> ~/.zsh.d/startup.log
@@ -148,10 +149,10 @@ function expandAlias() {
     local cmd
     cmd=(${(s/ /)LBUFFER})
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
-      $0_smart_expand $cmd[-1] "$(${(s/ /)command_abbrevs[$cmd[-1]]})"
+      $0_smart_expand $cmd[-1] "$(${(s/ /e)command_abbrevs[$cmd[-1]]})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
-      $0_smart_expand $cmd[-1] "$(${(s/ /)global_abbrevs[$cmd[-1]]})"
+      $0_smart_expand $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
 
     elif (( $expand[(i)$cmd[-1]] > $#expand )) && [[ $cmd[-1] != (\\*) ]]; then
       zle _expand_alias
