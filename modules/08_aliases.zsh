@@ -99,8 +99,6 @@ function alias () {
   alias gdc!='git diff --word-diff --cached'
 
   alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
-} always {
-  unfunction a
 } &>> ~/.zsh.d/startup.log
 
 # ==============
