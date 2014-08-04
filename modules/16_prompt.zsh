@@ -20,7 +20,7 @@ function compute_prompt () {
 compute_prompt
 
 function precmd() {
-  cur_command="zsh"
+  cur_command=""
   chpwd
 }
 
