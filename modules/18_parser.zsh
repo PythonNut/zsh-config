@@ -34,7 +34,7 @@ function _accept-line() {
   fi
 
   # ignore prefix commands
-  if [[ $cmd[1] == "nocorrect" ]]; then
+  if [[ $cmd[1] == (nocorrect|noglob|exec|command|builtin|-) ]]; then
     cmd=($cmd[2,${#cmd}])
   fi
 
