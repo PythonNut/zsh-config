@@ -6,7 +6,7 @@
   BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp'
   alias lsa='\ls --color --group-directories-first'
   alias lst='lsa -I "${BORING_FILES:gs/\|/" -I "/}"'
-  alias egrep='nocorrect noglob \egrep --line-buffered --color=auto'
+  alias egrep='nocorrect \egrep --line-buffered --color=auto'
 
   # ls aliases
   alias ls='lst -BFx'
