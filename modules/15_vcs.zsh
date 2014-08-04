@@ -83,7 +83,11 @@ function TRAPUSR1 {
 function vcs_async_auto_update {
   setopt local_options function_argzero
   vcs_async_info
-  sched +00:00:${(l:2::0:)$((int(ceil(($vcs_async_delay * 10)))+1))} $0
+  if [[ -n "$vcs_info_msg_0_"  || $1 != "pass" ]]; then
+    sched -1 &>/dev/null
+    sched +$((int(ceil(($vcs_async_delay * 10)))+1)) \
+      vcs_async_auto_update pass
+  fi
 }
 
-vcs_async_auto_update
+add-zsh-hook precmd vcs_async_auto_update
