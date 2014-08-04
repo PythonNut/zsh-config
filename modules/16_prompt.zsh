@@ -22,10 +22,9 @@ compute_prompt
 function precmd() {
   cur_command="zsh"
   chpwd
-  
-  vcs_async_info
-  compute_prompt
 }
+
+add-zsh-hook precmd compute_prompt
 
 # intercept keymap selection
 function zle-keymap-select () {

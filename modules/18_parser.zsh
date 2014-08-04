@@ -138,12 +138,6 @@ function preexec() {
   _preAlias=( )
 }
 
-function precmd() {
-  chpwd
-  vcs_async_info
-  compute_prompt
-}
-
 function command_not_found_handler() {
   # only error out if the tokenizer failed
   if [[ $command_not_found == 1 ]]; then
