@@ -18,7 +18,7 @@ function +vi-svn-untracked-and-modified() {
 
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
-ZSH_VCS_PROMPT_USING_PYTHON='false'
+ZSH_VCS_PROMPT_USING_PYTHON='true'
 
 ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
 ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
@@ -79,3 +79,11 @@ function TRAPUSR1 {
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
 }
+
+function vcs_async_auto_update {
+  setopt local_options function_argzero
+  vcs_async_info
+  sched +00:00:${(l:2::0:)$((int(ceil(($vcs_async_delay * 10)))+1))} $0
+}
+
+vcs_async_auto_update
