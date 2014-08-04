@@ -5,18 +5,22 @@
   function a(){ autoload -Uz $@}
   alias a='autoload -Uz'
   
-  a zargs              # a more integrated xargs
-  a zmv                # concise file renaming/moving 
-  a zed                # edit files right in the shell
-  a zsh/mathfunc       # common mathematical functions
-  a zcalc              # a calculator right in the shell
-  a zkbd               # automatic keybinding detection
-  a zsh-mime-setup     # automatic MIME type suffixes 
-  a colors             # collor utility functions
-  a vcs_info           # integrate with version control
-  a copy-earlier-word  # navigate backwards with C-. C-,
-  a url-quote-magic    # automatically%20escape%20characters
-  a add-zsh-hook       # a more modular way to hook
+  autoload -Uz zargs              # a more integrated xargs
+  autoload -Uz zmv                # concise file renaming/moving 
+  autoload -Uz zed                # edit files right in the shell
+  autoload -Uz zsh/mathfunc       # common mathematical functions
+  autoload -Uz zcalc              # a calculator right in the shell
+  autoload -Uz zkbd               # automatic keybinding detection
+  autoload -Uz zsh-mime-setup     # automatic MIME type suffixes 
+  autoload -Uz colors             # collor utility functions
+  autoload -Uz vcs_info           # integrate with version control
+  autoload -Uz copy-earlier-word  # navigate backwards with C-. C-,
+  autoload -Uz url-quote-magic    # automatically%20escape%20characters
+  autoload -Uz add-zsh-hook       # a more modular way to hook
+
+  zmodload zsh/sched              # delayed execution in zsh
+  zmodload zsh/mathfunc           # mathematical functions in zsh
+  zmodload zsh/terminfo           # terminal parameters from terminfo
   
 } always {
   unfunction a

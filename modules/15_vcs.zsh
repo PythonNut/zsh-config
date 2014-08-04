@@ -18,7 +18,7 @@ function +vi-svn-untracked-and-modified() {
 
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
-ZSH_VCS_PROMPT_USING_PYTHON='false'
+ZSH_VCS_PROMPT_USING_PYTHON='true'
 
 ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
 ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
@@ -29,7 +29,16 @@ ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
 ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
 ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
 
-function async_vcs_info () {
+typeset -F SECONDS
+vcs_async_start=0
+vcs_async_delay=0
+
+function vcs_async_info () {
+  vcs_async_start=$SECONDS
+  vcs_async_info_worker &>/dev/null&!
+}
+
+function vcs_async_info_worker () {
   # Save the prompt in a temp file so the parent shell can read it.
   printf "%s" "$(vcs_super_info)" >! ${TMPPREFIX}/vcs-prompt.$$
 
@@ -61,6 +70,7 @@ function compute_context_aliases () {
 }
 
 function TRAPUSR1 {
+  vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$(cat "${TMPPREFIX}/vcs-prompt.$$" 2> /dev/null)
   command rm ${TMPPREFIX}/vcs-prompt.$$ 2> /dev/null
 
@@ -69,3 +79,15 @@ function TRAPUSR1 {
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
 }
+
+function vcs_async_auto_update {
+  setopt local_options function_argzero
+  vcs_async_info
+  if [[ -n "$vcs_info_msg_0_"  || $1 != "pass" ]]; then
+    sched -1 &>/dev/null
+    sched +$((int(ceil(($vcs_async_delay * 10)))+1)) \
+      vcs_async_auto_update pass
+  fi
+}
+
+add-zsh-hook precmd vcs_async_auto_update
