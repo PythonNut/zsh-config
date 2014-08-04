@@ -91,10 +91,10 @@ function alias () {
 
   alias gck='git checkout'
   alias gb='git branch'
-  alias gm='git merge'
+  alias gm='git merge -s patience'
   
-  alias gd='git diff'
-  alias gdc='git diff --cached'
+  alias gd='git diff --patience'
+  alias gdc='git diff --patience --cached'
   alias gd!='git diff --word-diff'
   alias gdc!='git diff --word-diff --cached'
 
