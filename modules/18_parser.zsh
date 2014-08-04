@@ -38,6 +38,9 @@ function _accept-line() {
     cmd=($cmd[2,${#cmd}])
   fi
 
+  # set the current command
+  cur_command=$cmd[1]
+  
   # split it by command seperation delimiters
   if [[ $BUFFER != (*\$\{*\}*) ]]; then
     cmd=(${(ps:;:e)${(ps:|:e)${(ps:|&:e)${(ps:&&:e)${(ps:||:)BUFFER}}}}})
