@@ -31,7 +31,7 @@ function async_chpwd_worker_subshell () {
 
 function TRAPUSR2 {
   chpwd_s_str=$(cat "${TMPPREFIX}zsh-s-prompt.$$" 2> /dev/null)
-  command rm ${TMPPREFIX}zsh-s-prompt.$$ &> /dev/null
+  command rm ${TMPPREFIX}/zsh-s-prompt.$$ &> /dev/null
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
