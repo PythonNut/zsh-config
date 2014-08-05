@@ -47,7 +47,7 @@ function go() {
     teleport=" ${fg[blue]}${FX[bold]}$teleport${fg[default]}${FX[reset]}"
     if [[ $fasd_target != (*$@*) ]]; then
       read -k REPLY\?"zsh: teleport to$teleport? [ny] "
-      if [[ $REPLY =~ ^[Yy] ]]; then
+      if [[ $REPLY == [Yy]* ]]; then
         echo " ..."
         cd $fasd_target
       fi

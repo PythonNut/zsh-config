@@ -8,7 +8,7 @@ function {
   zkbd_dest=${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
   if [[ ! -f $zkbd_dest ]]; then
     read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ $REPLY == [Yy]* ]]; then
       echo
       export TERM=$_OLD_TERM
       zkbd
