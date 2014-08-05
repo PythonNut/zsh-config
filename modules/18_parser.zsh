@@ -10,12 +10,12 @@ function _accept-line() {
 
   # if buffer is effectively empty, clear instead
   # otherwise pass through
-  if [[ $BUFFER =~ "^ $" ]]; then
+  if [[ $BUFFER == "" ]]; then
     BUFFER="clear"
     zle .accept-line
     return 0
 
-  elif [[ $BUFFER =~ "^\s+$" || $BUFFER[1] == " " ]]; then
+  elif [[ $BUFFER == [[:space:]]# || $BUFFER[1] == " " ]]; then
     zle .accept-line
     return 0
   fi
@@ -29,11 +29,10 @@ function _accept-line() {
   done
 
   # expand all aliases on return
-  cmd=(${(s/ /)BUFFER})
-  if (( ${(e)expand[(i)${cmd[-1]}]} > ${#expand} )) && [[ ${cmd[-1]} != (\\*) ]]; then
-    zle _expand_alias
+  if [[ $#RBUFFER == 0 ]]; then
+    expandAlias no_space
   fi
-
+  
   # ignore prefix commands
   if [[ $cmd[1] == (nocorrect|noglob|exec|command|builtin|-) ]]; then
     cmd=($cmd[2,${#cmd}])
@@ -68,13 +67,12 @@ function process() {
   emulate -LR zsh
   setopt extended_glob null_glob ksh_glob
   if [[ $(type $1) == (*not*|*suffix*) ]]; then
-    # skip assignments until I find something smarter to do.
+    # skip assignments
     if [[ $1 == (*=*) ]]; then
       return 0
-    fi
     
-    # handle "/" teleport case
-    if [[ $1 == "/" ]]; then
+      # handle "/" teleport case
+    elif [[ $1 == "/" ]]; then
       alias "$1"="cd /"
       _preAlias+=($1)
       
@@ -112,21 +110,20 @@ function process() {
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
 
-      # If it's an option and it's set, unset it
-    elif [[ -n $(setopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
-      alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
-      _preAlias+=($1)
-
-      # If it's an option and it's unset, set it
-    elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
-      alias "$1"="echo \"setopt: $1\"; setopt $1"
+      # If it's an option, set/unset it
+    elif [[ -n $options[${1:l:gs/_/}] ]]; then
+      if [[ $options[${1:l:gs/_/}] == "on" ]]; then
+        alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
+      else
+        alias "$1"="echo \"setopt: $1\"; setopt $1"
+      fi
       _preAlias+=($1)
 
       # if it's a parameter, echo it
     elif [[ -n ${(P)1} ]]; then
       alias "$1"="echo ${(P)1}"
       _preAlias+=($1)
-
+      
       # last resort, forward to teleport handler
       # elif [[ -n $(j --stat | cut -f2 | sed -e '$d' | fgrep -i $1) ]]; then
     elif [[ -n $(fasd -d $@) ]]; then
