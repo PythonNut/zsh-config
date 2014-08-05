@@ -9,12 +9,12 @@ function alias () {
   if [[ "$1" == "-eg" ]]; then
     for token in $@[2,-1]; do
       token=(${(s/=/)token})
-      alias -g $token
+      builtin alias -g $token
       global_abbrevs[$token[1]]=$token[2]
     done
   elif [[ "$1" == "-ec" ]]; then
     for token in $@[2,-1]; do
-      alias $token
+      builtin alias $token
       token=(${(s/=/)token})
       command_abbrevs[$token[1]]=$token[2]
     done
