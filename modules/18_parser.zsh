@@ -65,13 +65,12 @@ command_not_found=1
 
 function process() {
   if [[ $(type $1) == (*not*|*suffix*) ]]; then
-    # skip assignments until I find something smarter to do.
+    # skip assignments
     if [[ $1 == (*=*) ]]; then
       return 0
-    fi
     
-    # handle "/" teleport case
-    if [[ $1 == "/" ]]; then
+      # handle "/" teleport case
+    elif [[ $1 == "/" ]]; then
       alias "$1"="cd /"
       _preAlias+=($1)
       
@@ -122,7 +121,7 @@ function process() {
     elif [[ -n ${(P)1} ]]; then
       alias "$1"="echo ${(P)1}"
       _preAlias+=($1)
-
+      
       # last resort, forward to teleport handler
       # elif [[ -n $(j --stat | cut -f2 | sed -e '$d' | fgrep -i $1) ]]; then
     elif [[ -n $(fasd -d $@) ]]; then
