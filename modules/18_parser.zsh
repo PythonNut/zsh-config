@@ -28,11 +28,10 @@ function _accept-line() {
   done
 
   # expand all aliases on return
-  cmd=(${(s/ /)BUFFER})
-  if (( ${(e)expand[(i)${cmd[-1]}]} > ${#expand} )) && [[ ${cmd[-1]} != (\\*) ]]; then
-    zle _expand_alias
+  if [[ $#RBUFFER == 0 ]]; then
+    expandAlias no_space
   fi
-
+  
   # ignore prefix commands
   if [[ $cmd[1] == (nocorrect|noglob|exec|command|builtin|-) ]]; then
     cmd=($cmd[2,${#cmd}])

@@ -118,8 +118,9 @@ function expandAlias() {
     # hack a local function scope using unfuction
     function $0_smart_space () {
       if [[ $RBUFFER[1] != ' ' ]]; then
-        # zle self-insert
-        zle magic-space
+        if [[ ! "$1" == "no_space" ]]; then
+          zle magic-space
+        fi
       else
         # we aren't at the end of the line so squeeze spaces
         
@@ -154,9 +155,9 @@ function expandAlias() {
 
     elif (( $expand[(i)$cmd[-1]] > $#expand )) && [[ $cmd[-1] != (\\*) ]]; then
       zle _expand_alias
-      $0_smart_space
+      $0_smart_space $1
     else
-      $0_smart_space
+      $0_smart_space $1
     fi
 
   } always {
