@@ -33,6 +33,7 @@
 
   # highjack afu-comppost function
   afu-comppost () {
+    emulate -LR zsh
     local will_complete
     will_complete=$afu_menu
     if [[ $BUFFER[1] == ' ' ]]; then

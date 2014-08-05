@@ -2,9 +2,6 @@
 # Autoloads
 # =========
 {
-  function a(){ autoload -Uz $@}
-  alias a='autoload -Uz'
-  
   autoload -Uz zargs              # a more integrated xargs
   autoload -Uz zmv                # concise file renaming/moving 
   autoload -Uz zed                # edit files right in the shell
@@ -22,6 +19,4 @@
   zmodload zsh/mathfunc           # mathematical functions in zsh
   zmodload zsh/terminfo           # terminal parameters from terminfo
   
-} always {
-  unfunction a
 } &>> ~/.zsh.d/startup.log

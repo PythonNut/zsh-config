@@ -3,6 +3,7 @@
 # ========================================
 
 function manopts() {
+  emulate -LR zsh
   findopts() {
     if [ "$1" = -a ]; then
       shift; EXPR="$@"
@@ -13,6 +14,7 @@ function manopts() {
 }
 
 function automan() {
+  emulate -LR zsh
   local cmds comp a
   cmds=$(comm -12 <(whatis -r . | cut -f1 -d " ") <(hash | cut -f1 -d "="))
   comp=$(typeset -f | \grep -P "^_" | cut -f1 -d " " | cut -c2-)
@@ -40,12 +42,14 @@ function automan() {
 }
 
 function mangen() {
+  emulate -LR zsh
   echo -e "$1" >> ~/.zsh.d/mangen
   sort ~/.zsh.d/mangen -o ~/.zsh.d/mangen
 }
 
 # scrapes helpfiles looking for arguments
 function autohelp() {
+  emulate -LR zsh
   for cmd in $(cat ~/.zsh.d/helpgen); do
     compdef _gnu_generic $cmd
   done
@@ -53,6 +57,7 @@ function autohelp() {
 
 # helper function, mark a command as autohelpable
 function helpgen() {
+  emulate -LR zsh
   echo -e "$1" >> ~/.zsh.d/helpgen
   sort ~/.zsh.d/helpgen -o ~/.zsh.d/helpgen
   compdef _gnu_generic $1

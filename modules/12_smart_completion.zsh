@@ -3,8 +3,9 @@
 # ========================
 
 function pcomplete() {
+  emulate -LR zsh
   {
-    setopt local_options function_argzero
+    setopt function_argzero
     # hack a local function scope using unfuction
     function $0_forward_word () {
       local space_index
@@ -118,6 +119,7 @@ zle -N pcomplete
 global_bindkey "^i" pcomplete
 
 function _magic-space () {
+  emulate -LR zsh
   if [[ $LBUFFER[-1] != " "  ]]; then
     zle magic-space
     if [[ $LBUFFER[-2] == " " ]]; then

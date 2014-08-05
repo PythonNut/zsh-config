@@ -4,6 +4,8 @@
 
 # Reduce path to shortest prefixes. Heavily Optimized
 function minify_path () {
+  emulate -LR zsh
+  setopt glob_dots
   local ppath="" full_path="/" cur_path matches revise dir
   eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
   for token in ${(s:/:)1}; do
@@ -57,7 +59,9 @@ function minify_path () {
 
 # take every possible branch on the file system into account
 function minify_path_full () {
-  #setopt localoptions caseglob
+  emulate -LR zsh
+  # setopt caseglob
+  setopt extended_glob
   {
     function $0_count_arg {
       return $(($#@-1))
@@ -93,6 +97,8 @@ function minify_path_full () {
 
 # Highlight the path's shortest prefixes. Heavily optimized
 function highlight_path () {
+  emulate -LR zsh
+  setopt extended_glob
   local ppath="" full_path="/" cur_path matches revise dir
   eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
   for token in ${(@s:/:)1}; do
@@ -139,6 +145,7 @@ function highlight_path () {
 
 # collapse empty runs too
 function minify_path_smart () {
+  # emulate -LR zsh
   local cur_path glob i
   cur_path=$(minify_path_full $1)
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
@@ -154,6 +161,7 @@ function minify_path_smart () {
 
 # find shortest unique fasd prefix. Heavily optimized
 function minify_path_fasd () {
+  # emulate -LR zsh
   if [[ $(type fasd) == *function* ]]; then
     local dirs index above higher base i k test escape
     1=${1%(/##)}

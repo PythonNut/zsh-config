@@ -6,6 +6,7 @@ global_abbrevs=()
 command_abbrevs=()
 
 function alias () {
+  emulate -LR zsh
   if [[ "$1" == "-eg" ]]; then
     for token in $@[2,-1]; do
       token=(${(s/=/)token})
@@ -113,8 +114,9 @@ done
 
 # expand aliases on space
 function expandAlias() {
+  emulate -LR zsh
   {
-    setopt local_options function_argzero
+    setopt function_argzero
     # hack a local function scope using unfuction
     function $0_smart_space () {
       if [[ $RBUFFER[1] != ' ' ]]; then

@@ -6,6 +6,7 @@ _exitForce=0
 # exit with background jobs lists them
 # use logout for normal exit or EXIT
 function disown_running() {
+  emulate -LR zsh
   # disown running jobs
   tmpfile==(:)
   jobs -r > $tmpfile
@@ -23,6 +24,7 @@ function disown_running() {
 }
 
 function exit() {
+  emulate -LR zsh
   disown_running && builtin exit "$@"
   if [[ $_exitForce == $(fc -l) ]]; then
     builtin exit
@@ -41,6 +43,7 @@ alias EXIT="builtin exit"
 
 # recursive Regex ls
 function lv() {
+  emulate -LR zsh
   local p=$argv[-1]
   [[ -d $p ]] && { argv[-1]=(); } || p='.'
   find $p ! -type d | sed 's:^./::' | egrep "${@:-.}"
@@ -68,6 +71,7 @@ function lr() {
 
 # search by file contents
 function g() {
+  emulate -LR zsh
   local p=$argv[-1]
   [[ -d $p ]] && { p=$p/; argv[-1]=(); } || p=''
   grep --exclude "*~" --exclude "*.o" --exclude "tags" \
@@ -80,12 +84,14 @@ function g() {
 # search for process without matching self
 alias px="nocorrect noglob px"
 function px() {
+  emulate -LR zsh
   ps uwwp ${$(pgrep -d, "${(j:|:)@}"):?no matches}
 }
 
 # extract any archive 
 compdef '_files -g "*.((tar|)(.gz|.bz2|.xz|.zma)|(t(gz|bz|bz2|lz|xz))|(lzma|Z|zip|rar|7z|deb)|tar)"'  extract
 function extract() {
+  emulate -LR zsh
   local remove_archive
   local success
   local file_name

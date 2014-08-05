@@ -6,6 +6,8 @@ nbsp=$'\u00A0' # a prompt that commits suicide when pasted
 bindkey $nbsp backward-kill-line
 
 function compute_prompt () {
+  emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   local black=$fg[black]
   PS1=$'%{${fg[red]}%}%(?..Error: (%?%)\n)' # errors
   PS1+="%{${fg[default]}%}[%{%(#~$fg[red]~$black)$FX[bold]%}"  # root or not

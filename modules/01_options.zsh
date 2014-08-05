@@ -80,6 +80,4 @@
   setopt csh_junkie_loops       # use end instead of done
   setopt continue_on_error      # don't stop! stop = bad
 
-} always {
-  unfunction s
 } &>> ~/.zsh.d/startup.log
