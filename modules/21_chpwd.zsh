@@ -59,7 +59,9 @@ function chpwd() {
 function chpwd_force() {
   emulate -LR zsh
   setopt equals
-  if [[ -n $(ps $PPID 2> /dev/null | grep =mc) ]]; then
+
+  # check if we're running under Midnight Commander
+  if [[ -n ${MC_TMPDIR+1} ]]; then
     chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
     zle && zle reset-prompt
   else
