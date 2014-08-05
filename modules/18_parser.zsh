@@ -109,14 +109,13 @@ function process() {
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
 
-      # If it's an option and it's set, unset it
-    elif [[ -n $(setopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
-      alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
-      _preAlias+=($1)
-
-      # If it's an option and it's unset, set it
-    elif [[ -n $(unsetopt | grep -xF "$(echo "$1" | sed -e 's/\(.*\)/\L\1/' -e 's/_//g')" 2>/dev/null) ]]; then
-      alias "$1"="echo \"setopt: $1\"; setopt $1"
+      # If it's an option, set/unset it
+    elif [[ -n $options[${1:l:gs/_/}] ]]; then
+      if [[ $options[${1:l:gs/_/}] == "on" ]]; then
+        alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
+      else
+        alias "$1"="echo \"setopt: $1\"; setopt $1"
+      fi
       _preAlias+=($1)
 
       # if it's a parameter, echo it
