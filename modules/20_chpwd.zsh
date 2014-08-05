@@ -51,8 +51,10 @@ function chpwd() {
 }
 
 function chpwd_force() {
-  setopt LOCAL_OPTIONS EQUALS
-  if [[ -n $(ps $PPID 2> /dev/null | grep =mc) ]]; then
+  setopt LOCAL_OPTIONS
+
+  # check if we're running under Midnight Commander
+  if [[ -n ${MC_TMPDIR+1} ]]; then
     chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
     zle && zle reset-prompt
   else
