@@ -6,7 +6,7 @@ _titleManual=0
 TMPPREFIX=/dev/shm/ # use shared memory
 LAST_PWD=${${:-.}:A}
 LAST_TITLE=""
-function async_chpwd_worker () {
+function chpwd_async_worker () {
   chpwd_s_str=$(minify_path_smart .)
 
   printf "%s" $chpwd_s_str >! ${TMPPREFIX}/zsh-s-prompt.$$
@@ -15,8 +15,8 @@ function async_chpwd_worker () {
   kill -USR2 $$
 }
 
-function async_chpwd_worker_subshell () {
-  chpwd_s_str=$(minify_path_smart $(pwd))
+function chpwd_async_worker_subshell () {
+  chpwd_s_str=$(minify_path_smart .)
   typeset -f minify_path_smart
   local GPID
   #chpwd_j_str=$(minify_path_fasd $(pwd))
@@ -38,7 +38,7 @@ function TRAPUSR2 {
 }
 
 # Build the prompt in a background job.
-async_chpwd_worker &!
+chpwd_async_worker &!
 function chpwd() {
   cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${${:-.}:A}/}"))}")
   if [[ ${${:-.}:A} != $LAST_PWD ]]; then
@@ -61,7 +61,7 @@ function chpwd_force() {
       LAST_TITLE="$(minify_path .) [$(minify_path_fasd .)]"
       _setTitle $LAST_TITLE
     fi
-    (async_chpwd_worker &!) 2> /dev/null
+    (chpwd_async_worker &!) 2> /dev/null
   fi
   LAST_PWD=${${:-.}:A}
 }
