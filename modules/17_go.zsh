@@ -12,7 +12,6 @@ function go() {
       if [[ -r "$1" ]]; then
         if ps ax |& egrep -i 'emacs --daemon' &>/dev/null; then
           # launch GUI editor
-          #($GEDITOR&) >&/dev/null
           emacsclient -t -a "emacs" $1
         else
           # launch my editor
@@ -39,7 +38,6 @@ function go() {
     ($@&)>/dev/null
 
     # check if dir is registered in database
-    # elif [[ $(autojump --stat | cut -f2 | sed -e "$d" | fgrep -i $1) != "" ]]; then
   elif [[ -n $(fasd -d $@) ]]; then
     local fasd_target=$(fasd -d $@)
     local teleport
