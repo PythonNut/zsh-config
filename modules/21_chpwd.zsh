@@ -36,7 +36,7 @@ function TRAPUSR2 {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   chpwd_s_str=$(cat "${TMPPREFIX}zsh-s-prompt.$$" 2> /dev/null)
-  command rm ${TMPPREFIX}zsh-s-prompt.$$ &> /dev/null
+  command rm ${TMPPREFIX}/zsh-s-prompt.$$ &> /dev/null
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
