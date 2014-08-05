@@ -7,6 +7,7 @@ TMPPREFIX=/dev/shm/ # use shared memory
 LAST_PWD=${${:-.}:A}
 LAST_TITLE=""
 function async_chpwd_worker () {
+  emulate -LR zsh
   chpwd_s_str=$(minify_path_smart .)
 
   printf "%s" $chpwd_s_str >! ${TMPPREFIX}/zsh-s-prompt.$$
@@ -16,6 +17,7 @@ function async_chpwd_worker () {
 }
 
 function async_chpwd_worker_subshell () {
+  emulate -LR zsh
   chpwd_s_str=$(minify_path_smart $(pwd))
   typeset -f minify_path_smart
   local GPID
@@ -30,6 +32,8 @@ function async_chpwd_worker_subshell () {
 }
 
 function TRAPUSR2 {
+  emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   chpwd_s_str=$(cat "${TMPPREFIX}zsh-s-prompt.$$" 2> /dev/null)
   command rm ${TMPPREFIX}zsh-s-prompt.$$ &> /dev/null
 
@@ -40,6 +44,7 @@ function TRAPUSR2 {
 # Build the prompt in a background job.
 async_chpwd_worker &!
 function chpwd() {
+  emulate -LR zsh
   cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${${:-.}:A}/}"))}")
   if [[ ${${:-.}:A} != $LAST_PWD ]]; then
     chpwd_force
@@ -51,7 +56,8 @@ function chpwd() {
 }
 
 function chpwd_force() {
-  setopt LOCAL_OPTIONS EQUALS
+  emulate -LR zsh
+  setopt equals
   if [[ -n $(ps $PPID 2> /dev/null | grep =mc) ]]; then
     chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
     zle && zle reset-prompt

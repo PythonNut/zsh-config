@@ -6,6 +6,7 @@ zstyle ':vcs_info:*' check-for-changes true
 
 zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked-and-modified
 function +vi-svn-untracked-and-modified() {
+  emulate -LR zsh
   local svn_status
   svn_status=$(svn status | cut -f1 -d ' ')
   if [[ $svn_status == *M* ]]; then
@@ -39,6 +40,7 @@ function vcs_async_info () {
 }
 
 function vcs_async_info_worker () {
+  emulate -LR zsh
   # Save the prompt in a temp file so the parent shell can read it.
   printf "%s" "$(vcs_super_info)" >! ${TMPPREFIX}/vcs-prompt.$$
 
@@ -57,6 +59,8 @@ function vcs_async_info_worker () {
 }
 
 function TRAPUSR1 {
+  emulate -LR zsh
+  setopt zle prompt_subst transient_rprompt
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$(cat "${TMPPREFIX}/vcs-prompt.$$" 2> /dev/null)
   command rm ${TMPPREFIX}/vcs-prompt.$$ 2> /dev/null
@@ -72,6 +76,7 @@ function TRAPUSR1 {
 }
 
 function vcs_async_auto_update {
+  emulate -LR zsh
   setopt local_options function_argzero
   vcs_async_info
   if [[ -n "$vcs_info_msg_0_"  || $1 != "pass" ]]; then

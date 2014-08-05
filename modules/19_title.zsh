@@ -1,5 +1,6 @@
 # set the title
 function _setTitle() {
+  emulate -LR zsh
   local titlestart titlefinish
 
   # determine the terminals escapes
@@ -39,6 +40,7 @@ function _setTitle() {
 
 # if title set manually, dont set automatically
 function settitle() {
+  emulate -LR zsh
   _titleManual=1
   _setTitle $1
   if [[ ! -n $1 ]]; then

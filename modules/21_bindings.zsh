@@ -4,6 +4,7 @@
 
 # increments the last number on the line
 function _increase_number() {
+  emulate -LR zsh
   local -a match mbegin mend
   while [[ ! $LBUFFER =~ '([0-9]+)[^0-9]*$' ]]; do
     zle up-line-or-search
@@ -17,8 +18,8 @@ bindkey -s '^Xx' '^[-^Xa'
 
 # C-r adds to line instead of replacing it
 autoload -Uz narrow-to-region
-function _history-incremental-preserving-pattern-search-backward
-{
+function _history-incremental-preserving-pattern-search-backward {
+  emulate -LR zsh
   local state
   MARK=CURSOR  # magick, else multiple ^R don't work
   narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
@@ -47,6 +48,7 @@ global_bindkey "^X1" after-first-word
 
 # rationalize dots
 rationalise_dot () {
+  emulate -LR zsh
   # typing .... becomes ../../../ etc.
   local MATCH # keep the regex match from leaking to the environment
   if [[ $LBUFFER =~ '(^|/| |      |'$'\n''|\||;|&)\.\.$' ]]; then

@@ -80,8 +80,9 @@ fi
 
 # see chpwd declaration
 function zshexit() {
-    if [[ ! -f ~/.zsh.d/zdirs ]]; then
-        touch ~/.zsh.d/zdirs
-    fi
-    dirs -pl >! ~/.zsh.d/zdirs
+   emulate -LR zsh
+   if [[ ! -f ~/.zsh.d/zdirs ]]; then
+      touch ~/.zsh.d/zdirs
+   fi
+   dirs -pl >! ~/.zsh.d/zdirs
 }

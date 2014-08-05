@@ -4,7 +4,8 @@
 
 alias go="nocorrect go"
 function go() {
-  setopt local_options no_case_glob no_case_match equals
+  emulate -LR zsh
+  setopt no_case_glob no_case_match equals
   cmd=(${(s/ /)1})
   # if it's a file and it's not binary and I don't need to be root
   if [[ -f "$1" ]]; then

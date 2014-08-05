@@ -4,7 +4,8 @@
 _preAlias=()
 
 function _accept-line() {
-  setopt local_options extended_glob
+  emulate -LR zsh
+  setopt extended_glob
   local cmd i
 
   # if buffer is effectively empty, clear instead
@@ -64,6 +65,8 @@ zle -N accept-line _accept-line
 command_not_found=1
 
 function process() {
+  emulate -LR zsh
+  setopt extended_glob null_glob ksh_glob
   if [[ $(type $1) == (*not*|*suffix*) ]]; then
     # skip assignments until I find something smarter to do.
     if [[ $1 == (*=*) ]]; then
@@ -136,6 +139,7 @@ function process() {
 }
 
 function preexec() {
+  emulate -LR zsh
   chpwd
 
   unalias ${(j: :)_preAlias} &> /dev/null

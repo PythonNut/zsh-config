@@ -4,6 +4,7 @@
 
 typeset -A key
 function {
+  emulate -LR zsh 
   local zkbd_dest
   zkbd_dest=${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
   if [[ ! -f $zkbd_dest ]]; then
