@@ -9,12 +9,12 @@ function _accept-line() {
 
   # if buffer is effectively empty, clear instead
   # otherwise pass through
-  if [[ $BUFFER =~ "^ $" ]]; then
+  if [[ $BUFFER == "" ]]; then
     BUFFER="clear"
     zle .accept-line
     return 0
 
-  elif [[ $BUFFER =~ "^\s+$" || $BUFFER[1] == " " ]]; then
+  elif [[ $BUFFER == [[:space:]]# || $BUFFER[1] == " " ]]; then
     zle .accept-line
     return 0
   fi
