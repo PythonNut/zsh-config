@@ -3,6 +3,7 @@
 /zdirs
 /.zcompdump
 /.histfile
+/.histfile.LOCK
 /cache
 /zcompdump
 /macros
