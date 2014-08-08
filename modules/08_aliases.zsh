@@ -41,6 +41,7 @@ function alias () {
   # saftey aliases
   alias rm='rm -i' cp='cp -i'
   alias rmf='\rm' cpf='\cp'
+  alias ln="\ln -s"
 
   # global aliases
   alias -g G='|& egrep -i'
