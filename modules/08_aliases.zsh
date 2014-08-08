@@ -80,6 +80,8 @@ function alias () {
   alias gs='git status -s'
   alias gst='git status'
 
+  alias gp="git pull --rebase -X patience"
+  
   alias ga='git add'
   alias gau='git add -u'
   alias gaa='git add -A'
@@ -94,6 +96,7 @@ function alias () {
   alias gck='git checkout'
   alias gb='git branch'
   alias gm='git merge -X patience'
+  alias gr="git rebase -X patience"
   
   alias gd='git diff --patience'
   alias gdc='git diff --patience --cached'
