@@ -6,7 +6,7 @@ for file in ~/.zsh.d/modules/*.zsh; do
     zcompile -U $file
 done
 
-cd $0
+cd ${${0:A}%/*}
 
 git submodule init
 git submodule update --init --recursive
