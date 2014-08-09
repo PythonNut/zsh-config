@@ -67,6 +67,7 @@ function pcomplete() {
       # detect single auto-fu match
       for i in $region_highlight; do
         i=("${(@s/ /)i}")
+        _setTitle $i
         if [[ $i[3] == *underline* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match="t"
@@ -122,12 +123,12 @@ global_bindkey "^i" pcomplete
 function _magic-space () {
   emulate -LR zsh
   if [[ $LBUFFER[-1] != " "  ]]; then
-    zle magic-space
+    zle .magic-space
     if [[ $LBUFFER[-2] == " " ]]; then
       zle backward-delete-char
     fi
   else
-    zle magic-space
+    zle .magic-space
   fi
 }
 
