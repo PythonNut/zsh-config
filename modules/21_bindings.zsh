@@ -74,6 +74,9 @@ global_bindkey '^z' foreground-current-job
 function () {
   emulate -LR zsh
   source ~/.zsh.d/zsh-zaw/zaw.zsh
+  source ~/.zsh.d/zaw-src-git-log/zaw-git-log.zsh
+  source ~/.zsh.d/zaw-src-git-show-branch/zaw-git-show-branch.zsh
+  
   global_bindkey "^X;" zaw
   global_bindkey "^R" zaw-history
   global_bindkey "^Xo" zaw-open-file
@@ -83,6 +86,8 @@ function () {
   global_bindkey "^Xgf" zaw-git-files
   global_bindkey "^Xgb" zaw-git-recent-branches
   global_bindkey "^Xgs" zaw-git-status
+  global_bindkey "^Xgl" zaw-git-log
+  global_bindkey "^Xgc" zaw-git-show-branch
   
   zstyle ':filter-select' extended-search yes
   zstyle ':filter-select' case-insensitive yes

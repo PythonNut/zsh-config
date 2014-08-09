@@ -31,3 +31,9 @@
 [submodule "zsh-zaw"]
 	path = zsh-zaw
 	url = https://github.com/zsh-users/zaw
+[submodule "zaw-src-git-log"]
+	path = zaw-src-git-log
+	url = https://github.com/yonchu/zaw-src-git-log
+[submodule "zaw-src-git-show-branch"]
+	path = zaw-src-git-show-branch
+	url = https://github.com/yonchu/zaw-src-git-show-branch
