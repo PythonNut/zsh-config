@@ -34,7 +34,7 @@ function pcomplete() {
     zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}' \
       'r:|[\.\_\-/\\]=* r:|=*' 'l:|[\.\_\-/\\]=* r:|[\.\_\-/\\]=*' \
       'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*'
-
+    
     # _user_expand \
     zstyle ':completion:*' completer \
       _expand \
@@ -57,7 +57,7 @@ function pcomplete() {
       # detect multiple auto-fu matches
       for i in $region_highlight; do
         i=("${(@s/ /)i}")
-        if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+        if [[ $i[3] == *black* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0 && ${i[1]:-0} > 1)); then
           $0_forward_word
           break
         fi
@@ -66,7 +66,7 @@ function pcomplete() {
       # detect single auto-fu match
       for i in $region_highlight; do
         i=("${(@s/ /)i}")
-        if [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0)); then
+        if [[ $i[3] == *underline* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match="t"
           fi
@@ -78,7 +78,7 @@ function pcomplete() {
       if [[ $single_match == "t" ]]; then
         $0_forward_word
         if [[ $#RBUFFER == 0 ]]; then
-          if [[ $LBUFFER[-1] == "/" ]]; then
+            if [[ $LBUFFER[-1] == "/" ]]; then
             $0_force_auto
           else
             zle magic-space

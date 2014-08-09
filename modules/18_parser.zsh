@@ -23,7 +23,7 @@ function _accept-line() {
   # remove black completion "suggestions"
   for i in $region_highlight; do
     i=("${(s/ /)i}")
-    if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 2)); then
+    if [[ $i[3] == *black* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0 && ${i[1]:-0} > 2)); then
       BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
     fi
   done
