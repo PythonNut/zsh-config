@@ -133,9 +133,12 @@ function vcs_async_auto_update {
 add-zsh-hook precmd vcs_async_auto_update
 
 function vcs_inotify_watch () {
-  inotifywait -m -q -r -e modify -e move -e create -e delete --format %w%f $1 | while IFS= read -r file; do
-    vcs_inotify_do "$file"
-  done
+  emulate -LR zsh
+  if hash inotifywait &>/dev/null; then
+    inotifywait -m -q -r -e modify -e move -e create -e delete --format %w%f $1 | while IFS= read -r file; do
+      vcs_inotify_do "$file"
+    done
+  fi
 }
 
 function vcs_inotify_do () {
