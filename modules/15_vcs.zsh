@@ -4,19 +4,6 @@
 zstyle ':vcs_info:*' enable git svn hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
-zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked-and-modified
-function +vi-svn-untracked-and-modified() {
-  emulate -LR zsh
-  local svn_status
-  svn_status=$(svn status | cut -f1 -d ' ')
-  if [[ $svn_status == *M* ]]; then
-    hook_com[staged]+=" %{$fg[green]%}+%{$reset_color%}"
-  fi
-  if [[ $svn_status == *\?* ]]; then
-    hook_com[unstaged]+='?'
-  fi
-}
-
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
 ZSH_VCS_PROMPT_USING_PYTHON='true'
@@ -142,6 +129,7 @@ function vcs_inotify_watch () {
 }
 
 function vcs_inotify_do () {
+  emulate -LR zsh
   vcs_async_info $file
 }
 
