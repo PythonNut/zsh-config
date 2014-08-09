@@ -28,3 +28,6 @@
 [submodule "zsh-macro"]
     path = zsh-macro
     url = https://github.com/edgarklerks/zsh-macro
+[submodule "zsh-soft-history"]
+	path = zsh-soft-history
+	url = https://github.com/coldfix/zsh-soft-history
