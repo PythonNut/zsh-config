@@ -17,6 +17,11 @@ export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
 export PATH=$PATH:~/bin:~/usr/bin
 
+
+typeset -TU LD_LIBRARY_PATH ld_library_path
+typeset -TU PERL5LIB        perl5lib
+typeset -U path
+
 NULLCMD="cat"
 READNULLCMD="less"
 
