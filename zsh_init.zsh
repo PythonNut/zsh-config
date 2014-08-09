@@ -2,7 +2,7 @@
 # this file should be run exactly once immediately after this repo is cloned
 # and whenever changes are made to files in modules
 
-for file in ~/.zsh.d/modules/*; do
+for file in ~/.zsh.d/modules/*.zsh; do
     zcompile -U $file
 done
 
