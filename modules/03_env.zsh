@@ -20,7 +20,11 @@ export PATH=$PATH:~/bin:~/usr/bin
 
 typeset -TU LD_LIBRARY_PATH ld_library_path
 typeset -TU PERL5LIB        perl5lib
+
 typeset -U path
+typeset -U manpath
+typeset -U fpath 
+typeset -U cdpath
 
 NULLCMD="cat"
 READNULLCMD="less"
