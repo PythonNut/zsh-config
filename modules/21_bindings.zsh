@@ -69,3 +69,42 @@ bindkey -M isearch . self-insert
 foreground-current-job() { fg; }
 zle -N foreground-current-job
 global_bindkey '^z' foreground-current-job
+
+# zaw: helm.el for zsh
+function () {
+  emulate -LR zsh
+  source ~/.zsh.d/zsh-zaw/zaw.zsh
+
+  # autoloading hack
+  function zaw-autoload-git-log () {
+    if ! type zaw-git-log &> /dev/null; then
+      source ~/.zsh.d/zaw-src-git-log/zaw-git-log.zsh
+    fi
+    zaw-git-log
+  }
+
+  function zaw-autoload-git-show-branch () {
+    if ! type zaw-git-show-branch &> /dev/null; then
+      source ~/.zsh.d/zaw-src-git-show-branch/zaw-git-show-branch.zsh
+    fi
+    zaw-git-show-branch
+  }
+
+  zle -N zaw-autoload-git-log
+  zle -N zaw-autoload-git-show-branch
+  
+  global_bindkey "^X;" zaw
+  global_bindkey "^R" zaw-history
+  global_bindkey "^Xo" zaw-open-file
+  global_bindkey "^Xa" zaw-applications
+
+
+  global_bindkey "^Xgf" zaw-git-files
+  global_bindkey "^Xgb" zaw-git-recent-branches
+  global_bindkey "^Xgs" zaw-git-status
+  global_bindkey "^Xgl" zaw-autoload-git-log
+  global_bindkey "^Xgc" zaw-autoload-git-show-branch
+  
+  zstyle ':filter-select' extended-search yes
+  zstyle ':filter-select' case-insensitive yes
+}
