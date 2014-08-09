@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# this file should be run exactly once immediately after this repo is cloned
 
 for file in ~/.zsh.d/modules/*; do
     zcompile -U $file
