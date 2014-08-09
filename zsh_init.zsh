@@ -1,11 +1,12 @@
-#!/usr/bin/bash
+#!/usr/bin/zsh
 # this file should be run exactly once immediately after this repo is cloned
+# and whenever changes are made to files in modules
 
 for file in ~/.zsh.d/modules/*; do
     zcompile -U $file
 done
 
-cd $(dirname "${BASH_SOURCE[0]}")
+cd $0
 
 git submodule init
 git submodule update --init --recursive
