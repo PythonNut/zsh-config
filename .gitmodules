@@ -28,3 +28,6 @@
 [submodule "zsh-macro"]
     path = zsh-macro
     url = https://github.com/edgarklerks/zsh-macro
+[submodule "zsh-zaw"]
+	path = zsh-zaw
+	url = https://github.com/zsh-users/zaw
