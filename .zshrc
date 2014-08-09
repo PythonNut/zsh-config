@@ -16,3 +16,8 @@ touch ~/.zsh.d/startup.log
 for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
   source $zsh_module
 done
+
+# and source host specific files
+for file in ~/.zsh.d/local/*.zsh(n); do
+  source $file
+done
