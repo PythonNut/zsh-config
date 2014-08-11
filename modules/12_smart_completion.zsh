@@ -5,7 +5,7 @@
 function pcomplete() {
   emulate -LR zsh
   {
-    setopt function_argzero
+    setopt function_argzero prompt_subst
     # hack a local function scope using unfuction
     function $0_forward_word () {
       local space_index
@@ -37,7 +37,7 @@ function pcomplete() {
     
     # _user_expand \
     zstyle ':completion:*' completer \
-      _expand \
+        _expand \
       _oldlist \
       _complete \
       _prefix \
