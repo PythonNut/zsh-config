@@ -95,9 +95,6 @@ VCS_ASYNC_TMP="/dev/shm"
 function vcs_async_info_worker () {
   emulate -LR zsh
   setopt noclobber multios
-  
-  touch $VCS_ASYNC_TMP/vcs-files.$$ 
-  echo $1 >>! $VCS_ASYNC_TMP/vcs-files.$$
 
   if (( $zsh_scheduled_events[(i)*vcs_async_info_worker*] <= $#zsh_scheduled_events )); then
     return 0;
@@ -115,8 +112,6 @@ function vcs_async_info_worker () {
     else
       command rm -f $VCS_ASYNC_TMP/vcs-data.$$
     fi
-    
-    sort -u  $VCS_ASYNC_TMP/vcs-files.$$ -o $VCS_ASYNC_TMP/vcs-files.$$
     
     # Signal the parent shell to update the prompt.
     kill -USR1 $$
@@ -143,18 +138,6 @@ function TRAPUSR1 {
   else
     unset vcs_raw_data
   fi
-    
-  
-  touch $VCS_ASYNC_TMP/vcs-files.$$
-  local modify_state
-  modify_state="${(f)$(cat $VCS_ASYNC_TMP/vcs-files.$$)}"
-  if (( $#modify_state + 10 > $(tput cols) )); then
-    zle && zle -M "Modified: ${#${(s: :)modify_state}} items" 
-  elif [[ -n $modify_state ]]; then
-    zle && zle -M "Modified: $modify_state"
-  fi
-    
-  command rm -f $VCS_ASYNC_TMP/vcs-files.$$
 
   # if we're in a vcs, start an inotify process
   if [[ -n $vcs_info_msg_0_ ]]; then
