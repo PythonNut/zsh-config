@@ -5,9 +5,9 @@ _preAlias=()
 
 function _accept-line() {
   emulate -LR zsh
-  setopt extended_glob
+  setopt extended_glob prompt_subst
   local cmd i
-
+  
   # if buffer is effectively empty, clear instead
   # otherwise pass through
   if [[ $BUFFER == "" ]]; then
