@@ -36,7 +36,7 @@ function TRAPUSR2 {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   chpwd_s_str=$(cat "${TMPPREFIX}zsh-s-prompt.$$" 2> /dev/null)
-  command rm ${TMPPREFIX}zsh-s-prompt.$$ &> /dev/null
+  command rm ${TMPPREFIX}/zsh-s-prompt.$$ &> /dev/null
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
@@ -59,7 +59,9 @@ function chpwd() {
 function chpwd_force() {
   emulate -LR zsh
   setopt equals
-  if [[ -n $(ps $PPID 2> /dev/null | grep =mc) ]]; then
+
+  # check if we're running under Midnight Commander
+  if [[ -n ${MC_TMPDIR+1} ]]; then
     chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
     zle && zle reset-prompt
   else
