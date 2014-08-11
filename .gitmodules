@@ -40,3 +40,6 @@
 [submodule "zsh-soft-history"]
     path = zsh-soft-history
     url = https://github.com/coldfix/zsh-soft-history
+[submodule "zsh-dwim"]
+	path = zsh-dwim
+	url = https://github.com/oknowton/zsh-dwim
