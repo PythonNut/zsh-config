@@ -27,6 +27,9 @@ zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
 ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
 +vi-svn-untracked() {
+  if ! hash svn; then
+    return 0;
+  fi
   if \svn info &> /dev/null; then
     if \svn status | \grep '^[MDA!]' &> /dev/null ; then
       local modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL
