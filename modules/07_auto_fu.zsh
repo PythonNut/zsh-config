@@ -12,6 +12,7 @@
     # zle autosuggest-start
   }
   zle -N zle-line-init
+
   zstyle ":auto-fu:var" postdisplay ""
   zstyle ":auto-fu:var" autoable-function/skipwords yum touch
 
@@ -69,3 +70,5 @@ function global_bindkey () {
   bindkey -M afu   $@
   bindkey      $@
 }
+
+global_bindkey "^x^x^x" zle-line-init
