@@ -105,6 +105,8 @@ function alias () {
   alias gd!='git diff --word-diff'
   alias gdc!='git diff --word-diff --cached'
 
+  alias gl='git log --oneline --graph --decorate --color'
+
   alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
 } &>> ~/.zsh.d/startup.log
 
