@@ -19,9 +19,10 @@ ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
 ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
 
 # zstyle ':vcs_info:*+*:*' debug true
-zstyle ':vcs_info:svn*' formats "(%B%F{yellow}%s%%b%f)[%b|%u%c]"
-zstyle ':vcs_info:svn*' branchformat "%B%F{red}%b(%r)%%b%f"
+zstyle ':vcs_info:(svn|csv|hg)*' formats "(%B%F{yellow}%s%%b%f)[%b|%u%c]"
+zstyle ':vcs_info:(svn|csv|hg)*' branchformat "%B%F{red}%b(%r)%%b%f"
 zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked
+zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
 
 ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
@@ -35,6 +36,24 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
     if \svn status | \grep '^?' &> /dev/null ; then
       local unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL
       unstaged_count+=$(\svn status | \grep '^?' | wc -l)
+      hook_com[unstaged]+="%f%b$unstaged_count%f"
+    fi
+  fi
+}
+
++vi-hg-untracked() {
+  if ! hash hg; then
+    return 0;
+  fi
+  if \hg id &> /dev/null; then
+    if \hg status | \grep '^[MDA!]' &> /dev/null ; then
+      local modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL
+      modified_count+=$(\hg status | \grep '^[MDA!]' | wc -l)
+      hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
+    fi
+    if \hg status | \grep '^?' &> /dev/null ; then
+      local unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL
+      unstaged_count+=$(\hg status | \grep '^?' | wc -l)
       hook_com[unstaged]+="%f%b$unstaged_count%f"
     fi
   fi
