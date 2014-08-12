@@ -39,7 +39,7 @@ function vcs_async_info_worker () {
     return 0;
   fi
 
-  if (( $SECONDS - $vcs_async_last > 0.3 )); then
+  if (( $SECONDS - $vcs_async_last > 1.0 )); then
     # Save the prompt in a temp file so the parent shell can read it.
     echo "$(vcs_super_info)" >! $VCS_ASYNC_TMP/vcs-prompt.$$
 
