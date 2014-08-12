@@ -102,10 +102,14 @@ function vcs_async_auto_update {
 
 add-zsh-hook precmd vcs_async_auto_update
 
+vcs_inotify_events=(modify move create delete)
+
 function vcs_inotify_watch () {
   emulate -LR zsh
   if hash inotifywait &>/dev/null; then
-    inotifywait -m -q -r -e modify -e move -e create -e delete --format %w%f $1 2> /dev/null | while IFS= read -r file; do
+    inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
+      -mqr --format %w%f $1 2> ~/.zsh.d/startup.log \
+      | while IFS= read -r file; do
       vcs_inotify_do "$file"
     done
   fi
