@@ -4,6 +4,7 @@
 zstyle ':vcs_info:*' enable git svn hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
+
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
 ZSH_VCS_PROMPT_USING_PYTHON='true'
@@ -16,6 +17,28 @@ ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
 ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
 ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
 ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
+
+# zstyle ':vcs_info:*+*:*' debug true
+zstyle ':vcs_info:svn*' formats "(%B%F{yellow}%s%%b%f)[%b|%u%c]"
+zstyle ':vcs_info:svn*' branchformat "%B%F{red}%b(%r)%%b%f"
+zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked
+
+ZSH_VCS_PROMPT_VCS_FORMATS="#s"
+
++vi-svn-untracked() {
+  if \svn info &> /dev/null; then
+    if \svn status | \grep '^[MDA!]' &> /dev/null ; then
+      local modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL
+      modified_count+=$(\svn status | \grep '^[MDA!]' | wc -l)
+      hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
+    fi
+    if \svn status | \grep '^?' &> /dev/null ; then
+      local unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL
+      unstaged_count+=$(\svn status | \grep '^?' | wc -l)
+      hook_com[unstaged]+="%f%b$unstaged_count%f"
+    fi
+  fi
+}
 
 typeset -F SECONDS
 vcs_async_last=0
