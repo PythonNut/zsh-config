@@ -5,7 +5,7 @@
 function pcomplete() {
   emulate -LR zsh
   {
-    setopt function_argzero
+    setopt function_argzero prompt_subst
     # hack a local function scope using unfuction
     function $0_forward_word () {
       local space_index
@@ -37,7 +37,7 @@ function pcomplete() {
     
     # _user_expand \
     zstyle ':completion:*' completer \
-      _expand \
+        _expand \
       _oldlist \
       _complete \
       _prefix \
@@ -67,9 +67,9 @@ function pcomplete() {
       prediction_array=("${(@f)$(predict_next_line)}")
       LBUFFER="$prediction_array[$prediction_index]"
       predict_buffer="$LBUFFER"
-  
+      
       _zsh_highlight
-  
+        
     else
       local single_match="" file_match="" cur_rbuffer space_index
 
@@ -77,7 +77,7 @@ function pcomplete() {
       for i in $region_highlight; do
         i=("${(@s/ /)i}")
         _setTitle $i
-        if [[ $i[3] == *black* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0 && ${i[1]:-0} > 1)); then
+        if [[ $i[3] == *black* ]] && ((${${i[2]%% *}:-0} - ${${i[1]%% *}:-0} > 0 && ${${i[1]%% *}:-0} > 1)); then
           $0_forward_word
           break
         fi
@@ -87,7 +87,7 @@ function pcomplete() {
       for i in $region_highlight; do
         i=("${(@s/ /)i}")
         _setTitle $i
-        if [[ $i[3] == *underline* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0)); then
+        if [[ $i[3] == *underline* ]] && ((${${i[2]%% *}:-0} - ${${i[1]%% *}:-0} > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match="t"
           fi
