@@ -6,6 +6,7 @@
   setopt local_options no_rc_expand_param
   source ~/.zsh.d/auto-fu/auto-fu.zsh
   zle-line-init () {
+    afu-zle-aysce-install() {}
     auto-fu-init
   }
   zle -N zle-line-init
