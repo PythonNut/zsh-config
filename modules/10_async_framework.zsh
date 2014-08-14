@@ -11,12 +11,18 @@ function zsh_pickle () {
 function zsh_unpickle () {
   # i - the name of the pickle
   # s - silently fail if pickle does not exists
+  # l - force local definition(s)
   emulate -LR zsh
-  zparseopts -D -E i:=ID s=S
+  zparseopts -D -E i:=ID s=S l=L
   {
-    # force variables to go up scope 
-    declare() { builtin declare -g "$@"; }
-    typeset() { builtin typeset -g "$@"; }
+    if [[ -n "$L" ]]; then
+      declare() { builtin declare "$@"; }
+      typeset() { builtin typeset "$@"; }
+    else
+      # force variables to go up scope 
+      declare() { builtin declare -g "$@"; }
+      typeset() { builtin typeset -g "$@"; }
+    fi
     
     local session_id="zsh.$$.$ID[2]"
     if [[ -f ${TMPPREFIX}$session_id || ! -n "$S" ]]; then
