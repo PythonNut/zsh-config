@@ -5,6 +5,10 @@
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
+fpath+=~/.zsh.d/zsh-git-escape-magic
+autoload -Uz git-escape-magic
+git-escape-magic
+
 typeset -A key
 function {
   emulate -LR zsh 
