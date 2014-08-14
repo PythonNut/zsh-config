@@ -2,6 +2,9 @@
 # unified key system
 # ==================
 
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
 typeset -A key
 function {
   emulate -LR zsh 
