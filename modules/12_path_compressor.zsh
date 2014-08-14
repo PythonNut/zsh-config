@@ -61,7 +61,7 @@ function minify_path () {
 function minify_path_full () {
   emulate -LR zsh
   # setopt caseglob
-  setopt extended_glob
+  setopt extended_glob null_glob
   {
     function $0_count_arg {
       return $(($#@-1))
