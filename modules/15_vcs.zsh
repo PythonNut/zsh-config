@@ -4,6 +4,7 @@
 zstyle ':vcs_info:*' enable git svn hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
+
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
 ZSH_VCS_PROMPT_USING_PYTHON='true'
@@ -16,6 +17,66 @@ ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
 ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
 ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
 ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
+
+# zstyle ':vcs_info:*+*:*' debug true
+zstyle ':vcs_info:(svn|csv|hg)*' formats "(%B%F{yellow}%s%%b%f)[%b|%u%c]"
+zstyle ':vcs_info:(svn|csv|hg)*' branchformat "%B%F{red}%b(%r)%%b%f"
+zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked
+zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
+
+ZSH_VCS_PROMPT_VCS_FORMATS="#s"
+
++vi-svn-untracked() {
+  emulate -LR zsh
+  if ! hash svn; then
+    return 0;
+  fi
+  if command svn info &> /dev/null; then
+    local svn_status=${(F)$(command svn status)}
+
+    local modified_count=${(F)$(echo $svn_status | \grep '^[MDA!]')}
+    if [[ ${#${(f)modified_count}} != 0 ]]; then
+      modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
+      hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
+    fi
+
+    local unstaged_count=${#${(f)${(F)$(echo $svn_status | \grep '^?')}}}
+    if [[ $unstaged_count != 0 ]]; then
+      unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL$unstaged_count
+      hook_com[unstaged]+="%f%b$unstaged_count%f"
+    fi
+
+    if [[ ! -n $hook_com[unstaged] ]]; then
+      hook_com[unstaged]="%F{green}$ZSH_VCS_PROMPT_CLEAN_SIGIL%f"
+    fi
+  fi
+}
+
++vi-hg-untracked() {
+  emulate -LR zsh
+  if ! hash hg; then
+    return 0;
+  fi
+  if command hg id &> /dev/null; then
+    local hg_status=${(F)$(command hg status)}
+
+    local modified_count=${(F)$(echo $hg_status | \grep '^[MDA!]')}
+    if [[ ${#${(f)modified_count}} != 0 ]]; then
+      modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
+      hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
+    fi
+
+    local unstaged_count=${#${(f)${(F)$(echo $hg_status | \grep '^?')}}}
+    if [[ $unstaged_count != 0 ]]; then
+      unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL$unstaged_count
+      hook_com[unstaged]+="%f%b$unstaged_count%f"
+    fi
+
+    if [[ ! -n $hook_com[unstaged] ]]; then
+      hook_com[unstaged]="%F{green}$ZSH_VCS_PROMPT_CLEAN_SIGIL%f"
+    fi
+  fi
+}
 
 typeset -F SECONDS
 vcs_async_last=0
