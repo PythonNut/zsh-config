@@ -104,50 +104,33 @@ VCS_ASYNC_TMP="/dev/shm"
 function vcs_async_info_worker () {
   emulate -LR zsh
   setopt noclobber multios
+  local vcs_raw_data vcs_super_info
 
-  if (( $zsh_scheduled_events[(i)*vcs_async_info_worker*] <= $#zsh_scheduled_events )); then
-    return 0;
-  fi
+  vcs_super_info="$(vcs_super_info)"
+  vcs_super_raw_data="$(vcs_super_info_raw_data)"
 
-  if (( $SECONDS - $vcs_async_last > 1.0 )); then
-    # Save the prompt in a temp file so the parent shell can read it.
-    echo "$(vcs_super_info)" >! $VCS_ASYNC_TMP/vcs-prompt.$$
-
-    local vcs_raw_data
-    vcs_raw_data="$(vcs_super_info_raw_data)"
-
-    if [[ -n "$vcs_raw_data" ]]; then
-      echo "$vcs_raw_data" >! $VCS_ASYNC_TMP/vcs-data.$$
-    else
-      command rm -f $VCS_ASYNC_TMP/vcs-data.$$
-    fi
-    
-    # Signal the parent shell to update the prompt.
-    kill -USR1 $$
-    
-  else
-    sched +1 vcs_async_info_worker 
-  fi
+  zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
+  
+  # Signal the parent shell to update the prompt.
+  kill -USR1 $$
 }
 
 function TRAPUSR1 {
   emulate -LR zsh
   setopt zle prompt_subst transient_rprompt no_clobber
-
+  zsh_unpickle -s -i vcs-data
+  
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
-  vcs_info_msg_0_=$(cat "$VCS_ASYNC_TMP/vcs-prompt.$$" 2> /dev/null)
-  command rm -f $VCS_ASYNC_TMP/vcs-prompt.$$ 2> /dev/null
+  vcs_info_msg_0_=$vcs_super_info
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
 
-  if [[ -f "$VCS_ASYNC_TMP/vcs-data.$$" ]]; then
-    vcs_raw_data=$(cat "$VCS_ASYNC_TMP/vcs-data.$$" 2> /dev/null)
-    command rm -f $VCS_ASYNC_TMP/vcs-data.$$ 2> /dev/null
-  else
+  vcs_raw_data=$vcs_super_raw_data
+  if [[ ! -n $vcs_raw_data ]]; then
     unset vcs_raw_data
   fi
-
+  
   # if we're in a vcs, start an inotify process
   if [[ -n $vcs_info_msg_0_ ]]; then
     if [[ $VCS_INOTIFY == "off" ]]; then
