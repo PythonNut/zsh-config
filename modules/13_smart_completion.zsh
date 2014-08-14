@@ -71,7 +71,9 @@ function pcomplete() {
       _zsh_highlight
         
     else
-      local single_match="" file_match="" cur_rbuffer space_index
+      local cur_rbuffer space_index
+      local -i single_match
+      local -i file_match
 
       # detect multiple auto-fu matches
       for i in $region_highlight; do
@@ -89,14 +91,14 @@ function pcomplete() {
         _setTitle $i
         if [[ $i[3] == *underline* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
-            file_match="t"
+            file_match=1
           fi
-          single_match="t"
+          single_match=1
           break
         fi
       done
 
-      if [[ $single_match == "t" ]]; then
+      if [[ $single_match == 1 ]]; then
         $0_forward_word
         if [[ $#RBUFFER == 0 ]]; then
             if [[ $LBUFFER[-1] == "/" ]]; then
@@ -111,7 +113,7 @@ function pcomplete() {
           fi
         fi
         if [[ $LBUFFER[-1] == " " ]]; then
-          zle .backward-delete-char
+            zle .backward-delete-char
         fi
       else
         $0_forward_word
