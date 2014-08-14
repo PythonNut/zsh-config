@@ -82,12 +82,21 @@ typeset -F SECONDS
 vcs_async_last=0
 vcs_async_start=0
 vcs_async_delay=0
+integer vcs_async_sentinel=0
+zsh_pickle -i async-sentinel vcs_async_sentinel
 VCS_INOTIFY="off"
 
 function vcs_async_info () {
-  vcs_async_start=$SECONDS
-  vcs_async_info_worker $1 &!
-  vcs_async_last=$SECONDS
+  zsh_unpickle -s -i async-sentinel
+  if [[ ${vcs_async_sentinel:-0} == 0 ]]; then
+    vcs_async_start=$SECONDS
+    vcs_async_info_worker $1 &!
+    vcs_async_last=$SECONDS
+    vcs_async_sentinel=1
+  else
+    vcs_async_sentinel=2
+  fi
+  zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
 VCS_ASYNC_TMP="/dev/shm"
@@ -149,6 +158,15 @@ function TRAPUSR1 {
     kill $VCS_INOTIFY
     VCS_INOTIFY="off"
   fi
+
+  zsh_unpickle -s -i async-sentinel
+  local temp_sentinel=$vcs_async_sentinel
+  vcs_async_sentinel=0
+  if [[ $vcs_async_sentinel == 2 ]]; then
+    vcs_async_info &!
+  fi
+  
+  zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
 
