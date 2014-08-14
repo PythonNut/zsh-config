@@ -40,3 +40,6 @@
 [submodule "zsh-zaw"]
     path = zsh-zaw
     url = https://github.com/zsh-users/zaw
+[submodule "zsh-git-escape-magic"]
+	path = zsh-git-escape-magic
+	url = https://github.com/knu/zsh-git-escape-magic
