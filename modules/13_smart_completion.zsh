@@ -75,9 +75,9 @@ function pcomplete() {
 
       # detect multiple auto-fu matches
       for i in $region_highlight; do
-        i=("${(@s/ /)i}")
+        i=("${(@)${(@s/ /)i}%% *}")
         _setTitle $i
-        if [[ $i[3] == *black* ]] && ((${${i[2]%% *}:-0} - ${${i[1]%% *}:-0} > 0 && ${${i[1]%% *}:-0} > 1)); then
+        if [[ $i[3] == *black* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0 && ${i[1]:-0} > 1)); then
           $0_forward_word
           break
         fi
@@ -85,9 +85,9 @@ function pcomplete() {
 
       # detect single auto-fu match
       for i in $region_highlight; do
-        i=("${(@s/ /)i}")
+        i=("${(@)${(@s/ /)i}%% *}")
         _setTitle $i
-        if [[ $i[3] == *underline* ]] && ((${${i[2]%% *}:-0} - ${${i[1]%% *}:-0} > 0)); then
+        if [[ $i[3] == *underline* ]] && ((${i[2]:-0} - ${i[1]:-0} > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match="t"
           fi
