@@ -3,9 +3,10 @@
 # ========================
 
 function pcomplete() {
-  emulate -LR zsh
+  emulate -L zsh
   {
     setopt function_argzero prompt_subst
+    setopt complete_in_word list_packed list_rows_first
     # hack a local function scope using unfuction
     function $0_forward_word () {
       local space_index
@@ -35,9 +36,8 @@ function pcomplete() {
       'r:|[\.\_\-/\\]=* r:|=*' 'l:|[\.\_\-/\\]=* r:|[\.\_\-/\\]=*' \
       'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*'
     
-    # _user_expand \
     zstyle ':completion:*' completer \
-        _expand \
+      _expand \
       _oldlist \
       _complete \
       _prefix \
@@ -46,7 +46,6 @@ function pcomplete() {
       _match \
       _prefix
 
-    setopt local_options complete_in_word list_packed list_rows_first
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       if [[ $#BUFFER == 0 ]]; then
@@ -75,23 +74,14 @@ function pcomplete() {
       local -i single_match
       local -i file_match
 
-      # detect multiple auto-fu matches
+      # detect single auto-fu match
       for i in $region_highlight; do
-        i=("${(@s/ /)i}" 0 0 0)
-        i=${(@)i%%[^0-9]*}
-        _setTitle $i
+        # sanitize to prevent $((...)) from crashing
+        i=(${(@s/ /)i[1,2]%%[^0-9]*} ${(@s/ /)i[3,-1]})
         if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
           $0_forward_word
           break
-        fi
-      done
-
-      # detect single auto-fu match
-      for i in $region_highlight; do
-        i=("${(@s/ /)i}" 0 0 0)
-        i=${(@)i%%[^0-9]*}
-        _setTitle $i
-        if [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0)); then
+        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match=1
           fi
@@ -132,8 +122,8 @@ function pcomplete() {
     zstyle ':completion:*' extra-verbose no
     zstyle ':completion:*' verbose no
     zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}'
-    # _user_expand
     zstyle ':completion:*' completer _oldlist _complete
+
   } always {
     unfunction -m "$0_*"
   }
