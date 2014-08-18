@@ -1,7 +1,7 @@
 # set the title
 function _setTitle() {
   emulate -LR zsh
-  local titlestart titlefinish
+  local titlestart='' titlefinish=''
 
   # determine the terminals escapes
   case "$_OLD_TERM" in
@@ -18,14 +18,9 @@ function _setTitle() {
       titlestart='\033k'
       titlefinish='\033\';;
     (*)
-      if hash tput &>/dev/null; then
-        if tput longname &>/dev/null; then
-          titlestart="$(tput tsl)"
-          titlefinish="$(tput fsl)"
-        fi
-      else
-        titlestart=''
-        titlefinish=''
+      if {hash tput && tput longname} &>/dev/null; then
+        titlestart="$(tput tsl)"
+        titlefinish="$(tput fsl)"
       fi
   esac
 
