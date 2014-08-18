@@ -18,7 +18,7 @@ function _setTitle() {
       titlestart='\033k'
       titlefinish='\033\';;
     (*)
-      if type tput &>/dev/null; then
+      if hash tput &>/dev/null; then
         if tput longname &>/dev/null; then
           titlestart="$(tput tsl)"
           titlefinish="$(tput fsl)"
