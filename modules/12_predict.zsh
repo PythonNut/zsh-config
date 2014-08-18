@@ -20,6 +20,9 @@ function predict_next_line () {
         combined[$v]=$k
     done
     for k in "${(@kOn)combined}"; do
-        echo $combined[$k] "->" $k
+        echo $combined[$k]
     done
 }
+
+integer prediction_index
+predict_buffer=''
