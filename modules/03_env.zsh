@@ -34,7 +34,8 @@ case $_OLD_TERM in
    (dumb)
       emulate sh
       PS1="$ "
-      return 1;;
+      unsetopt prompt_cr
+      return 0;;
    
    (screen*)
       export TERM='linux';;
