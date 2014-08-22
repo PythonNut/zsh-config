@@ -76,6 +76,9 @@ function alias () {
   alias killall='nocorrect \killall'
   alias yum-config-manager='nocorrect noglob \yum-config-manager'
 
+  # modifier aliases
+  alias please='sudo !!'
+
   # git aliases
   alias gs='git status -s'
   alias gst='git status'
