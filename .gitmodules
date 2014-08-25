@@ -43,3 +43,6 @@
 [submodule "zsh-git-escape-magic"]
     path = zsh-git-escape-magic
     url = https://github.com/knu/zsh-git-escape-magic
+[submodule "modules/zsh-manydots-magic"]
+	path = zsh-manydots-magic
+	url = https://github.com/knu/zsh-manydots-magic
