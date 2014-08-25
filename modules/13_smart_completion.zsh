@@ -105,7 +105,7 @@ function pcomplete() {
           fi
         fi
         if [[ $LBUFFER[-1] == " " ]]; then
-            zle .backward-delete-char
+          zle .backward-delete-char
         fi
       else
         $0_forward_word
