@@ -14,6 +14,7 @@
   autoload -Uz copy-earlier-word  # navigate backwards with C-. C-,
   autoload -Uz url-quote-magic    # automatically%20escape%20characters
   autoload -Uz add-zsh-hook       # a more modular way to hook
+  autoload -Uz is-at-least        # enable graceful regression
 
   zmodload zsh/sched              # delayed execution in zsh
   zmodload zsh/mathfunc           # mathematical functions in zsh
