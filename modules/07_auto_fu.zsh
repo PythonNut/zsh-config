@@ -7,6 +7,8 @@
   source ~/.zsh.d/auto-fu/auto-fu.zsh
   afu-zle-aysce-install() {}
   zle-line-init () {
+    emulate -LR zsh
+    setopt prompt_subst
     auto-fu-init
   }
   zle -N zle-line-init
