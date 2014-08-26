@@ -35,8 +35,8 @@
     path = zsh-soft-history
     url = https://github.com/coldfix/zsh-soft-history
 [submodule "zsh-dwim"]
-    path = zsh-dwim
-    url = https://github.com/oknowton/zsh-dwim
+	path = zsh-dwim
+	url = ./zsh-dwim/
 [submodule "zsh-zaw"]
     path = zsh-zaw
     url = https://github.com/zsh-users/zaw
