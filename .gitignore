@@ -6,6 +6,7 @@
 /cache
 /zcompdump
 /macros
+/.zcalc_history
 
 *.zwc
 *.log
