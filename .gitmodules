@@ -40,9 +40,6 @@
 [submodule "zsh-git-escape-magic"]
     path = zsh-git-escape-magic
     url = https://github.com/knu/zsh-git-escape-magic
-[submodule "zsh-manydots-magic"]
-	path = zsh-manydots-magic
-	url = https://github.com/knu/zsh-manydots-magic
 [submodule "zsh-dwim"]
 	path = zsh-dwim
 	url = https://github.com/oknowton/zsh-dwim
