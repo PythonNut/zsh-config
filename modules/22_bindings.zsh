@@ -77,6 +77,11 @@ function () {
   source ~/.zsh.d/zaw-src-git-log/zaw-git-log.zsh
   source ~/.zsh.d/zaw-src-git-show-branch/zaw-git-show-branch.zsh
 
+  # and import other zaw sources
+  for file in ~/.zsh.d/zaw-misc-sources/*.zsh(n); do
+    source $file
+  done
+
   zle -N zaw-autoload-git-log
   zle -N zaw-autoload-git-show-branch
   
@@ -91,33 +96,7 @@ function () {
   global_bindkey "^Xgs" zaw-git-status
   global_bindkey "^Xgl" zaw-git-log
   global_bindkey "^Xgc" zaw-git-show-branch
-
-  function zaw-src-open-file-recursive() {
-    local root parent f
-    setopt local_options null_glob
-    if (( $# == 0 )); then
-      root="${PWD}/"
-    else
-      root="$1"
-    fi
-    parent="${root:h}"
-    if [[ "${parent}" != */ ]]; then
-      parent="${parent}/"
-    fi
-    candidates+=("${parent}")
-    cand_descriptions+=("../")
-    for f in "${root%/}"/**/*; do
-      candidates+=("${f#${${:-.}:A}/}")
-      cand_descriptions+=("${f#${${:-.}:A}/}")
-    done
-    actions=( "zaw-callback-append-to-buffer" "zaw-callback-open-file" )
-    act_descriptions=( "append to edit buffer" "open file or directory" )
-    # TODO: open multiple files
-    #options=( "-m" )
-    options=( "-t" "${root}" )
-  }
-
-  zaw-register-src -n open-file-recursive zaw-src-open-file-recursive
+  global_bindkey "^Xgr" zaw-git-reflog
 
   global_bindkey "^Xr" zaw-open-file-recursive
   
