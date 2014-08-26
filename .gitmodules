@@ -34,9 +34,6 @@
 [submodule "zsh-soft-history"]
     path = zsh-soft-history
     url = https://github.com/coldfix/zsh-soft-history
-[submodule "zsh-dwim"]
-	path = zsh-dwim
-	url = ./zsh-dwim/
 [submodule "zsh-zaw"]
     path = zsh-zaw
     url = https://github.com/zsh-users/zaw
@@ -46,3 +43,6 @@
 [submodule "zsh-manydots-magic"]
 	path = zsh-manydots-magic
 	url = https://github.com/knu/zsh-manydots-magic
+[submodule "zsh-dwim"]
+	path = zsh-dwim
+	url = https://github.com/oknowton/zsh-dwim
