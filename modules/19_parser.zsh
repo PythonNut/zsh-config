@@ -46,7 +46,7 @@ function _accept-line() {
   cmd=(${(s/;/)BUFFER})
   for token in $cmd; do
     # process the command, strip whitespace
-    process "${${token##[[:space:]]#}%%[[:space:]]#}"
+    parser "${${token##[[:space:]]#}%%[[:space:]]#}"
   done
 
   zle .accept-line
@@ -62,7 +62,7 @@ zle -N _accept-line
 zle -N accept-line _accept-line
 command_not_found=1
 
-function process() {
+function parser() {
   emulate -LR zsh
   setopt extended_glob null_glob ksh_glob
   if [[ $(type $1) == (*not*|*suffix*) ]]; then
