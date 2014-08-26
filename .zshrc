@@ -8,9 +8,6 @@ autoload -Uz compinit  && compinit -d ~/.zsh.d/zcompdump
 echo -n > ~/.zsh.d/startup.log
 setopt function_argzero
 mkdir -p ~/.zsh.d
-touch ~/.zsh.d/startup.log
-
-
 
 # let us begin
 for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
