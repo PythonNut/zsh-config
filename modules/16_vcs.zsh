@@ -183,3 +183,10 @@ function vcs_inotify_do () {
   vcs_async_info $file
 }
 
+function vcs_async_cleanup () {
+  if [[ -n $VCS_INOTIFY ]]; then
+    kill $VCS_INOTIFY 2>/dev/null
+  fi
+}
+
+add-zsh-hook zshexit vcs_async_cleanup
