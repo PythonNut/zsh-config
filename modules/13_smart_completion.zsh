@@ -118,7 +118,7 @@ function pcomplete() {
       else
         $0_forward_word
         cur_rbuffer=$RBUFFER
-        if [[ $options[globcomplete] != on ]]; then
+        if [[ ! -o globcomplete ]]; then
           zle expand-word
         fi
         zle menu-complete

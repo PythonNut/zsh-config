@@ -24,7 +24,7 @@ function minify_path () {
       revise=()
       for fulldir in $cur_path; do
         dir=${${fulldir%%/}##*/}
-        if [[ $options[caseglob] == "off" ]]; then
+        if [[ ! -o caseglob ]]; then
           if (( ${#dir##(#i)($glob)} < $#dir )); then
             ((matches++))
             revise+=$fulldir
