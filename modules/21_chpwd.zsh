@@ -11,32 +11,16 @@ function chpwd_async_worker () {
   emulate -LR zsh
   chpwd_s_str=$(minify_path_smart .)
 
-  printf "%s" $chpwd_s_str >! ${TMPPREFIX}/zsh-s-prompt.$$
+  zsh_pickle -i async-chpwd chpwd_s_str
 
   # Signal the parent shell to update the prompt.
   kill -USR2 $$
 }
 
-function chpwd_async_worker_subshell () {
-  emulate -LR zsh
-  chpwd_s_str=$(minify_path_smart .)
-  typeset -f minify_path_smart
-  local GPID
-  #chpwd_j_str=$(minify_path_fasd $(pwd))
-  GPID=$(ps -fp $PPID | awk "/$PPID/"' { print $3 } ')
-  GPID=$(ps -fp $GPID | awk "/$GPID/"' { print $3 } ')
-  
-  printf "%s" $chpwd_s_str >! /dev/shm/zsh-s-prompt.$GPID
-
-  # Signal the parent shell to update the prompt.
-  kill -USR2 $GPID
-}
-
 function TRAPUSR2 {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
-  chpwd_s_str=$(cat "${TMPPREFIX}zsh-s-prompt.$$" 2> /dev/null)
-  command rm ${TMPPREFIX}/zsh-s-prompt.$$ &> /dev/null
+  zsh_unpickle -i async-chpwd
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
