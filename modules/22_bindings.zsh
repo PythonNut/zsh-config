@@ -2,6 +2,21 @@
 # Interactive commands
 # ====================
 
+fpath+=~/.zsh.d/zsh-git-escape-magic
+fpath+=~/.zsh.d/zsh-manydots-magic
+
+function {
+  emulate -LR zsh
+  autoload -Uz url-quote-magic
+  zle -N self-insert url-quote-magic
+
+  autoload -Uz git-escape-magic
+  git-escape-magic
+
+  autoload -Uz manydots-magic
+  manydots-magic
+}
+
 # increments the last number on the line
 function _increase_number() {
   emulate -LR zsh
