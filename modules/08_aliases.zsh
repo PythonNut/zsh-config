@@ -159,16 +159,23 @@ function expandAlias() {
     }
 
     local cmd
-    cmd=(${(s/ /)LBUFFER})
+    cmd=("${(@s/ /)LBUFFER}")
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
       $0_smart_expand $cmd[-1] "$(${(s/ /e)command_abbrevs[$cmd[-1]]})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
       $0_smart_expand $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
 
+    elif [[ ${(j: :)cmd} == *\!* ]] && alias "$cmd[-1]" &>/dev/null ; then
+      local alias_expand
+      alias_expand=${(Q)${(s/=/)$(alias "$cmd[-1]")}[2]}
+      if [[ -n $alias_expand ]]; then
+        LBUFFER="$alias_expand "
+      fi
     elif (( $expand[(i)$cmd[-1]] > $#expand )) && [[ $cmd[-1] != (\\*) ]]; then
       zle _expand_alias
       $0_smart_space $1
+      
     else
       $0_smart_space $1
     fi
