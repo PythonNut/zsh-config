@@ -45,14 +45,14 @@ function pcomplete() {
       'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*'
     
     zstyle ':completion:*' completer \
-      _expand \
-      _oldlist \
-      _complete \
-      _prefix \
-      _history \
-      _approximate \
-      _match \
-      _prefix
+       _expand \
+       _oldlist \
+       _complete \
+       _match \
+       _approximate \
+       _files \
+       _history \
+        prefix
 
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
@@ -118,7 +118,9 @@ function pcomplete() {
       else
         $0_forward_word
         cur_rbuffer=$RBUFFER
-        zle expand-word
+        if [[ $options[globcomplete] != on ]]; then
+          zle expand-word
+        fi
         zle menu-complete
         RBUFFER=$cur_rbuffer
         if [[ $LBUFFER[-1] == " " || $LBUFFER[-2] == " " ]]; then
@@ -137,6 +139,8 @@ function pcomplete() {
     unfunction -m "$0_*"
   }
 }
+
+bindkey -M menuselect . self-insert
 
 zle -N pcomplete
 

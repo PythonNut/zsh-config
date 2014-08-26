@@ -44,7 +44,6 @@ export SPROMPT="Correct $fg_bold[red]%R$reset_color to $fg_bold[green]%r?$reset_
 zstyle ':completion:*' group-name ''
 
 # adaptive correction
-# _user_expand
 zstyle ':completion:*' completer _oldlist _complete
 
 zstyle ':completion:*:match:*' original only

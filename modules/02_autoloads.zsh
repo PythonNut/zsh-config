@@ -19,5 +19,6 @@
   zmodload zsh/sched              # delayed execution in zsh
   zmodload zsh/mathfunc           # mathematical functions in zsh
   zmodload zsh/terminfo           # terminal parameters from terminfo
+  zmodload zsh/complist           # various completion functions
   
 } &>> ~/.zsh.d/startup.log
