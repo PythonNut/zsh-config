@@ -123,4 +123,5 @@ function () {
   
   zstyle ':filter-select' extended-search yes
   zstyle ':filter-select' case-insensitive yes
+  zstyle ':filter-select' max-lines -10
 }
