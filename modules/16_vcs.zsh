@@ -79,12 +79,12 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 }
 
 typeset -F SECONDS
-vcs_async_last=0
-vcs_async_start=0
-vcs_async_delay=0
+float vcs_async_last=0
+float vcs_async_start=0
+float vcs_async_delay=0
 integer vcs_async_sentinel=0
 zsh_pickle -i async-sentinel vcs_async_sentinel
-VCS_INOTIFY="off"
+integer vcs_inotify_pid=-1
 
 function vcs_async_info () {
   zsh_unpickle -s -i async-sentinel
@@ -134,13 +134,13 @@ function TRAPUSR1 {
   
   # if we're in a vcs, start an inotify process
   if [[ -n $vcs_info_msg_0_ ]]; then
-    if [[ $VCS_INOTIFY == "off" ]]; then
+    if (( $vcs_inotify_pid == -1 )); then
       vcs_inotify_watch ${${:-.}:A} &!
-      VCS_INOTIFY=$!
+      vcs_inotify_pid=$!
     fi
-  elif [[ $VCS_INOTIFY != "off" ]]; then
-    kill $VCS_INOTIFY
-    VCS_INOTIFY="off"
+  elif (( $vcs_inotify_pid != -1 )); then
+    kill $vcs_inotify_pid
+    vcs_inotify_pid=-1
   fi
 
   zsh_unpickle -s -i async-sentinel
@@ -183,3 +183,10 @@ function vcs_inotify_do () {
   vcs_async_info $file
 }
 
+function vcs_async_cleanup () {
+  if (( $vcs_inotify_pid != -1 )); then
+    kill $vcs_inotify_pid 2>/dev/null
+  fi
+}
+
+add-zsh-hook zshexit vcs_async_cleanup

@@ -23,6 +23,8 @@ function disown_running() {
   return $retval
 }
 
+add-zsh-hook zshexit disown_running
+
 function exit() {
   emulate -LR zsh
   disown_running && builtin exit "$@"
