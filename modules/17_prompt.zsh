@@ -15,7 +15,7 @@ function compute_prompt () {
   PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")]%#$nbsp" # shell depth
   
   local VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
-  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins|afu)/}"
+  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(afu)/}"
   RPS1=$RPS1"\${vcs_info_msg_0_}"
 }
 
@@ -31,6 +31,6 @@ add-zsh-hook precmd compute_prompt
 # intercept keymap selection
 function zle-keymap-select () {
   compute_prompt
-  zle reset-prompt
+  zle && zle reset-prompt
 }
 zle -N zle-keymap-select

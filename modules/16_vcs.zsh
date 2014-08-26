@@ -117,7 +117,8 @@ function vcs_async_info_worker () {
 
 function TRAPUSR1 {
   emulate -LR zsh
-  setopt zle prompt_subst transient_rprompt no_clobber
+  setopt zle 2>/dev/null
+  setopt prompt_subst transient_rprompt no_clobber
   zsh_unpickle -s -i vcs-data
   
   vcs_async_delay=$(($SECONDS - $vcs_async_start))

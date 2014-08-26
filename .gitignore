@@ -1,4 +1,3 @@
-/startup.log
 /fasd-init-cache
 /zdirs
 /.zcompdump
@@ -7,3 +6,10 @@
 /cache
 /zcompdump
 /macros
+/.zcalc_history
+
+*.zwc
+*.log
+*.swp
+*~
+\#*\#

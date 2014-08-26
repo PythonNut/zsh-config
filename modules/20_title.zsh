@@ -1,31 +1,26 @@
 # set the title
 function _setTitle() {
   emulate -LR zsh
-  local titlestart titlefinish
+  local titlestart='' titlefinish=''
 
   # determine the terminals escapes
   case "$_OLD_TERM" in
-    aixterm|dtterm|putty|rxvt|xterm*)
+    (aixterm|dtterm|putty|rxvt|xterm*)
       titlestart='\033]0;'
       titlefinish='\007';;
-    cygwin)
+    (cygwin)
       titlestart='\033];'
       titlefinish='\007';;
-    konsole)
+    (konsole)
       titlestart='\033]30;'
       titlefinish='\007';;
-    screen*|screen)
+    (screen*|screen)
       titlestart='\033k'
       titlefinish='\033\';;
-    *)
-      if type tput >/dev/null 2>&1; then
-        if tput longname >/dev/null 2>&1; then
-          titlestart="$(tput tsl)"
-          titlefinish="$(tput fsl)"
-        fi
-      else
-        titlestart=''
-        titlefinish=''
+    (*)
+      if {hash tput && tput longname} &>/dev/null; then
+        titlestart="$(tput tsl)"
+        titlefinish="$(tput fsl)"
       fi
   esac
 

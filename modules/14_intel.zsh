@@ -64,3 +64,5 @@ function helpgen() {
 }
 
 {autohelp;automan}>&/dev/null
+
+zsh-mime-setup

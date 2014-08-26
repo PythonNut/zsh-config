@@ -34,7 +34,8 @@ case $_OLD_TERM in
    (dumb)
       emulate sh
       PS1="$ "
-      return 1;;
+      unsetopt prompt_cr
+      return 0;;
    
    (screen*)
       export TERM='linux';;
@@ -74,24 +75,13 @@ FX=(
 # ==========================
 # Persistent directory stack
 # ==========================
-DIRSTACKSIZE=30
-if [[ -f ~/.zsh.d/zdirs ]] && [[ ${#dirstack[*]} -eq 0 ]]; then
-    dirstack=( ${(uf)"$(< ~/.zsh.d/zdirs)"} )
-    # "cd -" won't work after login by just setting $OLDPWD, so
-    if setopt | \grep autopushd &>/dev/null; then
-        unsetopt AUTO_PUSHD
-        cd $dirstack[0] && cd - > /dev/null
-        setopt AUTO_PUSHD
-    else
-        cd $dirstack[0] && cd - > /dev/null
-    fi
-fi
 
-# see chpwd declaration
-function zshexit() {
-   emulate -LR zsh
-   if [[ ! -f ~/.zsh.d/zdirs ]]; then
-      touch ~/.zsh.d/zdirs
-   fi
-   dirs -pl >! ~/.zsh.d/zdirs
-}
+autoload -Uz chpwd_recent_dirs cdr
+add-zsh-hook chpwd chpwd_recent_dirs
+
+zstyle ':chpwd:*' recent-dirs-max 100
+zstyle ':chpwd:*' recent-dirs-default true
+zstyle ':chpwd:*' recent-dirs-pushd true
+zstyle ':chpwd:*' recent-dirs-file "$ZDOTDIR/zdirs"
+
+dirstack=(${(nu@Q)$(cat $ZDOTDIR/zdirs)})

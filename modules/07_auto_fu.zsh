@@ -5,8 +5,10 @@
 {
   setopt local_options no_rc_expand_param
   source ~/.zsh.d/auto-fu/auto-fu.zsh
+  afu-zle-aysce-install() {}
   zle-line-init () {
-    afu-zle-aysce-install() {}
+    emulate -LR zsh
+    setopt prompt_subst
     auto-fu-init
   }
   zle -N zle-line-init
