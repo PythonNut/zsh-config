@@ -6,7 +6,15 @@ function pcomplete() {
   emulate -L zsh
   {
     setopt function_argzero prompt_subst
-    setopt complete_in_word list_packed list_rows_first
+    setopt list_packed list_rows_first
+
+    setopt auto_list              # list if multiple matches
+    setopt complete_in_word       # complete at cursor
+    setopt menu_complete          # add first of multiple
+    setopt auto_remove_slash      # remove extra slashes if needed
+    setopt auto_param_slash       # completed directory ends in /
+    setopt auto_param_keys        # smart insert spaces " "
+
     # hack a local function scope using unfuction
     function $0_forward_word () {
       local space_index
@@ -81,7 +89,7 @@ function pcomplete() {
         if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
           $0_forward_word
           break
-        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0)); then
+        elif [[ $i[3] == *white*underline* ]] && (($i[2] - $i[1] > 0)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match=1
           fi
@@ -110,7 +118,8 @@ function pcomplete() {
       else
         $0_forward_word
         cur_rbuffer=$RBUFFER
-        zle expand-or-complete
+        zle expand-word
+        zle menu-complete
         RBUFFER=$cur_rbuffer
         if [[ $LBUFFER[-1] == " " || $LBUFFER[-2] == " " ]]; then
           zle .backward-delete-char
