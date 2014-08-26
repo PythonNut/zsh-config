@@ -42,14 +42,12 @@ function _accept-line() {
   # set the current command
   cur_command=$cmd[1]
   
-  # split it by command seperation delimiters
-  if [[ $BUFFER != (*\$\{*\}*) ]]; then
-    cmd=(${(ps:;:e)${(ps:|:e)${(ps:|&:e)${(ps:&&:e)${(ps:||:)BUFFER}}}}})
-    for token in $cmd; do
-      # process the command, strip whitespace
-      process ${${token##[[:space:]]#}%%[[:space:]]#}
-    done
-  fi
+  # split by command separation delimiters
+  cmd=(${(s/;/)BUFFER})
+  for token in $cmd; do
+    # process the command, strip whitespace
+    process "${${token##[[:space:]]#}%%[[:space:]]#}"
+  done
 
   zle .accept-line
 
