@@ -8,16 +8,17 @@ function _accept-line() {
   setopt extended_glob prompt_subst
   local cmd i
   
+  if [[ $BUFFER == [[:space:]]##* ||  $CONTEXT == "cont" ]]; then
+  zle .accept-line
+    return 0
+
   # if buffer is effectively empty, clear instead
   # otherwise pass through
-  if [[ $BUFFER == "" ]]; then
+  elif [[ $BUFFER == "" ]]; then
     BUFFER="clear"
     zle .accept-line
     return 0
 
-  elif [[ $BUFFER == [[:space:]]# || $BUFFER[1] == " " ]]; then
-    zle .accept-line
-    return 0
   fi
 
   # remove black completion "suggestions"
