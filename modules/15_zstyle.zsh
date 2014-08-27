@@ -3,9 +3,9 @@
 #=================
 
 function _uexpand() {
-  zstyle ':completion:*' show-completer no
-  zstyle ':completion:*' extra-verbose no
-  zstyle ':completion:*' verbose no
+  zstyle ':completion:*' show-completer false
+  zstyle ':completion:*' extra-verbose false
+  zstyle ':completion:*' verbose false
   zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}'
   # _user_expand
   zstyle ':completion:*' completer _oldlist _complete
@@ -22,12 +22,12 @@ function _uexpand() {
 }
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' extra-verbose no
-zstyle ':completion:*' show-completer no
-zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' verbose false
+zstyle ':completion:*' extra-verbose false
+zstyle ':completion:*' show-completer false
+zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path ~/.zsh.d/cache
-
+zstyle ':completion:*' list-grouped true
 # formatting
 zstyle ':completion:*' format '%B-- %d%b'             # distinct categories
 zstyle ':completion:*' auto-description 'specify: %d' # auto description
@@ -47,9 +47,12 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' completer _oldlist _complete
 
 zstyle ':completion:*:match:*' original only
+zstyle ':completion::correct*:*' prefix-needed false
+zstyle ':completion::correct:*' max-errors 2 numeric 
+
 zstyle ':completion::approximate*:*' prefix-needed false
-zstyle ':completion:*:approximate:*' max-errors \
-  'reply=($((($#PREFIX+$#SUFFIX)/3)))'
+zstyle ':completion::approximate:*' max-errors 2 numeric 
+zstyle ':completion::approximate:*' origional true
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
@@ -67,7 +70,7 @@ zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*:functions' ignored-patterns '(_|.)*'
 
 # ignore completions that are aleady on the line
-zstyle ':completion:*:(rm|kill|diff|mv|cp):*' ignore-line yes
+zstyle ':completion:*:(rm|kill|diff|mv|cp):*' ignore-line true
 
 # seperate manpage sections
 zstyle ':completion:*:manuals' separate-sections true
@@ -77,7 +80,7 @@ zstyle ':completion:*' file-sort modification reverse
 #zstyle ':completion:*' file-sort change
 
 # try to automagically generate descriptions from manpage
-zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' description yes
 zstyle ':completion:*' auto-description 'specify: %d'
 
 ## case-insensitive,partial-word and then substring completion
@@ -126,7 +129,7 @@ zstyle ':completion:*:processes' command "ps ax -o pid,user,comm"
 zstyle ':completion:*:processes-names' command 'ps -e -o comm='
 zstyle ':completion:*:processes-names' ignored-patterns ".*"
 
-zstyle ':completion:history-words:*' remove-all-dups yes
+zstyle ':completion:*:history-words:*' remove-all-dups true
 zstyle ':completion:*:urls' urls ~/.zsh.d/urls/urls
 
 # ================================
