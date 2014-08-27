@@ -10,9 +10,7 @@ According to Wikipedia (8/14/14)
 
 The magic of `zsh` is it's fantastically powerful scripting ability. `zsh` isn't so much a shell as it is a way to _make your own shell_.
 
-**I've done so.**
-
-However, while I'm at it, I may as well try to go a level up. This is not a shell in the sense that Notepad is a text editor, this is a shell in the sense that `emacs` or `vim` are text editors. _They do so much more_. For example:
+This is my goal: to make a highly customized and tailored enviroment for my work. In adittion, I'd love to distill more intelligence into the shell (the kinds of things you wouldn't expect a shell to do).
 
 * Enter a version control repository and it will automatically spawn an `inotify` service, start watching your files and live stream async version control information (like git dirty status) into the righthand prompt.
 * Suffix aliases for all associated filetypes are generated from the environment MIME handler (via `zsh-mime-handler`)
@@ -20,4 +18,16 @@ However, while I'm at it, I may as well try to go a level up. This is not a shel
 * Automatically extract options and their descriptions from manpages and stream them to the completion system.
 * etc.
 
-An ordinary shell is boring. The future (and the future of this project) is to create a deepy integrated and intelligent environment.
+My goal is to comtinue adding features and deep integration with other tools. I also want this to be portable to other forms of Linux (Mac OS is a much more distant goal, as I don't own a Mac). Currently being tested on:
+
+* Arch Linux 64
+* Fedora 16 stable 64
+* Fedora 20 stable 32
+* Fedora rawhide 64
+* Ubuntu 64
+
+And with the following zsh versions
+
+* `zsh` 4.3 (mostly broken)
+* `zsh` 4.6 (fairly broken)
+* `zsh` 5.0+
