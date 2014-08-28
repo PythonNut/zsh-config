@@ -40,20 +40,25 @@ function pcomplete() {
     zstyle ':completion:*' verbose true
     zstyle ':completion:*' menu select=1 interactive
     zstyle ':completion:*' insert-unambiguous true
-    zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}' \
-      'r:|[\.\_\-/\\]=* r:|=*' 'l:|[\.\_\-/\\]=* r:|[\.\_\-/\\]=*' \
-      'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*'
+
+    # 0 -- vanilla completion    (abc => abc)
+    # 1 -- smart case completion (abc => Abc)
+    # 2 -- word flex completion  (abc => A-big-Car)
+    # 3 -- full flex completion  (abc => ABraCadabra)
+    zstyle ':completion:*' matcher-list '' \
+        'm:{a-z\-}={A-Z\_}' \
+        'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+        'r:[[:ascii:]]||[[:ascii:]]=** r:|=* l:|=* m:{a-z\-}={A-Z\_}'
     
     zstyle ':completion:*' completer \
-       _expand \
-       _oldlist \
-       _complete \
-       _match \
-       _approximate \
-       _files \
-       _history \
-        prefix
-
+      _expand \
+      _oldlist \
+      _complete \
+      _match \
+      _approximate \
+      _files \
+      _history \
+      _prefix
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       if [[ $#BUFFER == 0 ]]; then
