@@ -29,7 +29,7 @@ zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path ~/.zsh.d/cache
 zstyle ':completion:*' list-grouped true
 # formatting
-zstyle ':completion:*' format '%B-- %d%b'             # distinct categories
+zstyle ':completion:*' format '%B── %d%b'             # distinct categories
 zstyle ':completion:*' auto-description 'specify: %d' # auto description
 zstyle ':completion:*:descriptions' format '%B%d%b'   # description
 zstyle ':completion:*:messages' format '%d'           # messages
