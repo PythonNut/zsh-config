@@ -89,7 +89,7 @@ function pcomplete() {
         if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
           $0_forward_word
           break
-        elif [[ $i[3] == *white*underline* ]] && (($i[2] - $i[1] > 0)); then
+        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
           if  [[ $BUFFER != (*/|* */*) ]]; then
             file_match=1
           fi
