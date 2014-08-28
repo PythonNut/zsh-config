@@ -40,6 +40,15 @@ function pcomplete() {
     zstyle ':completion:*' verbose true
     zstyle ':completion:*' menu select=1 interactive
     zstyle ':completion:*' insert-unambiguous true
+
+    # 0 -- vanilla completion    (abc => abc)
+    # 1 -- smart case completion (abc => Abc)
+    # 2 -- word flex completion  (abc => A-big-Car)
+    # 3 -- full flex completion  (abc => ABraCadabra)
+    zstyle ':completion:*' matcher-list '' \
+      'm:{a-z\-}={A-Z\_}' \
+      'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+      'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
     
     zstyle ':completion:*' completer \
       _expand \
@@ -109,6 +118,7 @@ function pcomplete() {
     zstyle ':completion:*' extra-verbose false
     zstyle ':completion:*' verbose false
     zstyle ':completion:*' completer _oldlist _complete
+    zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
   } always {
     unfunction -m "$0_*"
