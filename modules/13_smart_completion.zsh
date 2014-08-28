@@ -35,11 +35,11 @@ function pcomplete() {
       zle backward-delete-char
     }
 
-    zstyle ':completion:*' show-completer yes
-    zstyle ':completion:*' extra-verbose yes
-    zstyle ':completion:*' verbose yes
+    zstyle ':completion:*' show-completer true
+    zstyle ':completion:*' extra-verbose true
+    zstyle ':completion:*' verbose true
     zstyle ':completion:*' menu select=1 interactive
-    zstyle ':completion:*' insert-unambiguous yes
+    zstyle ':completion:*' insert-unambiguous true
     zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}' \
       'r:|[\.\_\-/\\]=* r:|=*' 'l:|[\.\_\-/\\]=* r:|[\.\_\-/\\]=*' \
       'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*'
@@ -129,9 +129,9 @@ function pcomplete() {
       fi
     fi
 
-    zstyle ':completion:*' show-completer no
-    zstyle ':completion:*' extra-verbose no
-    zstyle ':completion:*' verbose no
+    zstyle ':completion:*' show-completer false
+    zstyle ':completion:*' extra-verbose false
+    zstyle ':completion:*' verbose false
     zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}'
     zstyle ':completion:*' completer _oldlist _complete
 
