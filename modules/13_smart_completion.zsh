@@ -61,27 +61,7 @@ function pcomplete() {
       _prefix
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
-      if [[ $#BUFFER == 0 ]]; then
-        prediction_index=-1
-      fi
-      local prediction_array
-      prediction_index=$(( $prediction_index + 1 ))
-      if [[ $prediction_index == 0 ]]; then
-        zle dwim
-        zle end-of-line
-        # catch the catch-all dwim case (temporary)
-        if [[ "$BUFFER" == (sudo*) ]]; then
-          prediction_index=$(( $prediction_index + 1 ))
-        else
-          return 0
-        fi
-      fi
-      prediction_array=("${(@f)$(predict_next_line)}")
-      LBUFFER="$prediction_array[$prediction_index]"
-      predict_buffer="$LBUFFER"
-      
-      _zsh_highlight
-        
+      zle predict-next-line  
     else
       local cur_rbuffer space_index
       local -i single_match
