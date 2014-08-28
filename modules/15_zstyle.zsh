@@ -93,6 +93,10 @@ zstyle ':completion:*:-command-:*' group-order \
   globbed-files hidden-directories hidden-files \
   boring-directories boring-files keywords viewable
 
+zstyle ':completion:*:(\ls|ls):*' group-order \
+  directories globbed-files hidden-directories hidden-files \
+  boring-directories boring-files  
+
 # complete more processes, typing names substitutes PID
 zstyle ':completion:*:*:kill:*:processes' list-colors \
   '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
