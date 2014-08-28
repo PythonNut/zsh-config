@@ -2,24 +2,6 @@
 # completion stuff
 #=================
 
-function _uexpand() {
-  zstyle ':completion:*' show-completer false
-  zstyle ':completion:*' extra-verbose false
-  zstyle ':completion:*' verbose false
-
-  zstyle ':completion:*' completer _oldlist _complete
-  zstyle ':completion:*' menu 'select=0'
-  if [[ $@ = "this_is_a" ]]; then
-    reply=("this is a" "this was a" $BUFFER)
-    reply=("${BUFFER}a" $BUFFER)
-    _complete
-  fi
-  # reply=("${(f)$(fc -l 1000 | cut -f4- -d" " | grep "^$BUFFER" 2>/dev/null)}")
-  reply=()
-  REPLY="user"
-  _complete
-}
-
 zstyle ':completion:*' verbose false
 zstyle ':completion:*' extra-verbose false
 zstyle ':completion:*' show-completer false
@@ -106,13 +88,6 @@ zstyle ':completion:*' group-order \
   directories hidden-files hidden-directories \
   boring-files boring-directories keywords viewable
 
-# zstyle ':completion:*:(globbed-files|directories)' ignored-patterns "$BORING_FILES|.*"
-# zstyle ':completion:*:hidden-(files|directories)' ignored-patterns $BORING_FILES
-
-# zstyle ':completion:*:(globbed-|)files' ignored-patterns $BORING_FILES
-# zstyle ':completion:*:all-files' ignored-patterns "*\~"
-# zstyle ':completion:*:directories' ignored-patterns $BORING_FILES
-
 zstyle ':completion:*:-command-:*' group-order \
   builtins expansions aliases functions commands directories \
   globbed-files hidden-directories hidden-files \
@@ -148,7 +123,6 @@ function _cdpath(){
 function _cmd() {
   _aliases
   _jobs
-  _builtin
   _command
   _functions
   _parameters
