@@ -18,9 +18,7 @@
 
   zstyle ':completion:*' show-completer no
   zstyle ':completion:*' extra-verbose no
-  zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}'
   zstyle ':completion:*:options' description no
-  # _user_expand
   zstyle ':completion:*' completer _oldlist _complete
 
   afu_menu=1

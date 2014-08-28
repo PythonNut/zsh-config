@@ -6,8 +6,7 @@ function _uexpand() {
   zstyle ':completion:*' show-completer false
   zstyle ':completion:*' extra-verbose false
   zstyle ':completion:*' verbose false
-  zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}'
-  # _user_expand
+
   zstyle ':completion:*' completer _oldlist _complete
   zstyle ':completion:*' menu 'select=0'
   if [[ $@ = "this_is_a" ]]; then
@@ -21,7 +20,6 @@ function _uexpand() {
   _complete
 }
 
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' verbose false
 zstyle ':completion:*' extra-verbose false
 zstyle ':completion:*' show-completer false
@@ -54,6 +52,16 @@ zstyle ':completion::approximate*:*' prefix-needed false
 zstyle ':completion::approximate:*' max-errors 2 numeric 
 zstyle ':completion::approximate:*' origional true
 
+
+# 0 -- vanilla completion    (abc => abc)
+# 1 -- smart case completion (abc => Abc)
+# 2 -- word flex completion  (abc => A-big-Car)
+# 3 -- full flex completion  (abc => ABraCadabra)
+zstyle ':completion:*' matcher-list '' \
+  'm:{a-z\-}={A-Z\_}' \
+  'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+  'r:[[:ascii:]]||[[:ascii:]]=** r:|=* l:|=* m:{a-z\-}={A-Z\_}'
+
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
 
@@ -82,11 +90,6 @@ zstyle ':completion:*' file-sort modification reverse
 # try to automagically generate descriptions from manpage
 zstyle ':completion:*:options' description yes
 zstyle ':completion:*' auto-description 'specify: %d'
-
-## case-insensitive,partial-word and then substring completion
-zstyle ':completion:*' matcher-list 'm:{a-z\-}={A-Z\_}' \
-  'r:|[\.\_\-/\\]=* r:|=*' 'l:|[\.\_\-/\\]=* r:|[\.\_\-/\\]=*' \
-  'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*'
 
 # Don't prompt for a huge list, page it!
 # Don't prompt for a huge list, menu it!
