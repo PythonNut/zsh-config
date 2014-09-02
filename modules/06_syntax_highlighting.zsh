@@ -9,12 +9,12 @@
   source ~/.zsh.d/zsh-syntax-highlighting/highlighters/brackets/brackets-highlighter.zsh
 
   ZSH_HIGHLIGHT_STYLES[default]='fg=grey'
-  ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=white'
+  ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=default'
   ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow'
-  ZSH_HIGHLIGHT_STYLES[alias]='fg=white,bold'
-  ZSH_HIGHLIGHT_STYLES[builtin]='fg=white,bold'
-  ZSH_HIGHLIGHT_STYLES[function]='fg=white,bold'
-  ZSH_HIGHLIGHT_STYLES[command]='fg=white,bold'
+  ZSH_HIGHLIGHT_STYLES[alias]='fg=default,bold'
+  ZSH_HIGHLIGHT_STYLES[builtin]='fg=default,bold'
+  ZSH_HIGHLIGHT_STYLES[function]='fg=default,bold'
+  ZSH_HIGHLIGHT_STYLES[command]='fg=default,bold'
   ZSH_HIGHLIGHT_STYLES[precommand]='fg=black,bold'
   ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=green'
   ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
@@ -28,6 +28,6 @@
   ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=cyan,bold'
   ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=yellow'
   ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=yellow'
-  ZSH_HIGHLIGHT_STYLES[assign]='fg=white,bold'
+  ZSH_HIGHLIGHT_STYLES[assign]='fg=default,bold'
 
 } &>> ~/.zsh.d/startup.log
