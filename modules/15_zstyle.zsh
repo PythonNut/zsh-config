@@ -79,7 +79,7 @@ zstyle ':completion:*:default' list-colors ${(@s.:.)LS_COLORS}
 
 zstyle ':completion:*' file-patterns \
   "^($BORING_FILES|.*)(-/):directories:normal\ directories %p~($BORING_FILES|.*)(^-/):globbed-files:normal\ files" \
-  "^($BORING_FILES|.*)(^-/):noglob-files:noglob\ files" \
+  "^($BORING_FILES|.*)(^-/)~%p:noglob-files:noglob\ files" \
   ".*~($BORING_FILES)(^-/):hidden-files:hidden\ files .*~($BORING_FILES)(-/):hidden-directories:hidden\ directories" \
   "($BORING_FILES)(^-/):boring-files:boring\ files ($BORING_FILES)(-/):boring-directories:boring\ directories" \
   
