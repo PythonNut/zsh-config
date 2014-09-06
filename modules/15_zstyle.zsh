@@ -3,6 +3,7 @@
 #=================
 
 zstyle ':completion:*' verbose false
+zstyle ':completion:*:options' verbose true
 zstyle ':completion:*' extra-verbose false
 zstyle ':completion:*' show-completer false
 zstyle ':completion:*' use-cache true
