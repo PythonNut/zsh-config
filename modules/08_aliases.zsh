@@ -146,12 +146,13 @@ function expandAlias() {
     }
 
     function $0_smart_expand () {
+      zparseopts -D -E i=G
       local expansion="${@[2,-1]}"
       local delta=$(($#expansion - $expansion[(i){}] - 1))
 
-      alias -g $1=${expansion/{}/}
+      alias ${G:+-g} $1=${expansion/{}/}
+      
       zle _expand_alias
-      _preAlias+="${expansion/{}/}"
       
       for ((i=0; i < $delta; i++)); do
         zle backward-char
@@ -164,7 +165,7 @@ function expandAlias() {
       $0_smart_expand $cmd[-1] "$(${(s/ /e)command_abbrevs[$cmd[-1]]})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
-      $0_smart_expand $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
+      $0_smart_expand -g $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
 
     elif [[ ${(j: :)cmd} == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
       if [[ -n "$aliases[$cmd[-1]]" ]]; then
