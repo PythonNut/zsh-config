@@ -110,12 +110,6 @@ zstyle ':completion:*:urls' urls ~/.zsh.d/urls/urls
 # command layer completion scripts
 # ================================
 
-function _keywords(){
-  local keywds expl
-  keywds=(for do done while if elif fi case esac function break continue)
-  _wanted keywords expl 'shell keyword' compadd "$@" -k keywds
-}
-
 function _cdpath(){
   tmpcdpath=(${${(@)cdpath:#.}:#$PWD}) 
   (( $#tmpcdpath )) && alt=('path-directories:directory in cdpath:_path_files -W tmpcdpath -/')
@@ -123,19 +117,12 @@ function _cdpath(){
 }
 
 function _cmd() {
-  _aliases
-  _jobs
-  _command
+  _command_names
   _functions
-  _parameters
-  _hosts
-  #_cd
   _tilde
-  _directory_stack
-  _files # -F "*(/)"
+  _files
   _cdpath
   _options
-  _keywords
 }
 
 compdef "_cmd" "-command-"
