@@ -72,9 +72,6 @@ zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*:default' menu 'select=0' interactive
 
-# color suggestion output according to ls
-zstyle ':completion:*:default' list-colors ${(@s.:.)LS_COLORS}
-
 # order files first by default, dirs if command operates on dirs (ls)
 
 zstyle ':completion:*' file-patterns \
@@ -141,3 +138,34 @@ function _cmd() {
 }
 
 compdef "_cmd" "-command-"
+
+ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;]##/$MATCH=$MATCH=04;$MATCH}/\*/'=(#b)($PREFIX:t)(?)*'}}
+
+function _file_list_colors () {
+  local MATCH
+  reply=("${(e@s/ /)ls_colors_parsed}")
+ 
+  # fallback to a catch-all
+  reply+=("=(#b)($PREFIX:t)(?)*===04")
+}
+
+function _other_list_colors () {
+  reply=("=(#b)(${PREFIX:t})(?)*===04")
+}
+
+# zstyle -e ':completion:*' list-colors _other_list_colors
+zstyle -e ':completion:*:default' list-colors _other_list_colors
+
+# color suggestion output according to ls
+zstyle -e ':completion:*:(globbed|noglob|hidden|boring)-files' list-colors _file_list_colors
+zstyle -e ':completion:*:(hidden-|boring-|)directories' list-colors _file_list_colors
+
+# git file completions
+zstyle -e ':completion:*:modified-files' list-colors _file_list_colors
+zstyle -e ':completion:*:other-files' list-colors _file_list_colors
+
+# cd completions
+zstyle -e ':completion:*:local-directories' list-colors _file_list_colors
+zstyle -e ':completion:*:path-directories' list-colors _file_list_colors
+
+zstyle ':completion:*' special-dirs true
