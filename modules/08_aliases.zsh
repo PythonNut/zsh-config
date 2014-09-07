@@ -54,6 +54,7 @@ function alias () {
 
   # regular aliases
   alias su='su -'
+  alias cd='cdr'
   alias watch='\watch -n 1 -d '
   alias emacs='\emacs -nw'
   alias df='\df -h'
