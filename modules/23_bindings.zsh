@@ -65,11 +65,6 @@ global_bindkey . rationalise_dot
 # without this, typing a "." aborts incremental history search
 bindkey -M isearch . self-insert
 
-# ^Z to foreground the last suspended job.
-foreground-current-job() { fg; }
-zle -N foreground-current-job
-global_bindkey '^z' foreground-current-job
-
 # zaw: helm.el for zsh
 function () {
   emulate -LR zsh
