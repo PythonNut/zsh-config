@@ -15,7 +15,8 @@ function compute_prompt () {
   PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")]%#$nbsp" # shell depth
   
   local VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
-  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(afu)/}"
+  local VIM_PROMPT_OPP="%{$fg_bold[black]%} [% N+]% %{$reset_color%}"
+  RPS1="${${${KEYMAP/vicmd/$VIM_PROMPT}/opp/$VIM_PROMPT_OPP}/(afu)/}"
   RPS1=$RPS1"\${vcs_info_msg_0_}"
 }
 

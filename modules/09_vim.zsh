@@ -27,6 +27,7 @@ zsh-x-kill-region () {
   zle kill-region
   print -rn $CUTBUFFER | xsel -i
 }
+
 zsh-x-yank () {
   CUTBUFFER=$(xsel -o -p </dev/null)
   zle yank
