@@ -124,7 +124,6 @@ function parser() {
       _preAlias+=($1)
       
       # last resort, forward to teleport handler
-      # elif [[ -n $(j --stat | cut -f2 | sed -e '$d' | fgrep -i $1) ]]; then
     elif [[ -n $(fasd -d $@) ]]; then
       alias $@="go $@"
       _preAlias+=($@)
@@ -136,7 +135,6 @@ function parser() {
 
 function preexec() {
   emulate -LR zsh
-  chpwd
 
   unalias ${(j: :)_preAlias} &> /dev/null
   _preAlias=( )

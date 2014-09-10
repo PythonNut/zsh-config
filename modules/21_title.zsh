@@ -26,11 +26,7 @@ function _setTitle() {
 
   test -z "${titlestart}" && return 0
   [[ -n ${EMACS+1} || $_OLD_TERM == "dumb" ]] && return 0
-  if [[ $EUID == 0 ]]; then
-    printf "${titlestart}$* ! ${cur_command}${titlefinish}"
-  else
-    printf "${titlestart}$* ${cur_command}${titlefinish}"
-  fi
+  printf "${titlestart}$* ${titlefinish}"
 }
 
 # if title set manually, dont set automatically

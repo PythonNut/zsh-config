@@ -22,11 +22,6 @@ function compute_prompt () {
 
 compute_prompt
 
-function precmd() {
-  cur_command=""
-  chpwd
-}
-
 add-zsh-hook precmd compute_prompt
 
 # intercept keymap selection
