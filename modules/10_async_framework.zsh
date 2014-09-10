@@ -15,10 +15,7 @@ function zsh_unpickle () {
   emulate -LR zsh
   zparseopts -D -E i:=ID s=S l=L
   {
-    if [[ -n "$L" ]]; then
-      declare() { builtin declare "$@"; }
-      typeset() { builtin typeset "$@"; }
-    else
+    if [[ ! -n "$L" ]]; then
       # force variables to go up scope 
       declare() { builtin declare -g "$@"; }
       typeset() { builtin typeset -g "$@"; }
@@ -29,7 +26,7 @@ function zsh_unpickle () {
       source ${TMPPREFIX}$session_id
     fi
   } always {
-    unset -f typeset declare
+    unset -f typeset declare 2>/dev/null
   }
 }
 
