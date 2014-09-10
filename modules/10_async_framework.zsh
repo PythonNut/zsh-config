@@ -12,8 +12,9 @@ function zsh_unpickle () {
   # i - the name of the pickle
   # s - silently fail if pickle does not exists
   # l - force local definition(s)
+  # c - cleanup pickle afterwards
   emulate -LR zsh
-  zparseopts -D -E i:=ID s=S l=L
+  zparseopts -D -E i:=ID s=S l=L c=C
   {
     if [[ ! -n "$L" ]]; then
       # force variables to go up scope 
@@ -26,6 +27,9 @@ function zsh_unpickle () {
       source ${TMPPREFIX}$session_id
     fi
   } always {
+    if [[ -n "$C" ]]; then
+      zsh_pickle_cleanup -i "$ID"
+    fi
     unset -f typeset declare 2>/dev/null
   }
 }
@@ -42,4 +46,6 @@ function zsh_pickle_cleanup () {
   fi
 }
 
+# cleanup possibly stale pickles
+zsh_pickle_cleanup
 add-zsh-hook zshexit zsh_pickle_cleanup
