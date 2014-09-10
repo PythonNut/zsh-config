@@ -42,6 +42,7 @@ function zsh_pickle_cleanup () {
     local session_id="zsh.$$.$ID[2]"
     command rm -f ${TMPPREFIX}$session_id
   else 
+    setopt null_glob
     command rm -f ${TMPPREFIX}zsh.$$.*
   fi
 }
