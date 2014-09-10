@@ -39,6 +39,8 @@ zstyle ':completion::approximate:*' origional true
 # 0 -- vanilla completion    (abc => abc)
 # 1 -- smart case completion (abc => Abc)
 zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:parameters' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:functions' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
