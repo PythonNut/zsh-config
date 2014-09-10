@@ -49,6 +49,8 @@
   setopt hist_no_store          # don't store history commands
   setopt hist_expire_dups_first # kill the dups! kill the dups!
   setopt hist_verify            # verify history expansions
+  setopt csh_junkie_history     # single instead of dual bang
+  setopt bang_hist              # make ! a special character
 
   # i/o and syntax
   setopt multios                # redirect to globs!
@@ -76,8 +78,8 @@
 
   setopt prompt_subst           # Preform live prompt substitution
   setopt transient_rprompt      # Get rid of old rprompts
-  setopt csh_junkie_history     # single instead of dual bang
   setopt csh_junkie_loops       # use end instead of done
   setopt continue_on_error      # don't stop! stop = bad
+  setopt traps_async            # run traps immediately
 
 } &>> ~/.zsh.d/startup.log
