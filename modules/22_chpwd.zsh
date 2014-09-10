@@ -20,7 +20,7 @@ function chpwd_async_worker () {
 function TRAPUSR2 {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
-  zsh_unpickle -i async-chpwd
+  zsh_unpickle -s -c -i async-chpwd
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
