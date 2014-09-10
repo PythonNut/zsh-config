@@ -139,7 +139,7 @@ function TRAPUSR1 {
       vcs_inotify_pid=$!
     fi
   elif (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid
+    kill $vcs_inotify_pid 2>/dev/null
     vcs_inotify_pid=-1
   fi
 
