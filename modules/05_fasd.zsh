@@ -2,25 +2,25 @@
 # FASD - all kinds of teleportation
 # =================================
 
-fasd_cache="$HOME/.zsh.d/fasd-init-cache"
-fasd_path="$HOME/.zsh.d/fasd/fasd"
+function {
+  emulate -LR zsh
+  local fasd_cache=~/.zsh.d/fasd-init-cache
+  local fasd_path=~/.zsh.d/fasd/fasd
 
-if [[ ! -w $fasd_cache ]]; then
-  echo setting fasd up
-  touch $fasd_cache
-  $fasd_path --init \
-    zsh-hook \
-    zsh-wcomp \
-    zsh-wcomp-install \
-    zsh-ccomp \
-    zsh-ccomp-install \
-    >! $fasd_cache
-fi
+  source $fasd_path
 
-source $fasd_cache
-source $fasd_path
-unset fasd_cache
-unset fasd_path
+  if [[ ! -w $fasd_cache ]]; then
+    echo setting fasd up
+    touch $fasd_cache
+    $fasd_path --init \
+      zsh-hook \
+      zsh-wcomp \
+      zsh-wcomp-install \
+      > $fasd_cache
+  fi
+
+  source $fasd_cache
+}
 
 alias a='fasd -a'        # any
 alias s='fasd -si'       # show / search / select
