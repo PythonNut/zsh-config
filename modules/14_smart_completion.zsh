@@ -65,7 +65,6 @@ function pcomplete() {
     else
       local cur_rbuffer space_index
       local -i single_match
-      local -i file_match
 
       # detect single auto-fu match
       for i in $region_highlight; do
@@ -75,9 +74,6 @@ function pcomplete() {
           $0_forward_word
           break
         elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
-          if  [[ $BUFFER != (*/|* */*) ]]; then
-            file_match=1
-          fi
           single_match=1
           break
         fi
@@ -88,9 +84,9 @@ function pcomplete() {
         if [[ $#RBUFFER == 0 ]]; then
             if [[ $LBUFFER[-1] == "/" ]]; then
             $0_force_auto
-          else
+            else
             zle magic-space
-          fi
+            fi
         else
           if [[ $LBUFFER[-2] == "/" ]]; then
             zle backward-char
