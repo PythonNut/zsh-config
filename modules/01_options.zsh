@@ -80,6 +80,5 @@
   setopt transient_rprompt      # Get rid of old rprompts
   setopt csh_junkie_loops       # use end instead of done
   setopt continue_on_error      # don't stop! stop = bad
-  setopt traps_async            # run traps immediately
 
 } &>> ~/.zsh.d/startup.log
