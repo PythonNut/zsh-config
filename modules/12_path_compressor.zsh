@@ -5,12 +5,15 @@
 # Reduce path to shortest prefixes. Heavily Optimized
 function minify_path () {
   emulate -LR zsh
-  setopt glob_dots
-  local ppath="" full_path="/" cur_path matches revise dir
+  setopt glob_dots extended_glob
+  local full_path="/" ppath cur_path dir
+  local -a revise
+  local -i matches
   eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
   for token in ${(s:/:)1}; do
     cur_path=${full_path:s/\~/$HOME/}
-    local col=1 glob=${token[0,1]}
+    local -i col=1
+    local glob="${token[0,1]}"
     cur_path=($cur_path/*(/))
     # prune the single dir case
     if [[ $#cur_path == 1 ]]; then
@@ -62,14 +65,9 @@ function minify_path_full () {
   emulate -LR zsh
   # setopt caseglob
   setopt extended_glob null_glob
-  {
-    function $0_count_arg {
-      return $(($#@-1))
-    }
-    local glob=$(minify_path $1)
-    # IFS=/ read -r -A glob <<< "$glob"
-    glob=("${(@s:/:)glob}")
-    local index=$(($#glob - 1))
+    local glob
+    glob=("${(@s:/:)$(minify_path $1)}")
+    local -i index=$(($#glob - 1))
     while ((index >= 1)); do
       if [[ ${glob[$index]} == "~" ]]; then
         break
@@ -90,20 +88,20 @@ function minify_path_full () {
     else
       echo ${(j:/:)glob}
     fi
-  } always {
-    unfunction -m "$0_*"
-  }
 }
 
 # Highlight the path's shortest prefixes. Heavily optimized
 function highlight_path () {
   emulate -LR zsh
   setopt extended_glob
-  local ppath="" full_path="/" cur_path matches revise dir
+  local full_path="/" ppath cur_path dir
+  local -i matches
+  local -a revise
   eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
   for token in ${(@s:/:)1}; do
     cur_path=${full_path:s/\~/$HOME/}
-    local col=1 glob=${token[0,1]}
+    local -i col=1
+    local glob=${token[0,1]}
     cur_path=($cur_path/*(/))
     # prune the single dir case
     if [[ $#cur_path == 1 ]]; then
@@ -146,7 +144,8 @@ function highlight_path () {
 # collapse empty runs too
 function minify_path_smart () {
   # emulate -LR zsh
-  local cur_path glob i
+  local cur_path glob
+  local -i i
   cur_path=$(minify_path_full $1)
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
     glob=${(l:$((2*$i))::\/:)}
@@ -170,7 +169,7 @@ function minify_path_fasd () {
     if [[ ${dirs[(i)$1]} -le $#dirs ]]; then
       dirs=($(print ${(f)dirs}))
       index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
-      1=$1:t
+      1=$1
       for ((i=0; i<=$#1+1; i++)); do
         for ((k=1; k<=$#1-$i; k++)); do
           test=${1[$k,$(($k+$i))]}
