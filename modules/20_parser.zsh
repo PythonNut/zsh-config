@@ -1,31 +1,32 @@
 # ============
 # Auto handler
 # ============
-_preAlias=()
+typeset -a _preAlias
 
 function _accept-line() {
   emulate -LR zsh
-  setopt extended_glob prompt_subst
+  setopt extended_glob prompt_subst transient_rprompt
   local cmd i
   
   if [[ $BUFFER == [[:space:]]##* ||  $CONTEXT == "cont" ]]; then
-  zle .accept-line
-    return 0
-
-  # if buffer is effectively empty, clear instead
-  # otherwise pass through
-  elif [[ $BUFFER == "" ]]; then
-    BUFFER="clear"
     zle .accept-line
     return 0
 
+  # if buffer is empty, clear instead
+  # otherwise pass through
+  elif [[ ! -n $BUFFER ]]; then
+    BUFFER="clear"
+    zle .accept-line
+    return 0
   fi
 
   # remove black completion "suggestions"
   for i in $region_highlight; do
-    i=("${(s/ /)i}")
-    if [[ $i[3] == *black* ]] && ((${${i[2]%% *}:-0} - ${${i[1]%% *}:-0} > 0 && ${${i[1]%% *}:-0} > 2)); then
-      BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
+    if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
+      i=("$match")
+      if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+        BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
+      fi
     fi
   done
 
@@ -38,9 +39,6 @@ function _accept-line() {
   if [[ $cmd[1] == (nocorrect|noglob|exec|command|builtin|-) ]]; then
     cmd=($cmd[2,${#cmd}])
   fi
-
-  # set the current command
-  cur_command=$cmd[1]
   
   # split by command separation delimiters
   cmd=(${(s/;/)BUFFER})
@@ -50,17 +48,10 @@ function _accept-line() {
   done
 
   zle .accept-line
-
-  # hack the syntax highlighter to highlight old lines
-  zle magic-space
-  _zsh_highlight
-  zle backward-delete-char
-  _zsh_highlight
 }
 
-zle -N _accept-line
 zle -N accept-line _accept-line
-command_not_found=1
+integer command_not_found=1
 
 function parser() {
   emulate -LR zsh
