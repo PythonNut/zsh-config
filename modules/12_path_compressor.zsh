@@ -163,23 +163,25 @@ function minify_path_smart () {
 function minify_path_fasd () {
   # emulate -LR zsh
   if [[ $(type fasd) == *function* ]]; then
-    local dirs index above higher base i k test escape
-    1=${1%(/##)}
-    dirs=$(fasd | cut -f2- -d/ | sed -e 's:.*:/&:' -e '1!G;h;$!d')
+    local dirs index above higher base test
+    local -i escape i k
+    1=${${1:A}%/}
+    dirs=${(nOa)$(fasd)##[0-9.[:space:]]##}
     if [[ ${dirs[(i)$1]} -le $#dirs ]]; then
       dirs=($(print ${(f)dirs}))
       index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
-      1=${1##*/}
+      1=$1:t
       for ((i=0; i<=$#1+1; i++)); do
         for ((k=1; k<=$#1-$i; k++)); do
           test=${1[$k,$(($k+$i))]}
+          echo $test $1
           if [[ ${index[(i)*$test*]} -ge $#index ]]; then
             echo $test
-            escape=t
+            escape=1
             break
           fi
         done
-        [[ -n $escape ]] && break
+        (( $escape == 1 )) && break
       done
     else
       printf " "
