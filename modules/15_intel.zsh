@@ -20,9 +20,8 @@ function automan() {
   comp=$(typeset -f | \grep -P "^_" | cut -f1 -d " " | cut -c2-)
   for i in $(comm -13 <(echo $comp) <(echo $cmds)); do
     _autogen_$i() {
-      local args
+      local -a args
       if [[ $words[-1] = (*-*) ]]; then
-        args=()
         name=${0:9}
         manpage=$(man $name | col -bx)
         for arg in $(manopts $name | sort -u); do
