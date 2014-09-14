@@ -1,0 +1,10 @@
+#compdef v6addr
+
+# an ipv6 utility over in my scripts repo under network/
+
+_arguments \
+  '(- *)-h[display help and exit]' \
+  '(-r)-f[forward ipv6 address]' \
+  '(-f)-r[reverse ipv6 address]' \
+  '1:ipv6address:(0 1 2 3 4 5 6 7 8 9 a b c d e f :)' \
+  && return 0
