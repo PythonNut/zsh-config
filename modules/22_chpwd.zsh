@@ -50,3 +50,5 @@ function prompt_async_compress () {
 }
 
 add-zsh-hook chpwd prompt_async_compress
+
+prompt_async_compress
