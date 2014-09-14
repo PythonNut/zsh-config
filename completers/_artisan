@@ -1,18 +1,18 @@
-#compdef teamocil
+#compdef artisan
 # ------------------------------------------------------------------------------
-# Copyright (c) 2014 Github zsh-users - https://github.com/zsh-users
+# Copyright (c) 2011 Github zsh-users - http://github.com/zsh-users
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-#     * Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in the
-#       documentation and/or other materials provided with the distribution.
-#     * Neither the name of the zsh-users nor the
-#       names of its contributors may be used to endorse or promote products
-#       derived from this software without specific prior written permission.
+# * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
+# * Neither the name of the zsh-users nor the
+# names of its contributors may be used to endorse or promote products
+# derived from this software without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -28,20 +28,26 @@
 # Description
 # -----------
 #
-#  Completion script for Teamocil 0.4.5 (https://github.com/remiprev/teamocil).
+#  Completion script for artisan (http://laravel.com/docs/artisan).
 #
 # ------------------------------------------------------------------------------
 # Authors
 # -------
 #
-#  * Petr Zelenin <petr.zelenin@gmail.com>
+#  * loranger (https://github.com/loranger)
 #
 # ------------------------------------------------------------------------------
 
-_arguments \
-    '--here[set up the first window in the current window]' \
-    '--edit[edit the YAML layout file instead of using it]' \
-    '--layout [use a specific layout file, instead of \`~/.teamocil/<layout>.yml\`]' \
-    '--list[list all available layouts in \`~/.teamocil/\`]' \
-    '--show[show the content of the layout file instead of executing it]' \
-    '*:teamocil layouts:_files -W ~/.teamocil -g "*.yml(:r)"'
+
+_artisan_get_command_list () {
+    php artisan --no-ansi | sed "1,/Available commands/d" | awk '/ [a-z]+/ { print $1 }'
+}
+
+_artisan () {
+    if [ -f artisan ]; then
+        compadd `_artisan_get_command_list`
+    fi
+}
+
+compdef _artisan php artisan
+compdef _artisan artisan

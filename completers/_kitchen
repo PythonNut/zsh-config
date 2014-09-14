@@ -1,6 +1,6 @@
-#compdef optirun
+#compdef kitchen
 # ------------------------------------------------------------------------------
-# Copyright (c) 2011 Github zsh-users - http://github.com/zsh-users
+# Copyright (c) 2014 Github zsh-users - http://github.com/zsh-users
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,48 +28,58 @@
 # Description
 # -----------
 #
-#  Completion script for the optirun command from bumblebee
-#  (https://github.com/Bumblebee-Project/Bumblebee).
+#  Completion script for Test Kitchen (http://kitchen.ci/).
 #
 # ------------------------------------------------------------------------------
 # Authors
 # -------
 #
-#  * Christophe-Marie Duquesne <chm.duquesne@gmail.com>
+#  * Peter Eisentraut (https://github.com/petere)
 #
 # ------------------------------------------------------------------------------
 
-local curcontext="$curcontext" state line
-typeset -A opt_args
 
-local -a arguments
+_kitchen() {
+  local curcontext="$curcontext" state line
+  typeset -A opt_args
 
-arguments=(
-    '--version[output version information]'
-    '(-h --help)'{-h,--help}'[show help]'
-    '(-c --vgl-compress)'{-c,--vgl-compress}'[image transport method]:method:(proxy jpeg rgb xb yuv)'
-    '--failsafe[run a program even if the nvidia card is unavailable]:boolean:(true false)'
-    '--no-failsafe[do not run a program if the nvidia card is unavailable]'
-    '--vgl-options[options to be passed to vglrun (example: +tr)]'
-    '(-q --quiet --silent)'{-q,--quiet,--silent}'[supress all logging messages]'
-    '(-v --verbose)'{-v,--verbose}'[increase the verbosity level of log messages]'
-    '--debug[set the verbosity level to the maximum]'
-    '(-b --bridge)'{-b,--bridge}'[specify bridge library to use: VirtualGL, Primus or auto]:method:(auto primus virtualgl none)'
-    '(-d --display)'{-d,--display}'[the X display number to use]'
-    '(-C --config)'{-C,--config}'[retrieve settings for Bumblebee from FILE]:file:_files'
-    '(-l --ldpath)'{-l,--ldpath}'[PATH the libraries like libGL.so are searched in]:file:_files'
-    '--primus-ldpath[a colon-separated list of paths which are searched for the primus libGL.so.1]:file:_files'
-    '(-s --socket)'{-s,--socket}'[use FILE for communication with the daemon]:file:_files'
-    '--no-xorg[do not start secondary X server (implies -b none)]'
-    '*::arguments: _normal'
-)
+  _arguments '1: :->cmds'\
+             '2: :->args'
 
-_arguments $arguments
+  case $state in
+    cmds)
+      _kitchen_commands
+      ;;
+    args)
+      case $line[1] in
+        converge|create|destroy|diagnose|list|setup|test|verify)
+          compadd 'all'
+          _kitchen_instances
+          ;;
+        login)
+          _kitchen_instances
+          ;;
+      esac
+      ;;
+  esac
+}
 
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
-# vim: ft=zsh sw=2 ts=2 et
+_kitchen_commands() {
+  local commands
+
+  commands=("${(@f)$(_call_program commands $service help | sed -n 's/^  kitchen \([[:alpha:]]*\) [ [].*# \(.*\)$/\1:\2/p')}")
+  _describe -t commands 'kitchen commands' commands
+}
+
+_kitchen_instances() {
+  if [[ $_kitchen_instances_cache_dir != $PWD ]]; then
+    unset _kitchen_instances_cache
+  fi
+  if [[ ${+_kitchen_instances_cache} -eq 0 ]]; then
+    _kitchen_instances_cache=(${(f)"$(_call_program instances $service list -b 2>/dev/null)"})
+    _kitchen_instances_cache_dir=$PWD
+  fi
+  _wanted instances expl 'instance' compadd -a _kitchen_instances_cache
+}
+
+_kitchen "$@"
