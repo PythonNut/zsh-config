@@ -84,7 +84,7 @@ zstyle ':chpwd:*' recent-dirs-default true
 zstyle ':chpwd:*' recent-dirs-pushd true
 zstyle ':chpwd:*' recent-dirs-file "$ZDOTDIR/zdirs"
 
-dirstack=(${(nu@Q)$(cat $ZDOTDIR/zdirs)})
+dirstack=(${(nu@Q)$(<$ZDOTDIR/zdirs)})
 
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true

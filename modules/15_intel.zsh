@@ -49,7 +49,10 @@ function mangen() {
 # scrapes helpfiles looking for arguments
 function autohelp() {
   emulate -LR zsh
-  for cmd in $(cat ~/.zsh.d/helpgen); do
+  if [[ ! -f ~/.zsh.d/helpgen ]]; then
+    return 1
+  fi
+  for cmd in $(<~/.zsh.d/helpgen); do
     compdef _gnu_generic $cmd
   done
 }
