@@ -65,6 +65,23 @@ function helpgen() {
   compdef _gnu_generic $1
 }
 
-{autohelp;automan}>&/dev/null
+autohelp
+automan
 
 zsh-mime-setup
+
+function auto_recompile () {
+  autoload -Uz zrecompile
+  zrecompile ~/.zsh.d/.zshrc
+
+  for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
+    zrecompile $zsh_module
+  done
+
+  for file in ~/.zsh.d/local/*.zsh(n); do
+    zrecompile $file
+  done
+}
+
+# asynchronously recompile in the background
+auto_recompile $!
