@@ -90,57 +90,6 @@ function minify_path_full () {
     fi
 }
 
-# Highlight the path's shortest prefixes. Heavily optimized
-function highlight_path () {
-  emulate -LR zsh
-  setopt extended_glob
-  local full_path="/" ppath cur_path dir
-  local -i matches
-  local -a revise
-  eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
-  for token in ${(@s:/:)1}; do
-    cur_path=${full_path:s/\~/$HOME/}
-    local -i col=1
-    local glob=${token[0,1]}
-    cur_path=($cur_path/*(/))
-    # prune the single dir case
-    if [[ $#cur_path == 1 ]]; then
-      ppath+="/"
-      continue
-    fi
-    while; do
-      matches=0
-      revise=()
-      for fulldir in $cur_path; do
-        dir=${${fulldir%%/}##*/}
-        if (( ${#dir##$glob} < $#dir )); then
-          ((matches++))
-          revise+=$fulldir
-          if ((matches > 1)); then
-            break
-          fi
-        fi
-      done
-      if (( $matches > 1 )); then
-        glob=${token[0,$((col++))]}
-        (( $col -1 > $#token )) && break
-      else
-        break
-      fi
-      cur_path=($revise)
-    done
-    if [[ "$glob" == "~" ]]; then
-      ppath+="~"
-    else
-      ppath+="/$FX[underline]${token[0,$col]}"
-      ppath+="$FX[no-underline]${token[$(($col+1)),-1]}"
-    fi
-    
-    full_path+="/$token"
-  done
-  echo ${ppath:s/\/\~/\~/}
-}
-
 # collapse empty runs too
 function minify_path_smart () {
   # emulate -LR zsh
