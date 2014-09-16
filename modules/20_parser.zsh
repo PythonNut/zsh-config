@@ -39,6 +39,8 @@ function _accept-line() {
   if [[ $cmd[1] == (nocorrect|noglob|exec|command|builtin|-) ]]; then
     cmd=($cmd[2,${#cmd}])
   fi
+
+  unset i
   
   # split by command separation delimiters
   cmd=(${(s/;/)BUFFER})

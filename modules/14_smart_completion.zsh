@@ -63,7 +63,7 @@ function pcomplete() {
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       zle predict-next-line  
     else
-      local cur_rbuffer space_index
+      local cur_rbuffer space_index i
       local -i single_match
       local -a match mbegin mend
 
