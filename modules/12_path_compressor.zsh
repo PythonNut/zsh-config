@@ -109,6 +109,7 @@ function minify_path_smart () {
 
 # find shortest unique fasd prefix. Heavily optimized
 function minify_path_fasd () {
+  zparseopts -D -E a=ALL
   # emulate -LR zsh
   if [[ $(type fasd) == *function* ]]; then
     local dirs index above higher base test
@@ -123,9 +124,11 @@ function minify_path_fasd () {
         for ((k=1; k<=$#1-$i; k++)); do
           test=${1[$k,$(($k+$i))]}
           if [[ ${index[(i)*$test*]} -ge $#index ]]; then
-            echo $test
-            escape=1
-            break
+            if [[ $(type $test) == *not* && ! -n ${(P)temp} || -n $ALL ]]; then
+              echo $test
+              escape=1
+              break
+            fi
           fi
         done
         (( $escape == 1 )) && break
