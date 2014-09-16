@@ -4,8 +4,6 @@
 _titleManual=0
 
 TMPPREFIX=/dev/shm/ # use shared memory
-LAST_PWD=${${:-.}:A}
-LAST_TITLE=""
 
 function chpwd_async_worker () {
   emulate -LR zsh
@@ -20,7 +18,7 @@ function chpwd_async_worker () {
 function TRAPUSR2 {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
-  zsh_unpickle -i async-chpwd
+  zsh_unpickle -s -c -i async-chpwd
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
@@ -28,22 +26,15 @@ function TRAPUSR2 {
 
 # Build the prompt in a background job.
 chpwd_async_worker &!
-function chpwd() {
+
+function recompute_cdpath() {
   emulate -LR zsh
   cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${${:-.}:A}/}"))}")
-  if [[ ${${:-.}:A} != $LAST_PWD ]]; then
-    chpwd_force
-  elif [[ $LAST_TITLE == "" ]]; then
-    chpwd_force
-  else
-    _setTitle $LAST_TITLE
-  fi
 }
 
-function chpwd_force() {
-  emulate -LR zsh
-  setopt equals
+add-zsh-hook chpwd recompute_cdpath
 
+function prompt_async_compress () {
   # check if we're running under Midnight Commander
   if [[ -n ${MC_TMPDIR+1} ]]; then
     chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
@@ -54,7 +45,10 @@ function chpwd_force() {
       LAST_TITLE="$(minify_path .) [$(minify_path_fasd .)]"
       _setTitle $LAST_TITLE
     fi
-    (chpwd_async_worker &!) 2> /dev/null
+    chpwd_async_worker &!
   fi
-  LAST_PWD=${${:-.}:A}
 }
+
+add-zsh-hook chpwd prompt_async_compress
+
+prompt_async_compress

@@ -16,6 +16,7 @@
   autoload -Uz add-zsh-hook       # a more modular way to hook
   autoload -Uz is-at-least        # enable graceful regression
 
+  zmodload zsh/complist           # ensure complist is loaded
   zmodload zsh/sched              # delayed execution in zsh
   zmodload zsh/mathfunc           # mathematical functions in zsh
   zmodload zsh/terminfo           # terminal parameters from terminfo

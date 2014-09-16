@@ -42,7 +42,7 @@ function go() {
   elif [[ -n $(fasd -d $@) ]]; then
     local fasd_target=$(fasd -d $@)
     local teleport
-    teleport=$(highlight_path $fasd_target)
+    teleport=${(D)fasd_target}
     teleport=" ${fg[blue]}${FX[bold]}$teleport${fg[default]}${FX[reset]}"
     if [[ $fasd_target != (*$@*) ]]; then
       read -k REPLY\?"zsh: teleport to$teleport? [ny] "

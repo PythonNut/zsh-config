@@ -5,11 +5,8 @@
 _arguments \
   '(- *)-h[display help and exit]' \
   '(-m)-f+[source file]:file:_files' \
-  '-I+[source data offset]:number:' \
   '(-f)-m+[replacement text]:message:' \
-  '-O+[alteration offset]:number:' \
-  '(-s)-S+[size of alteration]:number:' \
-  '(-S)-s[use all of source file]' \
+  '-O+[offset of alteration]:number:' \
   '-t+[truncate to offset]:number:' \
   '*:file:_files' \
   && return 0

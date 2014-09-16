@@ -55,27 +55,29 @@ function pcomplete() {
       _oldlist \
       _complete \
       _match \
-      _approximate \
       _files \
       _history \
-      _prefix
+      _prefix \
+      _approximate
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       zle predict-next-line  
     else
-      local cur_rbuffer space_index
+      local cur_rbuffer space_index i
       local -i single_match
+      local -a match mbegin mend
 
       # detect single auto-fu match
       for i in $region_highlight; do
-        # sanitize to prevent $((...)) from crashing
-        i=(${(@s/ /)i[1,2]%%[^0-9]*} ${(@s/ /)i[3,-1]})
-        if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-          $0_forward_word
-          break
-        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
-          single_match=1
-          break
+        if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
+          i=("$match")
+          if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+            $0_forward_word
+            break
+          elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
+            single_match=1
+            break
+          fi
         fi
       done
 

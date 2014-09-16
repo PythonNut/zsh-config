@@ -2,8 +2,6 @@
 # Aliases
 # =======
 typeset -A global_abbrevs command_abbrevs
-global_abbrevs=()
-command_abbrevs=()
 
 function alias () {
   emulate -LR zsh

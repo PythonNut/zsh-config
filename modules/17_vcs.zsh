@@ -119,7 +119,7 @@ function TRAPUSR1 {
   emulate -LR zsh
   setopt zle 2>/dev/null
   setopt prompt_subst transient_rprompt no_clobber
-  zsh_unpickle -s -i vcs-data
+  zsh_unpickle -s -c -i vcs-data
   
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$vcs_super_info
@@ -139,7 +139,7 @@ function TRAPUSR1 {
       vcs_inotify_pid=$!
     fi
   elif (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid
+    kill $vcs_inotify_pid 2>/dev/null
     vcs_inotify_pid=-1
   fi
 

@@ -8,7 +8,7 @@ bindkey $nbsp backward-kill-line
 function compute_prompt () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
-  local black=$fg[black]
+  local black=$fg_bold[black]
   PS1=$'%{${fg[red]}%}%(?..Error: (%?%)\n)' # errors
   PS1+="%{${fg[default]}%}[%{%(#~$fg[red]~$black)$FX[bold]%}"  # root or not
   PS1+='%n%{${fg[default]}${bg[default]}$FX[reset]%} $chpwd_s_str'  # Username
@@ -21,11 +21,6 @@ function compute_prompt () {
 }
 
 compute_prompt
-
-function precmd() {
-  cur_command=""
-  chpwd
-}
 
 add-zsh-hook precmd compute_prompt
 
