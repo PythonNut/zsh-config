@@ -37,18 +37,27 @@ add-zsh-hook chpwd recompute_cdpath
 function prompt_async_compress () {
   # check if we're running under Midnight Commander
   if [[ -n ${MC_TMPDIR+1} ]]; then
-    chpwd_s_str=${${:-.}:A:t} # or $(basename $(pwd))
+    chpwd_s_str=${${:-.}:A:t}
     zle && zle reset-prompt
   else
-    chpwd_str=$(minify_path .)
-    if [[ $_titleManual == 0 ]]; then 
-      LAST_TITLE="$(minify_path .) [$(minify_path_fasd .)]"
-      _setTitle $LAST_TITLE
+    chpwd_s_str=$(minify_path .)
+    if [[ $_titleManual == 0 ]]; then
+      _setTitle "$(minify_path .) [$(minify_path_fasd .)]"
     fi
     chpwd_async_worker &!
   fi
 }
 
+
+function title_async_compress () {
+  if [[ ! -n ${MC_TMPDIR+1} ]] && (( $_titleManual == 0 )); then
+    # minify_path will not change over time, fasd will
+    _setTitle "$chpwd_s_str [$(minify_path_fasd .)]"
+  fi
+}
+
 add-zsh-hook chpwd prompt_async_compress
+add-zsh-hook precmd title_async_compress
 
 prompt_async_compress
+title_async_compress
