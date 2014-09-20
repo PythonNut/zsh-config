@@ -1,6 +1,11 @@
 # set the title
 function _setTitle() {
   emulate -LR zsh
+
+  if (( $degraded_terminal[title] == 1 )); then
+    return 0
+  fi
+  
   local titlestart='' titlefinish=''
 
   # determine the terminals escapes
@@ -25,7 +30,6 @@ function _setTitle() {
   esac
 
   test -z "${titlestart}" && return 0
-  [[ -n ${EMACS+1} || $_OLD_TERM == "dumb" ]] && return 0
   printf "${titlestart}$* ${titlefinish}"
 }
 
