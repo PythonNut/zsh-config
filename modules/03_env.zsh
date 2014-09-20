@@ -51,11 +51,13 @@ case $_OLD_TERM in
     PS1="$ "
     unsetopt prompt_cr
     return 0;;
-   
-  (screen*)
-    export TERM='linux'
+    
+  (linux)
     degraded_terminal[unicode]=1;;
-   
+
+  (screen*|tmux*)
+    export TERM='linux';;
+    
   (*)
     export TERM=xterm
     [[ -f /usr/share/terminfo/x/xterm-256color ]] && {
