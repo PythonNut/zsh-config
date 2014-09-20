@@ -2,8 +2,9 @@
 # Prompt
 # ======
 
-nbsp=$'\u00A0' # a prompt that commits suicide when pasted
-bindkey $nbsp backward-kill-line
+# a prompt that commits suicide when pasted
+nbsp=$'\u00A0'
+global_bindkey $nbsp backward-kill-line
 
 function compute_prompt () {
   emulate -LR zsh
