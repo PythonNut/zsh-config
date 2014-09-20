@@ -70,7 +70,7 @@ function parser() {
       
       # if it's in CDPATH, teleport there
     elif [[ ${${${$(echo $cdpath*(/))%/}##*/}[(r)${1%/}]} == ${1%/} ]]; then
-      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg[blue]\$FX[bold]\${${:-.}:A}\$reset_color"
+      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg_bold[blue]\${${:-.}:A}\$reset_color"
       _preAlias+=($1)
       
       # if it contains math special characters, try to evaluate it
