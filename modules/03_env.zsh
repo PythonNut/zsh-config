@@ -29,32 +29,49 @@ typeset -U cdpath
 NULLCMD="cat"
 READNULLCMD="less"
 
+# =================
+# Terminal handling
+# =================
+
+# Indicates terminal does not support colors/decorations/unicode 
+typeset -A degraded_terminal
+
+degraded_terminal=(
+  colors      0
+  decorations 0
+  unicode     0
+  rprompt     0
+  title       0
+) 
+
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
-   (dumb)
-      emulate sh
-      PS1="$ "
-      unsetopt prompt_cr
-      return 0;;
+  (dumb)
+    emulate sh
+    PS1="$ "
+    unsetopt prompt_cr
+    return 0;;
    
-   (screen*)
-      export TERM='linux';;
+  (screen*)
+    export TERM='linux'
+    degraded_terminal[unicode]=1;;
    
-   (*)
-      export TERM=xterm
-      [[ -f /usr/share/terminfo/x/xterm-256color ]] && {
-        export TERM=xterm-256color
-      };;
+  (*)
+    export TERM=xterm
+    [[ -f /usr/share/terminfo/x/xterm-256color ]] && {
+      export TERM=xterm-256color
+    };;
 esac
 
-# color files in ls
-{
-   DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
-   eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
-} always {
-   # make sure DIRCOLORS does not pollute the environment
-   unset DIRCOLORS
-}
+if [[ -n ${MC_TMPDIR+1} ]]; then
+  degraded_terminal[rprompt]=1
+  degraded_terminal[decorations]=1
+  degraded_terminal[title]=1
+fi
+
+if [[ -n ${EMACS+1} ]]; then
+    degraded_terminal[title]=1
+fi
 
 # ======
 # Colors
@@ -64,13 +81,19 @@ colors
 
 # effects
 FX=(
-   reset     "[00m"
-   bold      "[01m" no-bold      "[22m"
-   italic    "[03m" no-italic    "[23m"
-   underline "[04m" no-underline "[24m"
-   blink     "[05m" no-blink     "[25m"
-   reverse   "[07m" no-reverse   "[27m"
+  reset     "[00m"
+  bold      "[01m" no-bold      "[22m"
+  italic    "[03m" no-italic    "[23m"
+  underline "[04m" no-underline "[24m"
+  blink     "[05m" no-blink     "[25m"
+  reverse   "[07m" no-reverse   "[27m"
 )
+
+function () {
+  local DIRCOLORS
+  DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
+  eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
+}
 
 # ==========================
 # Persistent directory stack

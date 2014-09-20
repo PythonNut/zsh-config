@@ -1,7 +1,6 @@
 # ======
 # Prompt
 # ======
-
 # a prompt that commits suicide when pasted
 nbsp=$'\u00A0'
 global_bindkey $nbsp backward-kill-line
@@ -20,7 +19,7 @@ function compute_prompt () {
   # username and reset decorations, compressed_path
   PS1+='%n%{${fg[default]}${bg[default]}$FX[reset]%} $chpwd_s_str'
 
-  if [[ ! -n ${MC_TMPDIR+1} ]]; then
+  if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
     PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")"
 
@@ -31,7 +30,6 @@ function compute_prompt () {
     RPS1=$RPS1"\${vcs_info_msg_0_}"
 
   else
-    # right prompt messes Midnight Commander up.
     RPS1=""
     PS1+=" \${vcs_info_msg_0_} "
   fi
