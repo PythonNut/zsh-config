@@ -1,7 +1,6 @@
 # ========================================
 # Title + Path compression + chpwd handler
 # ========================================
-_titleManual=0
 
 TMPPREFIX=/dev/shm/ # use shared memory
 
@@ -47,15 +46,5 @@ function prompt_async_compress () {
 }
 
 
-function title_async_compress () {
-  if (( $degraded_terminal[title] != 1 && $_titleManual == 0 )); then
-    # minify_path will not change over time, fasd will
-    _settitle "$chpwd_s_fallback_str [$(minify_path_fasd .)]"
-  fi
-}
-
 add-zsh-hook chpwd prompt_async_compress
-add-zsh-hook precmd title_async_compress
-
 prompt_async_compress
-title_async_compress
