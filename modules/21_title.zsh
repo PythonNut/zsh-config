@@ -1,5 +1,7 @@
+integer chpwd_title_manual
+
 # set the title
-function _setTitle() {
+function _settitle() {
   emulate -LR zsh
 
   if (( $degraded_terminal[title] == 1 )); then
@@ -10,7 +12,10 @@ function _setTitle() {
 
   # determine the terminals escapes
   case "$_OLD_TERM" in
-    (aixterm|dtterm|putty|rxvt|xterm*)
+    (xterm*)
+      titlestart='\e]0;'
+      titlefinish='\a';;
+    (aixterm|dtterm|putty|rxvt)
       titlestart='\033]0;'
       titlefinish='\007';;
     (cygwin)
@@ -30,22 +35,36 @@ function _setTitle() {
   esac
 
   test -z "${titlestart}" && return 0
-  printf "${titlestart}$* ${titlefinish}"
+  print -Pn "${(%)titlestart}$* ${(%)titlefinish}"
 }
 
 # if title set manually, dont set automatically
 function settitle() {
   emulate -LR zsh
-  _titleManual=1
-  _setTitle $1
+  chpwd_title_manual=1
+  _settitle $1
   if [[ ! -n $1 ]]; then
-    _titleManual=0
-    chpwd_force
+    chpwd_title_manual=0
+    _settitle
   fi
 }
 
-{
-  # let's initialize the title
-  alias settitle="nocorrect settitle"
-  _setTitle $(minify_path .)
-} &>> ~/.zsh.d/startup.log
+function title_async_compress_command () {
+  if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
+    # minify_path will not change over time, fasd will
+    _settitle "$chpwd_s_fallback_str [$(minify_path_fasd .)] $cur_command"
+  fi
+}
+
+add-zsh-hook preexec title_async_compress_command
+
+function title_async_compress () {
+  if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
+    # minify_path will not change over time, fasd will
+    _settitle "$chpwd_s_fallback_str [$(minify_path_fasd .)]"
+  fi
+}
+
+add-zsh-hook precmd title_async_compress
+
+title_async_compress
