@@ -51,6 +51,8 @@ function settitle() {
 
 function title_async_compress_command () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
+    local cur_command
+    cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
     # minify_path will not change over time, fasd will
     _settitle "$chpwd_s_fallback_str [$(minify_path_fasd .)] $cur_command"
   fi

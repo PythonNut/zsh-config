@@ -49,8 +49,6 @@ function _accept-line() {
     parser "${${token##[[:space:]]#}%%[[:space:]]#}"
   done
 
-  cur_command="${${${cmd[1]}##[[:space:]]#}%%[[:space:]]*}"
-
   zle .accept-line
 }
 
