@@ -6,6 +6,8 @@
   setopt local_options no_rc_expand_param
   source ~/.zsh.d/auto-fu/auto-fu.zsh
   afu-zle-aysce-install() {}
+  -zle-force-install() {}
+
   zle-line-init () {
     emulate -LR zsh
     setopt prompt_subst
