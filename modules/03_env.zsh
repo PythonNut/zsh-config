@@ -37,12 +37,13 @@ READNULLCMD="less"
 typeset -A degraded_terminal
 
 degraded_terminal=(
-  colors      0
-  decorations 0
-  unicode     0
-  rprompt     0
-  title       0
-) 
+  colors       0
+  decorations  0
+  unicode      0
+  rprompt      0
+  title        0
+  display_host 0
+)
 
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
@@ -73,6 +74,12 @@ fi
 
 if [[ -n ${EMACS+1} ]]; then
     degraded_terminal[title]=1
+fi
+
+if [[ -n "$SSH_CLIENT" || -n "SSH_TTY" ]]; then
+  degraded_terminal[display_host]=1
+elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
+  degraded_terminal[display_host]=1
 fi
 
 # ======
