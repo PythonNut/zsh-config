@@ -52,9 +52,15 @@ function settitle() {
 function title_async_compress_command () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
     local cur_command
+
+    local host=""
+    if (( $degraded_terminal[display_host] == 1 )); then
+      host="$(print -P '%m') "
+    fi
+
     cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
     # minify_path will not change over time, fasd will
-    _settitle "$chpwd_s_fallback_str [$(minify_path_fasd .)] $cur_command"
+    _settitle "${host}$chpwd_s_fallback_str [$(minify_path_fasd .)] $cur_command"
   fi
 }
 
@@ -62,8 +68,14 @@ add-zsh-hook preexec title_async_compress_command
 
 function title_async_compress () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
+
+    local host=""
+    if (( $degraded_terminal[display_host] == 1 )); then
+      host="$(print -P '%m') "
+
+    fi
     # minify_path will not change over time, fasd will
-    _settitle "$chpwd_s_fallback_str [$(minify_path_fasd .)]"
+    _settitle "${host}$chpwd_s_fallback_str [$(minify_path_fasd .)]"
   fi
 }
 
