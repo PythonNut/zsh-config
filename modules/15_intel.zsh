@@ -86,7 +86,7 @@ function helpgen() {
 }
 
 autohelp
-automan
+# automan
 
 zsh-mime-setup
 
