@@ -24,7 +24,7 @@ function alias () {
 
 {
   # proxy aliases
-  BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc'
+  BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
   alias lsa='\ls --color --group-directories-first'
   alias lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
   alias egrep='nocorrect \egrep --line-buffered --color=auto'
