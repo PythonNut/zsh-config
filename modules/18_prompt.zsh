@@ -17,7 +17,17 @@ function compute_prompt () {
   PS1+="%{${fg[default]}%}[%{%(#~$fg_bold[red]~$black)%}"
 
   # username and reset decorations, compressed_path
-  PS1+='%n%{${fg_no_bold[default]}${bg[default]}%} $chpwd_s_str'
+  PS1+='%n%{${fg_no_bold[default]}${bg[default]}%}'
+
+  if (( $degraded_terminal[display_host] == 1 )); then
+    if (( $degraded_terminal[colors256] != 1 )); then
+      # hash hostname and generate one of 256 colors
+      PS1+="%F{$((0x${$(print -P '%m'|md5sum):1:2}))}"
+      PS1+="@${${(j: :)$(print -P "%m")}:0:3}%k%f"
+    fi
+  fi
+
+  PS1+=' $chpwd_s_str'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
