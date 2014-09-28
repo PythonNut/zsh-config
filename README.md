@@ -24,7 +24,8 @@ My goal is to continue adding features and deep integration with other tools. I 
 * Fedora 16 stable 64
 * Fedora 20 stable 32
 * Fedora rawhide 64
-* Ubuntu 64
+* Ubuntu 14.10 64
+* FreeBSD 10 64
 
 And with the following zsh versions
 
