@@ -38,6 +38,7 @@ typeset -A degraded_terminal
 
 degraded_terminal=(
   colors       0
+  colors256    0
   decorations  0
   unicode      0
   rprompt      0
