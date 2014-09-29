@@ -1,4 +1,14 @@
-TMPPREFIX=/dev/shm/
+# ===========================
+# Asynchronous object passing
+# ===========================
+
+if [[ -d /dev/shm/ ]]; then
+  # tmpfs on /dev/shm is linux only
+  TMPPREFIX=/dev/shm/
+else
+  # may not be a tmpfs on BSDs
+  TMPPREFIX=/tmp/
+fi
 
 function zsh_pickle () {
   # i - the name of the pickle
