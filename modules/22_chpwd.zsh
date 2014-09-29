@@ -2,8 +2,6 @@
 # Title + Path compression + chpwd handler
 # ========================================
 
-TMPPREFIX=/dev/shm/ # use shared memory
-
 function chpwd_async_worker () {
   emulate -LR zsh
   chpwd_s_str=$(minify_path_smart .)

@@ -99,8 +99,6 @@ function vcs_async_info () {
   zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
-VCS_ASYNC_TMP="/dev/shm"
-
 function vcs_async_info_worker () {
   emulate -LR zsh
   setopt noclobber multios
