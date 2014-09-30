@@ -29,8 +29,10 @@ function compute_prompt () {
       if (( $+commands[md5sum] )); then
         # hash hostname and generate one of 256 colors
         PS1+="%F{$((0x${$(print -P '%m'|md5sum):1:2}))}"
-        PS1+="@${${(j: :)$(print -P "%m")}:0:3}%k%f"
+      elif (( $+commands[md5] )); then
+        PS1+="%F{$((0x${$(print -P '%m'|md5):1:2}))}"
       fi
+      PS1+="@${${(j: :)$(print -P "%m")}:0:3}%k%f"
     fi
   fi
 
