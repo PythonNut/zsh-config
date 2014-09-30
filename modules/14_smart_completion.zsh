@@ -17,8 +17,8 @@ function pcomplete() {
 
     # hack a local function scope using unfuction
     function $0_forward_word () {
-      local space_index
-      space_index=$(expr index "$RBUFFER" ' ')
+      local -i space_index
+      space_index=${RBUFFER[(i) ]}
       if ((space_index == 0)); then
         zle .end-of-line
       else
