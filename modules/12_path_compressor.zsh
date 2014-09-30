@@ -116,14 +116,14 @@ function minify_path_fasd () {
     local -i escape i k
     1=${${1:A}%/}
     dirs=${(nOa)$(fasd)##[0-9.[:space:]]##}
-    if [[ ${dirs[(i)$1]} -le $#dirs ]]; then
+    if (( ${+dirs[(r)$1]} )); then
       dirs=($(print ${(f)dirs}))
       index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
       1=$1:t
       for ((i=0; i<=$#1+1; i++)); do
         for ((k=1; k<=$#1-$i; k++)); do
           test=${1[$k,$(($k+$i))]}
-          if [[ ${index[(i)*$test*]} -ge $#index ]]; then
+          if (( ! ${+index[(r)*$test*]} )); then
             if [[ $(type $test) == *not* && ! -n ${(P)temp} || -n $ALL ]]; then
               echo $test
               escape=1
