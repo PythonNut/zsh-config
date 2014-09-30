@@ -83,6 +83,10 @@ elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
   degraded_terminal[display_host]=1
 fi
 
+if [[ $(locale) != *LANG=*UTF-8* ]]; then
+  degraded_terminal[unicode]=1
+fi
+
 # ======
 # Colors
 # ======
