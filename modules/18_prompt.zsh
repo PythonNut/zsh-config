@@ -1,9 +1,14 @@
 # ======
 # Prompt
 # ======
-# a prompt that commits suicide when pasted
-nbsp=$'\u00A0'
-global_bindkey $nbsp backward-kill-line
+
+if (( $degraded_terminal[unicode] != 1 )); then
+  # a prompt that commits suicide when pasted
+  nbsp=$'\u00A0'
+  global_bindkey $nbsp backward-kill-line
+else
+  nbsp=$' '
+fi
 
 function compute_prompt () {
   emulate -LR zsh
