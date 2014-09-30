@@ -1,9 +1,14 @@
 # ======
 # Prompt
 # ======
-# a prompt that commits suicide when pasted
-nbsp=$'\u00A0'
-global_bindkey $nbsp backward-kill-line
+
+if (( $degraded_terminal[unicode] != 1 )); then
+  # a prompt that commits suicide when pasted
+  nbsp=$'\u00A0'
+  global_bindkey $nbsp backward-kill-line
+else
+  nbsp=$' '
+fi
 
 function compute_prompt () {
   emulate -LR zsh
@@ -21,9 +26,11 @@ function compute_prompt () {
 
   if (( $degraded_terminal[display_host] == 1 )); then
     if (( $degraded_terminal[colors256] != 1 )); then
-      # hash hostname and generate one of 256 colors
-      PS1+="%F{$((0x${$(print -P '%m'|md5sum):1:2}))}"
-      PS1+="@${${(j: :)$(print -P "%m")}:0:3}%k%f"
+      if (( $+commands[md5sum] )); then
+        # hash hostname and generate one of 256 colors
+        PS1+="%F{$((0x${$(print -P '%m'|md5sum):1:2}))}"
+        PS1+="@${${(j: :)$(print -P "%m")}:0:3}%k%f"
+      fi
     fi
   fi
 

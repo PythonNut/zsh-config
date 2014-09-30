@@ -83,6 +83,10 @@ elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
   degraded_terminal[display_host]=1
 fi
 
+if [[ $(locale) != *LANG=*UTF-8* ]]; then
+  degraded_terminal[unicode]=1
+fi
+
 # ======
 # Colors
 # ======
@@ -100,9 +104,11 @@ FX=(
 )
 
 function () {
-  local DIRCOLORS
-  DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
-  eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
+  if (( $+commands[dircolors] )); then
+    local DIRCOLORS
+    DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
+    eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
+  fi
 }
 
 # ==========================
