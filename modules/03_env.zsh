@@ -62,9 +62,11 @@ case $_OLD_TERM in
     
   (*)
     export TERM=xterm
-    [[ -f /usr/share/terminfo/x/xterm-256color ]] && {
+    if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
       export TERM=xterm-256color
-    };;
+    elif [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
+      export TERM=xterm-256color
+    fi;;
 esac
 
 if [[ -n ${MC_TMPDIR+1} ]]; then

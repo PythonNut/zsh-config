@@ -25,8 +25,13 @@ function alias () {
 {
   # proxy aliases
   BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
-  alias lsa='\ls --color --group-directories-first'
-  alias lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
+  if [[ $OSTYPE != (#i)(free|open|net)bsd* ]]; then
+    alias lsa='\ls --color --group-directories-first'
+    alias lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
+  else
+    # in BSD, -G is the equivalent of --color
+    alias lst='\ls -G'
+  fi
   alias egrep='nocorrect \egrep --line-buffered --color=auto'
 
   # ls aliases
