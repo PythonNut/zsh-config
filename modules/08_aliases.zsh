@@ -90,8 +90,13 @@ function alias () {
 
   # yum aliases
   if (( $+commands[yum] )); then
-    alias yum-config-manager='nocorrect noglob \yum-config-manager'
-    alias yum='nocorrect noglob \yum'
+    if (( $user_has_root == 1 )); then
+      alias yum-config-manager='nocorrect noglob \yum-config-manager'
+      alias yum='nocorrect noglob \yum'
+    else
+      alias yum-config-manager='nocorrect noglob sudo \yum-config-manager'
+      alias yum='nocorrect noglob sudo \yum'
+    fi
   fi
 
   # git aliases
