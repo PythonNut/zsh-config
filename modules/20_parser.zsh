@@ -15,8 +15,8 @@ function _accept-line() {
   # if buffer is empty, clear instead
   # otherwise pass through
   elif [[ ! -n $BUFFER ]]; then
-    BUFFER="clear"
-    zle .accept-line
+    zle clear-screen
+    zle-line-init
     return 0
   fi
 
