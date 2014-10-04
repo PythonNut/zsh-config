@@ -2,6 +2,17 @@
 # Environment
 # ===========
 
+# check if user has root privileges
+integer user_has_root
+function {
+  local -a users_with_root
+  users_with_root=(${${(n)$(getent passwd 0)}%%:*})
+  if (( $+users_with_root[(r)$USER] )); then
+    echo Warning! This user has root privileges.
+    user_has_root=1
+  fi
+}
+
 raw_cdpath=(~/ /etc/ /run/media/$USER/)
 cdpath=(/etc/ /run/media/$USER/)
 
