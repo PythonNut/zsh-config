@@ -60,7 +60,7 @@ function title_async_compress_command () {
 
     cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
     # minify_path will not change over time, fasd will
-    _settitle "${host}$chpwd_s_fallback_str [$chpwd_minify_fasd_str] $cur_command"
+    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str] $cur_command"
   fi
 }
 
@@ -75,7 +75,7 @@ function title_async_compress () {
 
     fi
     # minify_path will not change over time, fasd will
-    _settitle "${host}$chpwd_s_fallback_str [$chpwd_minify_fasd_str]"
+    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]"
   fi
 }
 

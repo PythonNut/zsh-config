@@ -17,7 +17,7 @@ function compute_prompt () {
   PS1+="%{${fg[default]}%}[%{%(#~$fg_bold[red]~$black)%}"
 
   # username and reset decorations, compressed_path
-  PS1+='%n%{${fg_no_bold[default]}${bg[default]}%} $chpwd_s_str'
+  PS1+='%n%{${fg_no_bold[default]}${bg[default]}%} $chpwd_minify_smart_str'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
