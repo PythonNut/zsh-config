@@ -33,6 +33,7 @@ function recompute_cdpath() {
 }
 
 add-zsh-hook chpwd recompute_cdpath
+recompute_cdpath
 
 function prompt_async_compress () {
   # check if we're running under Midnight Commander
