@@ -2,14 +2,24 @@
 # Environment
 # ===========
 
+# check if user has root privileges
+integer user_has_root
+function {
+  local -a users_with_root
+  users_with_root=(${${(n)$(getent passwd 0)}%%:*})
+  if (( $+users_with_root[(r)$USER] )); then
+    echo Warning! This user has root privileges.
+    user_has_root=1
+  fi
+}
+
 raw_cdpath=(~/ /etc/ /run/media/$USER/)
 cdpath=(/etc/ /run/media/$USER/)
 
-HISTFILE=~/.zsh.d/.histfile
+HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=50000
 SAVEHIST=50000
 
-export ZDOTDIR=~/.zsh.d
 export EDITOR="vim"
 export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
@@ -29,32 +39,65 @@ typeset -U cdpath
 NULLCMD="cat"
 READNULLCMD="less"
 
+# =================
+# Terminal handling
+# =================
+
+# Indicates terminal does not support colors/decorations/unicode 
+typeset -A degraded_terminal
+
+degraded_terminal=(
+  colors       0
+  colors256    0
+  decorations  0
+  unicode      0
+  rprompt      0
+  title        0
+  display_host 0
+)
+
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
-   (dumb)
-      emulate sh
-      PS1="$ "
-      unsetopt prompt_cr
-      return 0;;
-   
-   (screen*)
-      export TERM='linux';;
-   
-   (*)
-      export TERM=xterm
-      [[ -f /usr/share/terminfo/x/xterm-256color ]] && {
-        export TERM=xterm-256color
-      };;
+  (dumb)
+    emulate sh
+    PS1="$ "
+    unsetopt prompt_cr
+    return 0;;
+    
+  (linux)
+    degraded_terminal[unicode]=1;;
+
+  (screen*|tmux*)
+    export TERM='linux';;
+    
+  (*)
+    export TERM=xterm
+    if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
+      export TERM=xterm-256color
+    elif [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
+      export TERM=xterm-256color
+    fi;;
 esac
 
-# color files in ls
-{
-   DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
-   eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
-} always {
-   # make sure DIRCOLORS does not pollute the environment
-   unset DIRCOLORS
-}
+if [[ -n ${MC_TMPDIR+1} ]]; then
+  degraded_terminal[rprompt]=1
+  degraded_terminal[decorations]=1
+  degraded_terminal[title]=1
+fi
+
+if [[ -n ${EMACS+1} ]]; then
+    degraded_terminal[title]=1
+fi
+
+if [[ -n "$SSH_CLIENT" || -n "SSH_TTY" ]]; then
+  degraded_terminal[display_host]=1
+elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
+  degraded_terminal[display_host]=1
+fi
+
+if [[ $(locale) != *LANG=*UTF-8* ]]; then
+  degraded_terminal[unicode]=1
+fi
 
 # ======
 # Colors
@@ -64,13 +107,21 @@ colors
 
 # effects
 FX=(
-   reset     "[00m"
-   bold      "[01m" no-bold      "[22m"
-   italic    "[03m" no-italic    "[23m"
-   underline "[04m" no-underline "[24m"
-   blink     "[05m" no-blink     "[25m"
-   reverse   "[07m" no-reverse   "[27m"
+  reset     "[00m"
+  bold      "[01m" no-bold      "[22m"
+  italic    "[03m" no-italic    "[23m"
+  underline "[04m" no-underline "[24m"
+  blink     "[05m" no-blink     "[25m"
+  reverse   "[07m" no-reverse   "[27m"
 )
+
+function () {
+  if (( $+commands[dircolors] )); then
+    local DIRCOLORS
+    DIRCOLORS=$ZDOTDIR/dircolors-solarized/dircolors.ansi-universal
+    eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
+  fi
+}
 
 # ==========================
 # Persistent directory stack
@@ -79,12 +130,14 @@ FX=(
 autoload -Uz chpwd_recent_dirs cdr
 add-zsh-hook chpwd chpwd_recent_dirs
 
+touch $ZDOTDIR/zdirs
+
 zstyle ':chpwd:*' recent-dirs-max 100
 zstyle ':chpwd:*' recent-dirs-default true
 zstyle ':chpwd:*' recent-dirs-pushd true
 zstyle ':chpwd:*' recent-dirs-file "$ZDOTDIR/zdirs"
 
-dirstack=(${(nu@Q)$(cat $ZDOTDIR/zdirs)})
+dirstack=(${(nu@Q)$(<$ZDOTDIR/zdirs)})
 
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true

@@ -1,6 +1,6 @@
 function zaw-src-open-file-recursive() {
   local root parent f
-  setopt local_options null_glob
+  setopt local_options null_glob glob_dots
   if (( $# == 0 )); then
     root="${PWD}/"
   else

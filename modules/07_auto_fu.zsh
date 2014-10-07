@@ -4,12 +4,16 @@
 
 {
   setopt local_options no_rc_expand_param
-  source ~/.zsh.d/auto-fu/auto-fu.zsh
+  source $ZDOTDIR/auto-fu/auto-fu.zsh
   afu-zle-aysce-install() {}
+  -zle-force-install() {}
+  integer afu_enabled=1
   zle-line-init () {
     emulate -LR zsh
     setopt prompt_subst
-    auto-fu-init
+    if (( $afu_enabled == 1 )); then
+      auto-fu-init
+    fi
   }
   zle -N zle-line-init
 
@@ -21,7 +25,7 @@
   zstyle ':completion:*:options' description no
   zstyle ':completion:*' completer _oldlist _complete
 
-  afu_menu=1
+  integer afu_menu=1
   toggle_afu() {
     if [[ $afu_menu == 1 ]]; then
       afu_menu=0
@@ -33,7 +37,7 @@
   # highjack afu-comppost function
   afu-comppost () {
     emulate -LR zsh
-    local will_complete
+    local -i will_complete
     will_complete=$afu_menu
     if [[ $BUFFER[1] == ' ' ]]; then
       will_complete=0
@@ -59,7 +63,7 @@
     afu_curcompleter=$_completer
   }
   setopt rc_expand_param
-} &>> ~/.zsh.d/startup.log
+} &>> $ZDOTDIR/startup.log
 
 function global_bindkey () {
   bindkey -M command $@

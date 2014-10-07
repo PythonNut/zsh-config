@@ -65,20 +65,15 @@ global_bindkey . rationalise_dot
 # without this, typing a "." aborts incremental history search
 bindkey -M isearch . self-insert
 
-# ^Z to foreground the last suspended job.
-foreground-current-job() { fg; }
-zle -N foreground-current-job
-global_bindkey '^z' foreground-current-job
-
 # zaw: helm.el for zsh
 function () {
   emulate -LR zsh
-  source ~/.zsh.d/zsh-zaw/zaw.zsh
-  source ~/.zsh.d/zaw-src-git-log/zaw-git-log.zsh
-  source ~/.zsh.d/zaw-src-git-show-branch/zaw-git-show-branch.zsh
+  source $ZDOTDIR/zsh-zaw/zaw.zsh
+  source $ZDOTDIR/zaw-src-git-log/zaw-git-log.zsh
+  source $ZDOTDIR/zaw-src-git-show-branch/zaw-git-show-branch.zsh
 
   # and import other zaw sources
-  for file in ~/.zsh.d/zaw-misc-sources/*.zsh(n); do
+  for file in $ZDOTDIR/zaw-misc-sources/*.zsh(n); do
     source $file
   done
 

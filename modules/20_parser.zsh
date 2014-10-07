@@ -1,31 +1,32 @@
 # ============
 # Auto handler
 # ============
-_preAlias=()
+typeset -a _preAlias
 
 function _accept-line() {
   emulate -LR zsh
-  setopt extended_glob prompt_subst
+  setopt extended_glob prompt_subst transient_rprompt
   local cmd i
   
   if [[ $BUFFER == [[:space:]]##* ||  $CONTEXT == "cont" ]]; then
-  zle .accept-line
-    return 0
-
-  # if buffer is effectively empty, clear instead
-  # otherwise pass through
-  elif [[ $BUFFER == "" ]]; then
-    BUFFER="clear"
     zle .accept-line
     return 0
 
+  # if buffer is empty, clear instead
+  # otherwise pass through
+  elif [[ ! -n $BUFFER ]]; then
+    zle clear-screen
+    zle-line-init
+    return 0
   fi
 
   # remove black completion "suggestions"
   for i in $region_highlight; do
-    i=("${(s/ /)i}")
-    if [[ $i[3] == *black* ]] && ((${${i[2]%% *}:-0} - ${${i[1]%% *}:-0} > 0 && ${${i[1]%% *}:-0} > 2)); then
-      BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
+    if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
+      i=("$match")
+      if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+        BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
+      fi
     fi
   done
 
@@ -39,8 +40,7 @@ function _accept-line() {
     cmd=($cmd[2,${#cmd}])
   fi
 
-  # set the current command
-  cur_command=$cmd[1]
+  unset i
   
   # split by command separation delimiters
   cmd=(${(s/;/)BUFFER})
@@ -58,9 +58,8 @@ function _accept-line() {
   _zsh_highlight
 }
 
-zle -N _accept-line
 zle -N accept-line _accept-line
-command_not_found=1
+integer command_not_found=1
 
 function parser() {
   emulate -LR zsh
@@ -77,7 +76,7 @@ function parser() {
       
       # if it's in CDPATH, teleport there
     elif [[ ${${${$(echo $cdpath*(/))%/}##*/}[(r)${1%/}]} == ${1%/} ]]; then
-      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg[blue]\$FX[bold]\${${:-.}:A}\$reset_color"
+      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg_bold[blue]\${${:-.}:A}\$reset_color"
       _preAlias+=($1)
       
       # if it contains math special characters, try to evaluate it
@@ -124,7 +123,6 @@ function parser() {
       _preAlias+=($1)
       
       # last resort, forward to teleport handler
-      # elif [[ -n $(j --stat | cut -f2 | sed -e '$d' | fgrep -i $1) ]]; then
     elif [[ -n $(fasd -d $@) ]]; then
       alias $@="go $@"
       _preAlias+=($@)
@@ -136,7 +134,6 @@ function parser() {
 
 function preexec() {
   emulate -LR zsh
-  chpwd
 
   unalias ${(j: :)_preAlias} &> /dev/null
   _preAlias=( )

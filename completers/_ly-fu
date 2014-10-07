@@ -144,6 +144,7 @@ _arguments \
   '--partial=[leading expression]:expression' \
   '(--absolute)--relative=[starting note]:note:' \
   '--repeats=[number of repeats]:count:' \
+  {-R,--rhythmic-staff}'[music with RhythmicStaff]' \
   '--silent[skip MIDI playback]' \
   '--sleep=[sleep kluge]:seconds:' \
   '--tempo=[tempo]:tempo:' \

@@ -5,7 +5,7 @@
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
-fpath+=~/.zsh.d/zsh-git-escape-magic
+fpath+=$ZDOTDIR/zsh-git-escape-magic
 autoload -Uz git-escape-magic
 git-escape-magic
 
@@ -30,10 +30,12 @@ function {
       key[Delete]=${terminfo[kdch1]}
       key[Up]=${terminfo[kcuu1]}
       key[Down]=${terminfo[kcud1]}
-      key[Left]=${terminfo[kcub1]}
-      key[Right]=${terminfo[kcuf1]}
       key[PageUp]=${terminfo[kpp]}
       key[PageDown]=${terminfo[knp]}
+
+      # these will get run anyway
+      # key[Left]=${terminfo[kcub1]}
+      # key[Right]=${terminfo[kcuf1]}
     fi
   else
     source $zkbd_dest
@@ -49,5 +51,9 @@ function {
 [[ -n ${key[PageDown]}  ]] && bindkey "${key[PageDown]}"  down-line-or-history
 [[ -n ${key[Up]}        ]] && bindkey "${key[Up]}"        up-line-or-search
 [[ -n ${key[Down]}      ]] && bindkey "${key[Down]}"      down-line-or-search
-[[ -n ${key[Left]}      ]] && bindkey "${key[Left]}"      forward-char
-[[ -n ${key[Right]}     ]] && bindkey "${key[Right]}"     backward-char
+
+# let the terminal take care of these
+key[Left]=${terminfo[kcub1]}
+key[Right]=${terminfo[kcuf1]}
+# [[ -n ${key[Left]}      ]] && bindkey "${key[Left]}"      forward-char
+# [[ -n ${key[Right]}     ]] && bindkey "${key[Right]}"     backward-char

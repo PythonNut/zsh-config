@@ -45,6 +45,10 @@ function zaw-src-git-reflog-append-to-buffer () {
     # 1 or 3 or more items.
     buf+="${(j: :)@}"
   fi
+
+  # escape brackets, since they're caught by extended_blog
+  buf=${${buf:gs/\{/\\\{}:gs/\}/\\\}}
+  
   # Append left buffer.
   LBUFFER+="$buf"
 }

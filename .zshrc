@@ -9,6 +9,8 @@ echo -n > ~/.zsh.d/startup.log
 setopt function_argzero
 mkdir -p ~/.zsh.d
 
+export ZDOTDIR=~/.zsh.d
+
 # let us begin
 for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
   source $zsh_module

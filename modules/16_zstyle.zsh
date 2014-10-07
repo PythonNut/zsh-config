@@ -3,13 +3,15 @@
 #=================
 
 zstyle ':completion:*' verbose false
+zstyle ':completion:*:options' verbose true
 zstyle ':completion:*' extra-verbose false
 zstyle ':completion:*' show-completer false
 zstyle ':completion:*' use-cache true
-zstyle ':completion:*' cache-path ~/.zsh.d/cache
+zstyle ':completion:*' cache-path $ZDOTDIR/cache
 zstyle ':completion:*' list-grouped true
 # formatting
 zstyle ':completion:*' format '%B── %d%b'             # distinct categories
+zstyle ':completion:*' list-separator '─'             # distinct descriptions
 zstyle ':completion:*' auto-description 'specify: %d' # auto description
 zstyle ':completion:*:descriptions' format '%B%d%b'   # description
 zstyle ':completion:*:messages' format '%d'           # messages
@@ -37,6 +39,8 @@ zstyle ':completion::approximate:*' origional true
 # 0 -- vanilla completion    (abc => abc)
 # 1 -- smart case completion (abc => Abc)
 zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:parameters' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:functions' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
@@ -72,9 +76,6 @@ zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*:default' menu 'select=0' interactive
 
-# color suggestion output according to ls
-zstyle ':completion:*:default' list-colors ${(@s.:.)LS_COLORS}
-
 # order files first by default, dirs if command operates on dirs (ls)
 
 zstyle ':completion:*' file-patterns \
@@ -106,17 +107,11 @@ zstyle ':completion:*:processes-names' command 'ps -e -o comm='
 zstyle ':completion:*:processes-names' ignored-patterns ".*"
 
 zstyle ':completion:*:history-words:*' remove-all-dups true
-zstyle ':completion:*:urls' urls ~/.zsh.d/urls/urls
+zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 
 # ================================
 # command layer completion scripts
 # ================================
-
-function _keywords(){
-  local keywds expl
-  keywds=(for do done while if elif fi case esac function break continue)
-  _wanted keywords expl 'shell keyword' compadd "$@" -k keywds
-}
 
 function _cdpath(){
   tmpcdpath=(${${(@)cdpath:#.}:#$PWD}) 
@@ -125,19 +120,26 @@ function _cdpath(){
 }
 
 function _cmd() {
-  _aliases
-  _jobs
-  _command
+  _command_names
   _functions
-  _parameters
-  _hosts
-  #_cd
   _tilde
-  _directory_stack
-  _files # -F "*(/)"
+  _files
   _cdpath
   _options
-  _keywords
 }
 
 compdef "_cmd" "-command-"
+
+ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;]##/$MATCH=$MATCH=04;$MATCH}/\*/'(*files|*directories)=(#b)($PREFIX:t)(?)*'}}
+
+function _list_colors () {
+  local MATCH
+  reply=("${(e@s/ /)ls_colors_parsed}")
+ 
+  # fallback to a catch-all
+  reply+=("=(#b)($PREFIX:t)(?)*===04")
+}
+
+zstyle -e ':completion:*:default' list-colors _list_colors
+
+zstyle ':completion:*' special-dirs true

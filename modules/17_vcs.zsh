@@ -4,19 +4,30 @@
 zstyle ':vcs_info:*' enable git svn hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
+ZSH_VCS_PROMPT_ENABLE_CACHING='false'
+ZSH_VCS_PROMPT_USING_PYTHON='false'
+
+if (( $degraded_terminal[unicode] != 1 )); then
+  ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
+  ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
+  ZSH_VCS_PROMPT_STAGED_SIGIL='●'
+  ZSH_VCS_PROMPT_CONFLICTS_SIGIL='✖'
+  ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
+  ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
+  ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
+  ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
+else
+  ZSH_VCS_PROMPT_AHEAD_SIGIL='>'
+  ZSH_VCS_PROMPT_BEHIND_SIGIL='<'
+  ZSH_VCS_PROMPT_STAGED_SIGIL='*'
+  ZSH_VCS_PROMPT_CONFLICTS_SIGIL='x'
+  ZSH_VCS_PROMPT_UNSTAGED_SIGIL='+'
+  ZSH_VCS_PROMPT_UNTRACKED_SIGIL='.'
+  ZSH_VCS_PROMPT_STASHED_SIGIL='#'
+  ZSH_VCS_PROMPT_CLEAN_SIGIL='-'
+fi
 
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
-ZSH_VCS_PROMPT_ENABLE_CACHING='false'
-ZSH_VCS_PROMPT_USING_PYTHON='true'
-
-ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
-ZSH_VCS_PROMPT_BEHIND_SIGIL='↓'
-ZSH_VCS_PROMPT_STAGED_SIGIL='●'
-ZSH_VCS_PROMPT_CONFLICTS_SIGIL='✖'
-ZSH_VCS_PROMPT_UNSTAGED_SIGIL='✚'
-ZSH_VCS_PROMPT_UNTRACKED_SIGIL='…'
-ZSH_VCS_PROMPT_STASHED_SIGIL='⚑'
-ZSH_VCS_PROMPT_CLEAN_SIGIL='✔'
 
 # zstyle ':vcs_info:*+*:*' debug true
 zstyle ':vcs_info:(svn|csv|hg)*' formats "(%B%F{yellow}%s%%b%f)[%b|%u%c]"
@@ -99,8 +110,6 @@ function vcs_async_info () {
   zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
-VCS_ASYNC_TMP="/dev/shm"
-
 function vcs_async_info_worker () {
   emulate -LR zsh
   setopt noclobber multios
@@ -119,7 +128,7 @@ function TRAPUSR1 {
   emulate -LR zsh
   setopt zle 2>/dev/null
   setopt prompt_subst transient_rprompt no_clobber
-  zsh_unpickle -s -i vcs-data
+  zsh_unpickle -s -c -i vcs-data
   
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$vcs_super_info
@@ -139,7 +148,7 @@ function TRAPUSR1 {
       vcs_inotify_pid=$!
     fi
   elif (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid
+    kill $vcs_inotify_pid 2>/dev/null
     vcs_inotify_pid=-1
   fi
 

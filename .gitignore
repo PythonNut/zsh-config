@@ -9,7 +9,9 @@
 /.zcalc_history
 
 *.zwc
+*.zwc.old
 *.log
 *.swp
 *~
-\#*\#
+\#*
+.#*

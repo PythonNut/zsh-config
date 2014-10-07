@@ -17,8 +17,8 @@ function pcomplete() {
 
     # hack a local function scope using unfuction
     function $0_forward_word () {
-      local space_index
-      space_index=$(expr index "$RBUFFER" ' ')
+      local -i space_index
+      space_index=${RBUFFER[(i) ]}
       if ((space_index == 0)); then
         zle .end-of-line
       else
@@ -55,31 +55,29 @@ function pcomplete() {
       _oldlist \
       _complete \
       _match \
-      _approximate \
       _files \
       _history \
-      _prefix
+      _prefix \
+      _approximate
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       zle predict-next-line  
     else
-      local cur_rbuffer space_index
+      local cur_rbuffer space_index i
       local -i single_match
-      local -i file_match
+      local -a match mbegin mend
 
       # detect single auto-fu match
       for i in $region_highlight; do
-        # sanitize to prevent $((...)) from crashing
-        i=(${(@s/ /)i[1,2]%%[^0-9]*} ${(@s/ /)i[3,-1]})
-        if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-          $0_forward_word
-          break
-        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
-          if  [[ $BUFFER != (*/|* */*) ]]; then
-            file_match=1
+        if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
+          i=("$match")
+          if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+            $0_forward_word
+            break
+          elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
+            single_match=1
+            break
           fi
-          single_match=1
-          break
         fi
       done
 
@@ -88,9 +86,9 @@ function pcomplete() {
         if [[ $#RBUFFER == 0 ]]; then
             if [[ $LBUFFER[-1] == "/" ]]; then
             $0_force_auto
-          else
+            else
             zle magic-space
-          fi
+            fi
         else
           if [[ $LBUFFER[-2] == "/" ]]; then
             zle backward-char
@@ -106,7 +104,16 @@ function pcomplete() {
         if [[ ! -o globcomplete ]]; then
           zle expand-word
         fi
-        zle menu-complete
+
+        # store a temporary copy of the buffer
+        local TEMP_BUFFER
+        TEMP_BUFFER=$BUFFER
+        zle complete-word
+
+        # if the line is unchanged, show possible continuations
+        if [[ $BUFFER == $TEMP_BUFFER ]]; then
+          zle menu-complete
+        fi
         RBUFFER=$cur_rbuffer
         if [[ $LBUFFER[-1] == " " || $LBUFFER[-2] == " " ]]; then
           zle .backward-delete-char
@@ -129,7 +136,8 @@ bindkey -M menuselect . self-insert
 
 zle -N pcomplete
 
-global_bindkey "^i" pcomplete
+global_bindkey '^i' pcomplete
+bindkey -M menuselect '^i' pcomplete
 
 function _magic-space () {
   emulate -LR zsh

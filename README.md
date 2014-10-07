@@ -18,16 +18,21 @@ This is my goal: to make a highly customized and tailored enviroment for my work
 * Automatically extract options and their descriptions from manpages and stream them to the completion system.
 * etc.
 
-My goal is to comtinue adding features and deep integration with other tools. I also want this to be portable to other forms of Linux (Mac OS is a much more distant goal, as I don't own a Mac). Currently being tested on:
+My goal is to continue adding features and deep integration with other tools. I also want this to be portable to other forms of *NIX (Mac OS is a much more distant goal, as I don't own a Mac). Currently being tested on:
 
-* Arch Linux 64
-* Fedora 16 stable 64
-* Fedora 20 stable 32
-* Fedora rawhide 64
-* Ubuntu 64
+* Arch Linux
+  + Working
+* Fedora
+  + 16 x32 Working
+  + 20 x64 Working
+  + rawhide Working
+* Ubuntu
+  + 14.10 x64 Working (with minor bugs)
+* FreeBSD
+  + 10 Mostly broken
 
 And with the following zsh versions
 
-* `zsh` 4.3 (mostly broken)
-* `zsh` 4.6 (fairly broken)
+* `zsh` 4.3 (broken)
+* `zsh` 4.6 (mostly broken)
 * `zsh` 5.0+
