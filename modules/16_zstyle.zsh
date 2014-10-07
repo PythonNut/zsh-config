@@ -7,7 +7,7 @@ zstyle ':completion:*:options' verbose true
 zstyle ':completion:*' extra-verbose false
 zstyle ':completion:*' show-completer false
 zstyle ':completion:*' use-cache true
-zstyle ':completion:*' cache-path ~/.zsh.d/cache
+zstyle ':completion:*' cache-path $ZDOTDIR/cache
 zstyle ':completion:*' list-grouped true
 # formatting
 zstyle ':completion:*' format '%B── %d%b'             # distinct categories
@@ -107,7 +107,7 @@ zstyle ':completion:*:processes-names' command 'ps -e -o comm='
 zstyle ':completion:*:processes-names' ignored-patterns ".*"
 
 zstyle ':completion:*:history-words:*' remove-all-dups true
-zstyle ':completion:*:urls' urls ~/.zsh.d/urls/urls
+zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 
 # ================================
 # command layer completion scripts

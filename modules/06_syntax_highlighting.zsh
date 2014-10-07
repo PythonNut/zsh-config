@@ -4,9 +4,9 @@
 
 {
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-  source ~/.zsh.d/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-  source ~/.zsh.d/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh
-  source ~/.zsh.d/zsh-syntax-highlighting/highlighters/brackets/brackets-highlighter.zsh
+  source $ZDOTDIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source $ZDOTDIR/zsh-syntax-highlighting/highlighters/main/main-highlighter.zsh
+  source $ZDOTDIR/zsh-syntax-highlighting/highlighters/brackets/brackets-highlighter.zsh
 
   ZSH_HIGHLIGHT_STYLES[default]='fg=grey'
   ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=default'
@@ -30,4 +30,4 @@
   ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=yellow'
   ZSH_HIGHLIGHT_STYLES[assign]='fg=default,bold'
 
-} &>> ~/.zsh.d/startup.log
+} &>> $ZDOTDIR/startup.log

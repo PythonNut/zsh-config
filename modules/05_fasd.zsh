@@ -4,8 +4,8 @@
 
 function {
   emulate -LR zsh
-  local fasd_cache=~/.zsh.d/fasd-init-cache
-  local fasd_path=~/.zsh.d/fasd/fasd
+  local fasd_cache=$ZDOTDIR/fasd-init-cache
+  local fasd_path=$ZDOTDIR/fasd/fasd
 
   source $fasd_path
 

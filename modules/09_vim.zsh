@@ -19,9 +19,9 @@ function _vi-insert () {
 }
 zle -N vi-insert _vi-insert
 
-source ~/.zsh.d/zsh-vim-pattern-search/en.zsh
-source ~/.zsh.d/zsh-vim-textobjects/opp.zsh
-source ~/.zsh.d/zsh-vim-textobjects/opp/surround.zsh
+source $ZDOTDIR/zsh-vim-pattern-search/en.zsh
+source $ZDOTDIR/zsh-vim-textobjects/opp.zsh
+source $ZDOTDIR/zsh-vim-textobjects/opp/surround.zsh
 
 zsh-x-kill-region () {
   zle kill-region

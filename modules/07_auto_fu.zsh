@@ -4,7 +4,7 @@
 
 {
   setopt local_options no_rc_expand_param
-  source ~/.zsh.d/auto-fu/auto-fu.zsh
+  source $ZDOTDIR/auto-fu/auto-fu.zsh
   afu-zle-aysce-install() {}
   -zle-force-install() {}
   integer afu_enabled=1
@@ -63,7 +63,7 @@
     afu_curcompleter=$_completer
   }
   setopt rc_expand_param
-} &>> ~/.zsh.d/startup.log
+} &>> $ZDOTDIR/startup.log
 
 function global_bindkey () {
   bindkey -M command $@

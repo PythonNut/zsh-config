@@ -62,17 +62,17 @@ function automan() {
 
 function mangen() {
   emulate -LR zsh
-  echo -e "$1" >> ~/.zsh.d/mangen
-  sort ~/.zsh.d/mangen -o ~/.zsh.d/mangen
+  echo -e "$1" >> $ZDOTDIR/mangen
+  sort $ZDOTDIR/mangen -o $ZDOTDIR/mangen
 }
 
 # scrapes helpfiles looking for arguments
 function autohelp() {
   emulate -LR zsh
-  if [[ ! -f ~/.zsh.d/helpgen ]]; then
+  if [[ ! -f $ZDOTDIR/helpgen ]]; then
     return 1
   fi
-  for cmd in $(<~/.zsh.d/helpgen); do
+  for cmd in $(<$ZDOTDIR/helpgen); do
     compdef _gnu_generic $cmd
   done
 }
@@ -80,8 +80,8 @@ function autohelp() {
 # helper function, mark a command as autohelpable
 function helpgen() {
   emulate -LR zsh
-  echo -e "$1" >> ~/.zsh.d/helpgen
-  sort ~/.zsh.d/helpgen -o ~/.zsh.d/helpgen
+  echo -e "$1" >> $ZDOTDIR/helpgen
+  sort $ZDOTDIR/helpgen -o $ZDOTDIR/helpgen
   compdef _gnu_generic $1
 }
 
@@ -92,13 +92,13 @@ zsh-mime-setup
 
 function auto_recompile () {
   autoload -Uz zrecompile
-  zrecompile ~/.zsh.d/.zshrc
+  zrecompile $ZDOTDIR/.zshrc
 
-  for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
+  for zsh_module in $ZDOTDIR/modules/*.zsh(n); do
     zrecompile $zsh_module
   done
 
-  for file in ~/.zsh.d/local/*.zsh(n); do
+  for file in $ZDOTDIR/local/*.zsh(n); do
     zrecompile $file
   done
 }

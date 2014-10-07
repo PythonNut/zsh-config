@@ -22,118 +22,116 @@ function alias () {
   fi
 }
 
-{
-  # proxy aliases
-  BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
-  if [[ $OSTYPE != (#i)(free|open|net)bsd* ]]; then
-    alias lsa='\ls --color --group-directories-first'
-    alias lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
+# proxy aliases
+BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
+if [[ $OSTYPE != (#i)(free|open|net)bsd* ]]; then
+  alias lsa='\ls --color --group-directories-first'
+  alias lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
+else
+  # in BSD, -G is the equivalent of --color
+  alias lst='\ls -G'
+fi
+alias egrep='nocorrect \egrep --line-buffered --color=auto'
+
+# ls aliases
+alias ls='lst -BFx'
+alias l='lst -lFBGh'
+alias ll='lsa -lAFGh'
+alias lss='lst -BFshx'
+alias lsp='\ls'
+
+# saftey aliases
+alias rm='rm -i' cp='cp -i'
+alias rmf='\rm' cpf='\cp'
+alias ln="\ln -s"
+
+# global aliases
+alias -g G='|& egrep -i'
+alias -g L='|& less -R'
+alias -g Lr='|& less'
+alias -g D='>&/dev/null'
+alias -g W='|& wc -l -c'
+alias -g Q='>&/dev/null&'
+alias -g ,,=';=read -n1 -rp 'Press any key to continue...''
+
+# regular aliases
+alias su='su -'
+alias cd='cdr'
+alias watch='\watch -n 1 -d '
+alias emacs='\emacs -nw'
+alias df='\df -h'
+alias ping='\ping -c 10'
+alias exi='exit'
+alias locate='\locate -ib'
+alias exit=' exit'
+alias tail="\tail -n $(tput lines)"
+
+# suppression aliases
+alias man='nocorrect noglob \man'
+alias find='noglob find'
+alias touch='nocorrect \touch'
+alias mkdir='nocorrect \mkdir'
+alias killall='nocorrect \killall'
+
+# sudo aliases
+if (( $+commands[sudo] )); then
+  alias sudo="sudo "
+  alias please='sudo !!'
+fi
+
+# yaourt aliases
+if (( $+commands[yaourt] )); then
+  alias y='yaourt'
+  alias yi='yaourt -Sa'
+  alias yu='yaourt -Syyua --noconfirm'
+  alias yuu='yaourt --sucre'
+fi
+
+# yum aliases
+if (( $+commands[yum] )); then
+  if (( $user_has_root == 1 )); then
+    alias yum-config-manager='nocorrect noglob \yum-config-manager'
+    alias yum='nocorrect noglob \yum'
   else
-    # in BSD, -G is the equivalent of --color
-    alias lst='\ls -G'
+    alias yum-config-manager='nocorrect noglob sudo \yum-config-manager'
+    alias yum='nocorrect noglob sudo \yum'
   fi
-  alias egrep='nocorrect \egrep --line-buffered --color=auto'
+fi
 
-  # ls aliases
-  alias ls='lst -BFx'
-  alias l='lst -lFBGh'
-  alias ll='lsa -lAFGh'
-  alias lss='lst -BFshx'
-  alias lsp='\ls'
+# git aliases
+if (( $+commands[git] )); then
+  alias gs='git status -s'
+  alias gst='git status'
 
-  # saftey aliases
-  alias rm='rm -i' cp='cp -i'
-  alias rmf='\rm' cpf='\cp'
-  alias ln="\ln -s"
+  alias gp="git pull --rebase -X patience"
 
-  # global aliases
-  alias -g G='|& egrep -i'
-  alias -g L='|& less -R'
-  alias -g Lr='|& less'
-  alias -g D='>&/dev/null'
-  alias -g W='|& wc -l -c'
-  alias -g Q='>&/dev/null&'
-  alias -g ,,=';=read -n1 -rp 'Press any key to continue...''
+  alias ga='git add'
+  alias gau='git add -u'
+  alias gaa='git add -A'
 
-  # regular aliases
-  alias su='su -'
-  alias cd='cdr'
-  alias watch='\watch -n 1 -d '
-  alias emacs='\emacs -nw'
-  alias df='\df -h'
-  alias ping='\ping -c 10'
-  alias exi='exit'
-  alias locate='\locate -ib'
-  alias exit=' exit'
-  alias tail="\tail -n $(tput lines)"
+  alias gc='git commit -v'
+  alias -ec gcm="echo git commit -v -m '{}'"
+  alias gc!='git commit -v --amend'
+  alias gca='git commit -v -a'
+  alias -ec gcam="echo git commit -v -a -m '{}'"
+  alias gca!='git commit -v -a --amend'
 
-  # suppression aliases
-  alias man='nocorrect noglob \man'
-  alias find='noglob find'
-  alias touch='nocorrect \touch'
-  alias mkdir='nocorrect \mkdir'
-  alias killall='nocorrect \killall'
-  
-  # sudo aliases
-  if (( $+commands[sudo] )); then
-    alias sudo="sudo "
-    alias please='sudo !!'
-  fi
+  alias gck='git checkout'
+  alias -ec gfork='echo git checkout -b {} ${${(f)vcs_raw_data}[4]}'
 
-  # yaourt aliases
-  if (( $+commands[yaourt] )); then
-    alias y='yaourt'
-    alias yi='yaourt -Sa'
-    alias yu='yaourt -Syyua --noconfirm'
-    alias yuu='yaourt --sucre'
-  fi
+  alias gb='git branch'
+  alias gm='git merge -X patience'
+  alias gr="git rebase -X patience"
 
-  # yum aliases
-  if (( $+commands[yum] )); then
-    if (( $user_has_root == 1 )); then
-      alias yum-config-manager='nocorrect noglob \yum-config-manager'
-      alias yum='nocorrect noglob \yum'
-    else
-      alias yum-config-manager='nocorrect noglob sudo \yum-config-manager'
-      alias yum='nocorrect noglob sudo \yum'
-    fi
-  fi
+  alias gd='git diff --patience'
+  alias gdc='git diff --patience --cached'
+  alias gd!='git diff --word-diff'
+  alias gdc!='git diff --word-diff --cached'
 
-  # git aliases
-  if (( $+commands[git] )); then
-    alias gs='git status -s'
-    alias gst='git status'
+  alias gl='git log --oneline --graph --decorate'
 
-    alias gp="git pull --rebase -X patience"
-    
-    alias ga='git add'
-    alias gau='git add -u'
-    alias gaa='git add -A'
-
-    alias gc='git commit -v'
-    alias -ec gcm="echo git commit -v -m '{}'"
-    alias gc!='git commit -v --amend'
-    alias gca='git commit -v -a'
-    alias -ec gcam="echo git commit -v -a -m '{}'"
-    alias gca!='git commit -v -a --amend'
-
-    alias gck='git checkout'
-    alias -ec gfork='echo git checkout -b {} ${${(f)vcs_raw_data}[4]}'
-    
-    alias gb='git branch'
-    alias gm='git merge -X patience'
-    alias gr="git rebase -X patience"
-    
-    alias gd='git diff --patience'
-    alias gdc='git diff --patience --cached'
-    alias gd!='git diff --word-diff'
-    alias gdc!='git diff --word-diff --cached'
-
-    alias gl='git log --oneline --graph --decorate'
-
-    alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
-  fi
-} &>> ~/.zsh.d/startup.log
+  alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
+fi
 
 # ==============
 # Expand aliases

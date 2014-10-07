@@ -16,11 +16,10 @@ function {
 raw_cdpath=(~/ /etc/ /run/media/$USER/)
 cdpath=(/etc/ /run/media/$USER/)
 
-HISTFILE=~/.zsh.d/.histfile
+HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=50000
 SAVEHIST=50000
 
-export ZDOTDIR=~/.zsh.d
 export EDITOR="vim"
 export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
@@ -119,7 +118,7 @@ FX=(
 function () {
   if (( $+commands[dircolors] )); then
     local DIRCOLORS
-    DIRCOLORS=~/.zsh.d/dircolors-solarized/dircolors.ansi-universal
+    DIRCOLORS=$ZDOTDIR/dircolors-solarized/dircolors.ansi-universal
     eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
   fi
 }

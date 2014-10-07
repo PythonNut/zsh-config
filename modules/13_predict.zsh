@@ -1,4 +1,4 @@
-source ~/.zsh.d/zsh-dwim/init.zsh
+source $ZDOTDIR/zsh-dwim/init.zsh
 global_bindkey "^u" kill-whole-line
 
 function predict_next_line () {

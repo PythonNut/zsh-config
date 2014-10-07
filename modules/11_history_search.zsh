@@ -1,7 +1,7 @@
 # ========================
 # History substring search
 # ========================
-source ~/.zsh.d/history-substring/zsh-history-substring-search.zsh
+source $ZDOTDIR/history-substring/zsh-history-substring-search.zsh
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND="fg=black,bg=green,underline"
 bindkey -M afu '^R' history-incremental-pattern-search-backward
 bindkey -M afu '^S' history-incremental-pattern-search-forward
@@ -18,4 +18,4 @@ bindkey -M emacs '^N' history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
-source ~/.zsh.d/zsh-soft-history/soft-history.zsh
+source $ZDOTDIR/zsh-soft-history/soft-history.zsh

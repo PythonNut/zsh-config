@@ -68,12 +68,12 @@ bindkey -M isearch . self-insert
 # zaw: helm.el for zsh
 function () {
   emulate -LR zsh
-  source ~/.zsh.d/zsh-zaw/zaw.zsh
-  source ~/.zsh.d/zaw-src-git-log/zaw-git-log.zsh
-  source ~/.zsh.d/zaw-src-git-show-branch/zaw-git-show-branch.zsh
+  source $ZDOTDIR/zsh-zaw/zaw.zsh
+  source $ZDOTDIR/zaw-src-git-log/zaw-git-log.zsh
+  source $ZDOTDIR/zaw-src-git-show-branch/zaw-git-show-branch.zsh
 
   # and import other zaw sources
-  for file in ~/.zsh.d/zaw-misc-sources/*.zsh(n); do
+  for file in $ZDOTDIR/zaw-misc-sources/*.zsh(n); do
     source $file
   done
 

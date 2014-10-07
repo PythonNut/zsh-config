@@ -22,4 +22,4 @@
   zmodload zsh/terminfo           # terminal parameters from terminfo
   zmodload zsh/complist           # various completion functions
   
-} &>> ~/.zsh.d/startup.log
+} &>> $ZDOTDIR/startup.log
