@@ -99,7 +99,7 @@ integer vcs_inotify_pid=-1
 
 function vcs_async_info () {
   zsh_unpickle -s -i async-sentinel
-  if [[ ${vcs_async_sentinel:-0} == 0 ]]; then
+  if [[ $vcs_async_sentinel == 0 ]]; then
     vcs_async_start=$SECONDS
     vcs_async_info_worker $1 &!
     vcs_async_last=$SECONDS
@@ -161,7 +161,6 @@ function TRAPUSR1 {
   
   zsh_pickle -i async-sentinel vcs_async_sentinel
 }
-
 
 function vcs_async_auto_update {
   emulate -LR zsh
