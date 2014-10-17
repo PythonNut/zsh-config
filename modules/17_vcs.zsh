@@ -90,7 +90,6 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 }
 
 typeset -F SECONDS
-float vcs_async_last=0
 float vcs_async_start=0
 float vcs_async_delay=0
 integer vcs_async_sentinel=0
@@ -102,7 +101,6 @@ function vcs_async_info () {
   if [[ $vcs_async_sentinel == 0 ]]; then
     vcs_async_start=$SECONDS
     vcs_async_info_worker $1 &!
-    vcs_async_last=$SECONDS
     vcs_async_sentinel=1
   else
     vcs_async_sentinel=2
@@ -163,7 +161,7 @@ function TRAPUSR1 {
 
 function vcs_async_auto_update {
   emulate -LR zsh
-  setopt local_options function_argzero
+  setopt function_argzero
   if [[ -n $VCS_PAUSE ]]; then
     return 0;
   fi
