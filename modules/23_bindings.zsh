@@ -68,6 +68,7 @@ bindkey -M isearch . self-insert
 # zaw: helm.el for zsh
 function () {
   emulate -LR zsh
+  ZAW_SRC_GIT_LOG_MAX_COUNT=0
   source $ZDOTDIR/zsh-zaw/zaw.zsh
   source $ZDOTDIR/zaw-src-git-log/zaw-git-log.zsh
   source $ZDOTDIR/zaw-src-git-show-branch/zaw-git-show-branch.zsh
