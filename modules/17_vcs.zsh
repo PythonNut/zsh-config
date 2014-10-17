@@ -192,6 +192,7 @@ function vcs_inotify_do () {
 }
 
 function vcs_async_cleanup () {
+  emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
     kill $vcs_inotify_pid 2>/dev/null
   fi
