@@ -112,8 +112,7 @@ function vcs_async_info () {
 
 function vcs_async_info_worker () {
   emulate -LR zsh
-  setopt noclobber multios
-  local vcs_raw_data vcs_super_info
+  local vcs_super_info vcs_super_raw_data
 
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
