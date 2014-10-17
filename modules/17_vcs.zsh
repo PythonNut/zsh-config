@@ -165,12 +165,14 @@ function vcs_async_auto_update {
   if [[ -n $VCS_PAUSE ]]; then
     return 0;
   fi
+  vcs_async_sentinel=0
+  zsh_pickle -i async-sentinel vcs_async_sentinel
   vcs_async_info
 }
 
 add-zsh-hook precmd vcs_async_auto_update
 
-vcs_inotify_events=(modify move create delete)
+vcs_inotify_events=(modify move create delete attrib close)
 
 function vcs_inotify_watch () {
   emulate -LR zsh
