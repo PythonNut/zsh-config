@@ -180,6 +180,9 @@ function vcs_inotify_watch () {
       | while IFS= read -r file; do
       vcs_inotify_do "$file"
     done
+  else
+    echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
+    return 1
   fi
 }
 
