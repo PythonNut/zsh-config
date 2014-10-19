@@ -72,6 +72,8 @@ function () {
   source $ZDOTDIR/zaw-src-git-log/zaw-git-log.zsh
   source $ZDOTDIR/zaw-src-git-show-branch/zaw-git-show-branch.zsh
 
+  ZAW_SRC_GIT_LOG_MAX_COUNT=0
+
   # and import other zaw sources
   for file in $ZDOTDIR/zaw-misc-sources/*.zsh(n); do
     source $file
