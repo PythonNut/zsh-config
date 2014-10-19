@@ -120,7 +120,7 @@ if (( $+commands[git] )); then
   alias -ec gfork='echo git checkout -b {} ${${(f)vcs_raw_data}[4]}'
 
   alias gb='git branch'
-  alias gm='git merge -X patience'
+  alias gm='git merge -X patience --no-ff'
   alias gr="git rebase -X patience"
 
   alias gd='git diff --patience'
