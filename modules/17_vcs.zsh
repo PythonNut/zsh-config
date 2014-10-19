@@ -90,7 +90,6 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 }
 
 typeset -F SECONDS
-float vcs_async_last=0
 float vcs_async_start=0
 float vcs_async_delay=0
 integer vcs_async_sentinel=0
@@ -99,10 +98,9 @@ integer vcs_inotify_pid=-1
 
 function vcs_async_info () {
   zsh_unpickle -s -i async-sentinel
-  if [[ ${vcs_async_sentinel:-0} == 0 ]]; then
+  if [[ $vcs_async_sentinel == 0 ]]; then
     vcs_async_start=$SECONDS
     vcs_async_info_worker $1 &!
-    vcs_async_last=$SECONDS
     vcs_async_sentinel=1
   else
     vcs_async_sentinel=2
@@ -112,8 +110,7 @@ function vcs_async_info () {
 
 function vcs_async_info_worker () {
   emulate -LR zsh
-  setopt noclobber multios
-  local vcs_raw_data vcs_super_info
+  local vcs_super_info vcs_super_raw_data
 
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
@@ -162,19 +159,20 @@ function TRAPUSR1 {
   zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
-
 function vcs_async_auto_update {
   emulate -LR zsh
-  setopt local_options function_argzero
+  setopt function_argzero
   if [[ -n $VCS_PAUSE ]]; then
     return 0;
   fi
+  vcs_async_sentinel=0
+  zsh_pickle -i async-sentinel vcs_async_sentinel
   vcs_async_info
 }
 
 add-zsh-hook precmd vcs_async_auto_update
 
-vcs_inotify_events=(modify move create delete)
+vcs_inotify_events=(modify move create delete attrib close)
 
 function vcs_inotify_watch () {
   emulate -LR zsh
@@ -184,6 +182,9 @@ function vcs_inotify_watch () {
       | while IFS= read -r file; do
       vcs_inotify_do "$file"
     done
+  else
+    echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
+    return 1
   fi
 }
 
@@ -193,6 +194,7 @@ function vcs_inotify_do () {
 }
 
 function vcs_async_cleanup () {
+  emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
     kill $vcs_inotify_pid 2>/dev/null
   fi
