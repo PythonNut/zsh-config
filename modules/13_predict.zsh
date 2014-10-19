@@ -2,6 +2,8 @@ source $ZDOTDIR/zsh-dwim/init.zsh
 global_bindkey "^u" kill-whole-line
 
 function predict_next_line () {
+  # s - show scores
+  zparseopts -D -E s=S
   local hist_array i=1 hist_frequency next_line
   typeset -A hist_frequency
   # get array of history lines in order of increasing age
@@ -20,7 +22,11 @@ function predict_next_line () {
     combined[$v]=$k
   done
   for k in "${(@kOn)combined}"; do
-    echo $combined[$k]
+    if [[ -n $S ]]; then
+      echo $combined[$k] \# $k
+    else
+      echo $combined[$k]
+    fi
   done
 }
 
