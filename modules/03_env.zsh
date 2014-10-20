@@ -74,8 +74,10 @@ case $_OLD_TERM in
     export TERM=xterm
     if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
       export TERM=xterm-256color
-    elif [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
-      export TERM=xterm-256color
+    elif [[ -f /usr/share/misc/termcap ]]; then
+      if [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
+        export TERM=xterm-256color
+      fi
     fi;;
 esac
 
