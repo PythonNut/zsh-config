@@ -141,3 +141,4 @@ function minify_path_fasd () {
     printf " "
   fi
 }
+
