@@ -71,7 +71,12 @@ alias man='nocorrect noglob \man'
 alias find='noglob find'
 alias touch='nocorrect \touch'
 alias mkdir='nocorrect \mkdir'
-alias killall='nocorrect \killall'
+
+if (( $+commands[killall] )); then
+  alias killall='nocorrect \killall'
+elif (( $+commands[pkill] )); then
+  alias killall='nocorrect \pkill'
+fi
 
 # sudo aliases
 if (( $+commands[sudo] )); then
