@@ -118,7 +118,7 @@ function vcs_async_info_worker () {
   zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
   
   # Signal the parent shell to update the prompt.
-  kill -USR1 $$
+  kill -USR1 $$ 2>/dev/null
 }
 
 function TRAPUSR1 {
