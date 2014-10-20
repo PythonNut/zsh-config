@@ -64,7 +64,6 @@ alias ping='\ping -c 10'
 alias exi='exit'
 alias locate='\locate -ib'
 alias exit=' exit'
-alias tail="\tail -n $(tput lines)"
 
 # suppression aliases
 alias man='nocorrect noglob \man'
