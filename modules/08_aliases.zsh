@@ -141,7 +141,7 @@ fi
 # Expand aliases
 # ==============
 # typeset -A abbrevs
-expand=('go' 'cd' 'grep' 'fgrep' 'egrep' 'mc' 'lst' ',,' 'lsa' 'exit' 'px')
+expand=('go' 'cd' 'grep' 'fgrep' 'egrep' 'mc' 'lst' ',,' 'lsa' 'exit')
 
 for supressed in $(alias |& egrep -i '(nocorrect|noglob)' | cut -f1 -d=); do
   expand+=($supressed)
