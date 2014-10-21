@@ -68,8 +68,11 @@ case $_OLD_TERM in
     degraded_terminal[unicode]=1;;
 
   (screen*|tmux*)
-    export TERM='linux';;
-    
+    # check for lack of 256color support
+    if [[ $TTY == /dev/tty*  ]]; then
+      export TERM='screen'
+    fi;;
+
   (*)
     export TERM=xterm
     if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
