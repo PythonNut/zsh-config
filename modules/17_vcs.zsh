@@ -145,18 +145,17 @@ function TRAPUSR1 {
       vcs_inotify_pid=$!
     fi
   elif (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid 2>/dev/null
-    vcs_inotify_pid=-1
+    vcs_async_cleanup
   fi
 
   zsh_unpickle -s -i async-sentinel
-  local temp_sentinel=$vcs_async_sentinel
+  local -i temp_sentinel=$vcs_async_sentinel
   vcs_async_sentinel=0
-  if [[ $vcs_async_sentinel == 2 ]]; then
+  zsh_pickle -i async-sentinel vcs_async_sentinel
+
+  if [[ $temp_sentinel == 2 ]]; then
     vcs_async_info &!
   fi
-  
-  zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
 function vcs_async_auto_update {
@@ -197,6 +196,7 @@ function vcs_async_cleanup () {
   emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
     kill $vcs_inotify_pid 2>/dev/null
+    vcs_inotify_pid=-1
   fi
 }
 
