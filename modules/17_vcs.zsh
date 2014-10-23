@@ -103,7 +103,7 @@ function vcs_async_info () {
     vcs_async_sentinel=1
     vcs_async_info_worker $1 &!
   else
-    vcs_async_sentinel=2
+    (( vcs_async_sentinel++ ))
   fi
   zsh_pickle -i async-sentinel vcs_async_sentinel
 }
@@ -116,7 +116,7 @@ function vcs_async_info_worker () {
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
 
   zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
-  
+
   # Signal the parent shell to update the prompt.
   kill -USR1 $$ 2>/dev/null
 }
@@ -131,7 +131,7 @@ function TRAPUSR1 {
   fi
 
   zsh_unpickle -s -c -i vcs-data
-  
+
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$vcs_super_info
 
@@ -142,7 +142,7 @@ function TRAPUSR1 {
   if [[ ! -n $vcs_raw_data ]]; then
     unset vcs_raw_data
   fi
-  
+
   # if we're in a vcs, start an inotify process
   if [[ -n $vcs_info_msg_0_ ]]; then
     if (( $vcs_inotify_pid == -1 )); then
@@ -194,9 +194,7 @@ function vcs_inotify_watch () {
 
 function vcs_inotify_do () {
   emulate -LR zsh
-  echo $file
   vcs_async_info $file
-  echo updating vcs $vcs_async_sentinel
 }
 
 function vcs_async_cleanup () {
