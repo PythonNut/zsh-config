@@ -125,6 +125,11 @@ function TRAPUSR1 {
   emulate -LR zsh
   setopt zle 2>/dev/null
   setopt prompt_subst transient_rprompt no_clobber
+
+  if [[ -n $VCS_PAUSE ]]; then
+    return 0;
+  fi
+
   zsh_unpickle -s -c -i vcs-data
   
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
