@@ -171,7 +171,7 @@ function vcs_async_auto_update {
 
 add-zsh-hook precmd vcs_async_auto_update
 
-vcs_inotify_events=(modify move create delete attrib close)
+vcs_inotify_events=(modify move create delete)
 
 function vcs_inotify_watch () {
   emulate -LR zsh
@@ -189,7 +189,9 @@ function vcs_inotify_watch () {
 
 function vcs_inotify_do () {
   emulate -LR zsh
+  echo $file
   vcs_async_info $file
+  echo updating vcs $vcs_async_sentinel
 }
 
 function vcs_async_cleanup () {
