@@ -12,6 +12,10 @@ bindkey -M vicmd '^R' redo
 global_bindkey '^R' redo
 global_bindkey '^Z' undo
 
+bindkey -M vicmd 'Y' vi-yank-eol
+bindkey -M vicmd '\-' vi-repeat-find
+bindkey -M vicmd '_' vi-rev-repeat-find
+
 function _vi-insert () {
   # hack to enable Auto-FU during vi-insert
   zle .vi-insert
