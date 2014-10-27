@@ -2,7 +2,7 @@
 # BEGIN HOLISTIC HANDLER
 # ======================
 
-alias go="nocorrect go"
+alias -E go="nocorrect go"
 function go() {
   emulate -LR zsh
   setopt no_case_glob no_case_match equals

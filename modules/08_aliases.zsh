@@ -2,22 +2,32 @@
 # Aliases
 # =======
 typeset -A global_abbrevs command_abbrevs
+typeset -a expand
+
+expand=('mc')
 
 function alias () {
   emulate -LR zsh
-  if [[ "$1" == "-eg" ]]; then
-    for token in $@[2,-1]; do
+  zparseopts -D -E eg=EG ec=EC E=E
+  if [[ -n $EG ]]; then
+    for token in $@; do
       token=(${(s/=/)token})
       builtin alias -g $token
       global_abbrevs[$token[1]]=$token[2]
     done
-  elif [[ "$1" == "-ec" ]]; then
-    for token in $@[2,-1]; do
+  elif [[ -n $EC ]]; then
+    for token in $@; do
       builtin alias $token
       token=(${(s/=/)token})
       command_abbrevs[$token[1]]=$token[2]
     done
   else
+    if [[ -n $E ]]; then
+      for token in $@; do
+        token=(${(s/=/)token})
+        expand+="$token[1]"
+      done
+    fi
     builtin alias $@
   fi
 }
@@ -26,12 +36,12 @@ function alias () {
 BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
 if [[ $OSTYPE != (#i)(free|open|net)bsd* ]]; then
   alias lsa='\ls --color --group-directories-first'
-  alias lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
+  alias -E lst="lsa -I '${BORING_FILES:gs/\|/' -I '/}'"
 else
   # in BSD, -G is the equivalent of --color
-  alias lst='\ls -G'
+  alias -E lst='\ls -G'
 fi
-alias egrep='nocorrect \egrep --line-buffered --color=auto'
+alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 
 # ls aliases
 alias ls='lst -BFx'
@@ -52,29 +62,29 @@ alias -g Lr='|& less'
 alias -g D='>&/dev/null'
 alias -g W='|& wc -l -c'
 alias -g Q='>&/dev/null&'
-alias -g ,,=';=read -n1 -rp 'Press any key to continue...''
+alias -E -g ,,=';=read -n1 -rp 'Press any key to continue...''
 
 # regular aliases
 alias su='su -'
-alias cd='cdr'
+alias -E cd='cdr'
 alias watch='\watch -n 1 -d '
 alias emacs='\emacs -nw'
 alias df='\df -h'
 alias ping='\ping -c 10'
 alias exi='exit'
 alias locate='\locate -ib'
-alias exit=' exit'
+alias -E exit=' exit'
 
 # suppression aliases
-alias man='nocorrect noglob \man'
-alias find='noglob find'
-alias touch='nocorrect \touch'
-alias mkdir='nocorrect \mkdir'
+alias -E man='nocorrect noglob \man'
+alias -E find='noglob find'
+alias -E touch='nocorrect \touch'
+alias -E mkdir='nocorrect \mkdir'
 
 if (( $+commands[killall] )); then
-  alias killall='nocorrect \killall'
+  alias -E killall='nocorrect \killall'
 elif (( $+commands[pkill] )); then
-  alias killall='nocorrect \pkill'
+  alias -E killall='nocorrect \pkill'
 fi
 
 # sudo aliases
@@ -94,11 +104,11 @@ fi
 # yum aliases
 if (( $+commands[yum] )); then
   if (( $user_has_root == 1 )); then
-    alias yum-config-manager='nocorrect noglob \yum-config-manager'
-    alias yum='nocorrect noglob \yum'
+    alias -E yum-config-manager='nocorrect noglob \yum-config-manager'
+    alias -E yum='nocorrect noglob \yum'
   else
-    alias yum-config-manager='nocorrect noglob sudo \yum-config-manager'
-    alias yum='nocorrect noglob sudo \yum'
+    alias -E yum-config-manager='nocorrect noglob sudo \yum-config-manager'
+    alias -E yum='nocorrect noglob sudo \yum'
   fi
 fi
 
@@ -140,12 +150,6 @@ fi
 # ==============
 # Expand aliases
 # ==============
-# typeset -A abbrevs
-expand=('go' 'cd' 'grep' 'fgrep' 'egrep' 'mc' 'lst' ',,' 'lsa' 'exit')
-
-for supressed in $(alias |& egrep -i '(nocorrect|noglob)' | cut -f1 -d=); do
-  expand+=($supressed)
-done
 
 # expand aliases on space
 function expandAlias() {
