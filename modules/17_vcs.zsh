@@ -46,13 +46,13 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
     local svn_status=${(F)$(command svn status)}
 
     local modified_count=${(F)$(echo $svn_status | \grep '^[MDA!]')}
-    if [[ ${#${(f)modified_count}} != 0 ]]; then
+    if (( ${#${(f)modified_count}} != 0 )); then
       modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
       hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
     fi
 
     local unstaged_count=${#${(f)${(F)$(echo $svn_status | \grep '^?')}}}
-    if [[ $unstaged_count != 0 ]]; then
+    if (( $unstaged_count != 0 )); then
       unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL$unstaged_count
       hook_com[unstaged]+="%f%b$unstaged_count%f"
     fi
@@ -98,12 +98,12 @@ integer vcs_inotify_pid=-1
 
 function vcs_async_info () {
   zsh_unpickle -s -i async-sentinel
-  if [[ $vcs_async_sentinel == 0 ]]; then
+  if (( $vcs_async_sentinel == 0 )); then
     vcs_async_start=$SECONDS
-    vcs_async_info_worker $1 &!
     vcs_async_sentinel=1
+    vcs_async_info_worker $1 &!
   else
-    vcs_async_sentinel=2
+    (( vcs_async_sentinel++ ))
   fi
   zsh_pickle -i async-sentinel vcs_async_sentinel
 }
@@ -116,17 +116,22 @@ function vcs_async_info_worker () {
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
 
   zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
-  
+
   # Signal the parent shell to update the prompt.
-  kill -USR1 $$
+  kill -USR1 $$ 2>/dev/null
 }
 
 function TRAPUSR1 {
   emulate -LR zsh
   setopt zle 2>/dev/null
   setopt prompt_subst transient_rprompt no_clobber
+
+  if [[ -n $VCS_PAUSE ]]; then
+    return 0;
+  fi
+
   zsh_unpickle -s -c -i vcs-data
-  
+
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$vcs_super_info
 
@@ -137,7 +142,7 @@ function TRAPUSR1 {
   if [[ ! -n $vcs_raw_data ]]; then
     unset vcs_raw_data
   fi
-  
+
   # if we're in a vcs, start an inotify process
   if [[ -n $vcs_info_msg_0_ ]]; then
     if (( $vcs_inotify_pid == -1 )); then
@@ -145,18 +150,17 @@ function TRAPUSR1 {
       vcs_inotify_pid=$!
     fi
   elif (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid 2>/dev/null
-    vcs_inotify_pid=-1
+    vcs_async_cleanup
   fi
 
   zsh_unpickle -s -i async-sentinel
-  local temp_sentinel=$vcs_async_sentinel
+  local -i temp_sentinel=$vcs_async_sentinel
   vcs_async_sentinel=0
-  if [[ $vcs_async_sentinel == 2 ]]; then
+  zsh_pickle -i async-sentinel vcs_async_sentinel
+
+  if [[ $temp_sentinel == 2 ]]; then
     vcs_async_info &!
   fi
-  
-  zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
 function vcs_async_auto_update {
@@ -172,7 +176,7 @@ function vcs_async_auto_update {
 
 add-zsh-hook precmd vcs_async_auto_update
 
-vcs_inotify_events=(modify move create delete attrib close)
+vcs_inotify_events=(modify move create delete)
 
 function vcs_inotify_watch () {
   emulate -LR zsh
@@ -197,6 +201,7 @@ function vcs_async_cleanup () {
   emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
     kill $vcs_inotify_pid 2>/dev/null
+    vcs_inotify_pid=-1
   fi
 }
 
