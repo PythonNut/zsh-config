@@ -149,6 +149,12 @@ if (( $+commands[git] )); then
   alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
 fi
 
+if (( $+commands[emacsclient] )); then
+  alias -E ec='emacsclient -c -n'
+  alias -E ecn='emacsclient -n'
+  alias -E ect='emacsclient -t'
+fi
+
 # ==============
 # Expand aliases
 # ==============
