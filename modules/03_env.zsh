@@ -141,3 +141,7 @@ dirstack=(${(nu@Q)$(<$ZDOTDIR/zdirs)})
 
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true
+
+# disable traps until we define them later
+TRAPUSR1(){ echo "USR1 called before init!" }
+TRAPUSR2(){ echo "USR2 called before init!" }
