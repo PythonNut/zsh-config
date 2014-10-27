@@ -24,8 +24,10 @@ function alias () {
   else
     if [[ -n $E ]]; then
       for token in $@; do
-        token=(${(s/=/)token})
-        expand+="$token[1]"
+        if [[ $token == (*=*) ]]; then
+          token=(${(s/=/)token})
+          expand+="$token[1]"
+        fi
       done
     fi
     builtin alias $@
@@ -50,7 +52,7 @@ alias ll='lsa -lAFGh'
 alias lss='lst -BFshx'
 alias lsp='\ls'
 
-# saftey aliases
+# safety aliases
 alias rm='rm -i' cp='cp -i'
 alias rmf='\rm' cpf='\cp'
 alias ln="\ln -s"
