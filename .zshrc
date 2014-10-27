@@ -1,6 +1,11 @@
 #!/bin/zsh
 
 # core zsh setup
+
+# disable traps until we define them later
+TRAPUSR1(){ echo "USR1 called before init!" }
+TRAPUSR2(){ echo "USR2 called before init!" }
+
 zstyle :compinstall filename '~/.zshrc'
 skip_global_compinit=1
 fpath=(~/.zsh.d/completers $fpath)
