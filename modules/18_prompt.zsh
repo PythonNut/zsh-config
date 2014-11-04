@@ -12,8 +12,8 @@ fi
 
 function compute_prompt () {
   emulate -LR zsh
-  setopt prompt_subst transient_rprompt
-  local black=$fg_bold[black]
+  setopt prompt_subst transient_rprompt extended_glob
+  local black=$fg_bold[black] pure_ascii
 
   # show the last error code
   PS1=$'%{${fg[red]}%}%(?..Error: (%?%)\n)'
@@ -55,6 +55,14 @@ function compute_prompt () {
   
   # finish the prompt
   PS1+="]%#$nbsp"
+
+
+  pure_ascii=${$(print -P $PS1)//$(echo -e "\x1B")\[[0-9;]#[mK]/}
+  if (( $degraded_terminal[colors] == 1)); then
+      PS1="$pure_ascii"
+  fi
+
+  PS2="$(printf ' %.0s' {1..$(( $#pure_ascii - 2 ))})> "
 }
 
 compute_prompt
