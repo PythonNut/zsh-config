@@ -1,0 +1,4 @@
+#compdef go
+shift words
+(( CURRENT-- ))
+_normal
