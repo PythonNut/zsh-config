@@ -19,7 +19,7 @@ function compute_prompt () {
   PS1=$'%{%F{red}%}%(?..Error: (%?%)\n)'
 
   # highlight root in red
-  PS1+="%{%F{default}%}[%B%{%(#~%F{red}~%F{black})%}"
+  PS1+="%{%F{default}%}[%B%{%(!.%F{red}.%F{black})%}"
 
   # username and reset decorations, compressed_path
   PS1+='%n%b'
