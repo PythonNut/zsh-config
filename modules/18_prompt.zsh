@@ -40,7 +40,7 @@ function compute_prompt () {
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
-    PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")"
+    PS1+=$((($SHLVL > 1)) && echo " <%L>")
 
     # vim normal/textobject mode indicator
     local VIM_PROMPT="%B%F{black} [% N]% %b"
