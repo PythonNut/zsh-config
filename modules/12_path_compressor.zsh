@@ -98,11 +98,11 @@ function minify_path_smart () {
   cur_path=$(minify_path_full $1)
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
     glob=${(l:$((2*$i))::\/:)}
-    eval "cur_path=\${cur_path:gs/$glob/\%\{\$FX[underline]\%\}$i\%\{\$FX[no-underline]\%\}}"
+    eval "cur_path=\${cur_path:gs/$glob/\%U$i\%u}"
   done
   cur_path=${cur_path:s/\~\//\~}
   for char in {a-zA-Z}; do
-    eval "cur_path=\${cur_path:gs/\/$char/\%\{\$FX[underline]\%\}$char\%\{\$FX[no-underline]\%\}}"
+    eval "cur_path=\${cur_path:gs/\/$char/\%U$char\%u}"
   done
   echo $cur_path
 }
