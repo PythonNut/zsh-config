@@ -16,13 +16,13 @@ function compute_prompt () {
   local black=$fg_bold[black] pure_ascii
 
   # show the last error code
-  PS1=$'%{${fg[red]}%}%(?..Error: (%?%)\n)'
+  PS1=$'%{%F{red}%}%(?..Error: (%?%)\n)'
 
   # highlight root in red
-  PS1+="%{${fg[default]}%}[%{%(#~$fg_bold[red]~$black)%}"
+  PS1+="%{%F{default}%}[%B%{%(#~%F{red}~%F{black})%}"
 
   # username and reset decorations, compressed_path
-  PS1+='%n%{${fg_no_bold[default]}${bg[default]}%}'
+  PS1+='%n%b'
 
   if (( $degraded_terminal[display_host] == 1 )); then
     if (( $degraded_terminal[colors256] != 1 )); then
@@ -43,8 +43,8 @@ function compute_prompt () {
     PS1+="$(((SHLVL>1))&&echo " <"${SHLVL}">")"
 
     # vim normal/textobject mode indicator
-    local VIM_PROMPT="%{$fg_bold[black]%} [% N]% %{$reset_color%}"
-    local VIM_PROMPT_OPP="%{$fg_bold[black]%} [% N+]% %{$reset_color%}"
+    local VIM_PROMPT="%B%F{black} [% N]% %b"
+    local VIM_PROMPT_OPP="%B%F{black} [% N+]% %b"
     RPS1="${${${KEYMAP/vicmd/$VIM_PROMPT}/opp/$VIM_PROMPT_OPP}/(afu)/}"
     RPS1=$RPS1"\${vcs_info_msg_0_}"
 
