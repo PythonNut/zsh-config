@@ -91,8 +91,8 @@ fi
 
 # sudo aliases
 if (( $+commands[sudo] )); then
-  alias sudo="sudo "
-  alias please='sudo !!'
+  alias sudo='sudo '
+  alias -ec please='echo sudo ${history[$#history]}'
 fi
 
 # yaourt aliases
