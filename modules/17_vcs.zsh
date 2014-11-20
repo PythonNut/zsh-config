@@ -114,16 +114,18 @@ function vcs_async_info_worker () {
 
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
-
   zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
 
   # Signal the parent shell to update the prompt.
-  kill -USR1 $$ 2>/dev/null
+  kill -USR1 $$
+  if [[ $? != 0 ]]; then
+      vcs_async_cleanup
+  fi
 }
 
 function TRAPUSR1 {
   emulate -LR zsh
-  setopt zle 2>/dev/null
+  setopt zle 2> /dev/null
   setopt prompt_subst transient_rprompt no_clobber
 
   if [[ -n $VCS_PAUSE ]]; then
@@ -182,9 +184,17 @@ function vcs_inotify_watch () {
   emulate -LR zsh
   if hash inotifywait &>/dev/null; then
     inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
-      -mqr --format %w%f $1 2> ~/.zsh.d/startup.log \
-      | while IFS= read -r file; do
-      vcs_inotify_do "$file"
+                -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
+    while IFS= read -r file; do
+      # if parent is dead, kill self
+      if ps -p $$ &> /dev/null; then
+          vcs_inotify_do "$file"
+      else
+        kill -HUP -- -$$ -$! -$(exec $ZSH_NAME -fc 'print $PPID')
+        sleep 2
+        kill -KILL -- -$$ -$! -$(exec $ZSH_NAME -fc 'print $PPID')
+        break
+      fi
     done
   else
     echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
@@ -200,7 +210,9 @@ function vcs_inotify_do () {
 function vcs_async_cleanup () {
   emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid 2>/dev/null
+    kill -HUP -- -$vcs_inotify_pid
+    sleep 2
+    kill -KILL -- -$vcs_inotify_pid &> /dev/null
     vcs_inotify_pid=-1
   fi
 }
