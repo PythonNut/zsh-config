@@ -24,9 +24,6 @@ function TRAPUSR2 {
   title_async_compress
 }
 
-# Build the prompt in a background job.
-chpwd_async_worker &!
-
 function recompute_cdpath() {
   emulate -LR zsh
   cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${${:-.}:A}/}"))}")
