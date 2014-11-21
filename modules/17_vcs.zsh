@@ -46,7 +46,7 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
     local svn_status=${(F)$(command svn status)}
 
     local modified_count=${(F)$(echo $svn_status | \grep '^[MDA!]')}
-    if (( ${#${(f)modified_count}} != 0 )); then
+    if (( $modified_count != 0 )); then
       modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
       hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
     fi
@@ -72,13 +72,13 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
     local hg_status=${(F)$(command hg status)}
 
     local modified_count=${(F)$(echo $hg_status | \grep '^[MDA!]')}
-    if [[ ${#${(f)modified_count}} != 0 ]]; then
+    if (( $modified_count != 0 )); then
       modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
       hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
     fi
 
     local unstaged_count=${#${(f)${(F)$(echo $hg_status | \grep '^?')}}}
-    if [[ $unstaged_count != 0 ]]; then
+    if (( $unstaged_count != 0 )); then
       unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL$unstaged_count
       hook_com[unstaged]+="%f%b$unstaged_count%f"
     fi
