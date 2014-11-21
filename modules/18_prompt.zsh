@@ -21,8 +21,8 @@ function compute_prompt () {
   # highlight root in red
   PS1+="%{%F{default}%}[%B%{%(!.%F{red}.%F{black})%}"
 
-  # username and reset decorations, compressed_path
-  PS1+='%n%b'
+  # username and reset decorations
+  PS1+='%n%{%b%F{default}%}'
 
   if (( $degraded_terminal[display_host] == 1 )); then
     if (( $degraded_terminal[colors256] != 1 )); then
@@ -36,7 +36,8 @@ function compute_prompt () {
     fi
   fi
 
-  PS1+=' $chpwd_minify_smart_str'
+  # compressed_path
+  PS1+=" $chpwd_minify_smart_str"
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
