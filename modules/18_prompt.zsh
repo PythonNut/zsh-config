@@ -72,6 +72,9 @@ add-zsh-hook precmd compute_prompt
 
 # intercept keymap selection
 function zle-keymap-select () {
+  emulate -LR zsh
+  setopt zle 2> /dev/null
+  setopt prompt_subst transient_rprompt extended_glob
   compute_prompt
   zle && zle reset-prompt
 }
