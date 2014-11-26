@@ -14,10 +14,12 @@ function chpwd_async_worker () {
 
 function TRAPUSR2 {
   emulate -LR zsh
+  setopt zle 2> /dev/null
   setopt prompt_subst transient_rprompt
   zsh_unpickle -s -c -i async-chpwd
 
   # Force zsh to redisplay the prompt.
+  compute_prompt
   zle && zle reset-prompt
 
   # and update the title
@@ -33,13 +35,15 @@ add-zsh-hook chpwd recompute_cdpath
 recompute_cdpath
 
 function prompt_async_compress () {
+  emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   # check if we're running under Midnight Commander
   if (( $degraded_terminal[decorations] == 1 )); then
     chpwd_minify_smart_str=${${:-.}:A:t}
     zle && zle reset-prompt
   else
-    chpwd_minify_smart_str=$(minify_path .)
-    chpwd_minify_fast_str=$chpwd_minify_smart_str
+    chpwd_minify_smart_str="$(minify_path .)"
+    chpwd_minify_fast_str="$chpwd_minify_smart_str"
     chpwd_async_worker &!
   fi
 }
