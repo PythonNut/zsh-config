@@ -4,8 +4,8 @@
 
 function chpwd_async_worker () {
   emulate -LR zsh
-  chpwd_minify_smart_str=$(minify_path_smart .)
-  chpwd_minify_fasd_str=$(minify_path_fasd .)
+  chpwd_minify_smart_str="$(minify_path_smart .)"
+  chpwd_minify_fasd_str="$(minify_path_fasd .)"
   zsh_pickle -i async-chpwd chpwd_minify_smart_str chpwd_minify_fasd_str
 
   # Signal the parent shell to update the prompt.
@@ -28,7 +28,7 @@ function TRAPUSR1 {
 
 function recompute_cdpath() {
   emulate -LR zsh
-  cdpath=(${(@)raw_cdpath:#${${:-.}:A}/})
+  cdpath=("${(@)raw_cdpath:#${${:-.}:A}/}")
 }
 
 add-zsh-hook chpwd recompute_cdpath

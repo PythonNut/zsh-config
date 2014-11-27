@@ -118,8 +118,8 @@ function vcs_async_info_worker () {
 
   # Signal the parent shell to update the prompt.
   kill -USR2 $$
-  if [[ $? != 0 ]]; then
-      vcs_async_cleanup
+  if (( $? != 0 )); then
+    vcs_async_cleanup
   fi
 }
 
