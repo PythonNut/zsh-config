@@ -3,7 +3,6 @@
 # ========================================
 
 function chpwd_async_worker () {
-  emulate -LR zsh
   chpwd_minify_smart_str="$(minify_path_smart .)"
   chpwd_minify_fasd_str="$(minify_path_fasd .)"
   zsh_pickle -i async-chpwd chpwd_minify_smart_str chpwd_minify_fasd_str
@@ -13,9 +12,6 @@ function chpwd_async_worker () {
 }
 
 function TRAPUSR1 {
-  emulate -LR zsh
-  setopt zle 2> /dev/null
-  setopt prompt_subst transient_rprompt
   zsh_unpickle -s -c -i async-chpwd
 
   # Force zsh to redisplay the prompt.

@@ -109,7 +109,6 @@ function vcs_async_info () {
 }
 
 function vcs_async_info_worker () {
-  emulate -LR zsh
   local vcs_super_info vcs_super_raw_data
 
   vcs_super_info="$(vcs_super_info)"
@@ -124,9 +123,6 @@ function vcs_async_info_worker () {
 }
 
 function TRAPUSR2 {
-  emulate -LR zsh
-  setopt zle 2> /dev/null
-  setopt prompt_subst transient_rprompt no_clobber
   local current_pwd
 
   if [[ -n $VCS_PAUSE ]]; then
