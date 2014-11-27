@@ -28,7 +28,7 @@ function TRAPUSR1 {
 
 function recompute_cdpath() {
   emulate -LR zsh
-  cdpath=("${(s/ /)$(eval echo $(echo "\${(@)raw_cdpath:#${${:-.}:A}/}"))}")
+  cdpath=(${(@)raw_cdpath:#${${:-.}:A}/})
 }
 
 add-zsh-hook chpwd recompute_cdpath
