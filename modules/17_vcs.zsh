@@ -207,9 +207,7 @@ function vcs_inotify_watch () {
       if ps -p $$ &> /dev/null; then
           vcs_inotify_do "$file"
       else
-        kill -HUP -- -$$ -$! -$(exec $ZSH_NAME -fc 'print $PPID')
-        sleep 2
-        kill -KILL -- -$$ -$! -$(exec $ZSH_NAME -fc 'print $PPID')
+        kill -TERM -- -$$ -$! -$(exec $ZSH_NAME -fc 'print $PPID')
         break
       fi
     done
@@ -227,9 +225,7 @@ function vcs_inotify_do () {
 function vcs_async_cleanup () {
   emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
-    kill -HUP -- -$vcs_inotify_pid
-    sleep 2
-    kill -KILL -- -$vcs_inotify_pid &> /dev/null
+    kill -TERM -- -$vcs_inotify_pid &> /dev/null
     vcs_inotify_pid=-1
   fi
 }
