@@ -117,13 +117,13 @@ function vcs_async_info_worker () {
   zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
 
   # Signal the parent shell to update the prompt.
-  kill -USR1 $$
+  kill -USR2 $$
   if [[ $? != 0 ]]; then
       vcs_async_cleanup
   fi
 }
 
-function TRAPUSR1 {
+function TRAPUSR2 {
   emulate -LR zsh
   setopt zle 2> /dev/null
   setopt prompt_subst transient_rprompt no_clobber

@@ -9,10 +9,10 @@ function chpwd_async_worker () {
   zsh_pickle -i async-chpwd chpwd_minify_smart_str chpwd_minify_fasd_str
 
   # Signal the parent shell to update the prompt.
-  kill -USR2 $$
+  kill -USR1 $$
 }
 
-function TRAPUSR2 {
+function TRAPUSR1 {
   emulate -LR zsh
   setopt zle 2> /dev/null
   setopt prompt_subst transient_rprompt
