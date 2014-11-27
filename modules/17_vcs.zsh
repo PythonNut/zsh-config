@@ -127,6 +127,7 @@ function TRAPUSR1 {
   emulate -LR zsh
   setopt zle 2> /dev/null
   setopt prompt_subst transient_rprompt no_clobber
+  local current_pwd
 
   if [[ -n $VCS_PAUSE ]]; then
     return 0;
@@ -149,11 +150,12 @@ function TRAPUSR1 {
   # TODO: only restart inotify if we move out of its tracked zone
   zsh_unpickle -s -i vcs_last_dir
 
+  current_pwd=${${:-.}:A}
   # if we're in a vcs, start an inotify process
-  if [[ $vcs_last_dir == ${${:-.}:A} ]]; then
+  if [[ $vcs_last_dir == $current_pwd ]]; then
     if [[ -n $vcs_info_msg_0_ ]]; then
         if (( $vcs_inotify_pid == -1 )); then
-            vcs_inotify_watch ${${:-.}:A} &!
+            vcs_inotify_watch $current_pwd &!
             vcs_inotify_pid=$!
         fi
     elif (( $vcs_inotify_pid != -1 )); then
@@ -162,14 +164,14 @@ function TRAPUSR1 {
   else
     if [[ -n $vcs_info_msg_0_ ]]; then
       vcs_async_cleanup &!
-      vcs_inotify_watch ${${:-.}:A} &!
+      vcs_inotify_watch $current_pwd &!
       vcs_inotify_pid=$!
     elif (( $vcs_inotify_pid != -1 )); then
       vcs_async_cleanup &!
     fi
   fi
 
-  vcs_last_dir=${${:-.}:A}
+  vcs_last_dir=$current_pwd
   zsh_pickle -i vcs-last-dir vcs_last_dir
 
   zsh_unpickle -s -i async-sentinel
