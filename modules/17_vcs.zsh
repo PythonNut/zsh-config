@@ -116,6 +116,11 @@ function vcs_async_info_worker () {
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
   zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
 
+  zsh_unpickle -s -i async-sentinel
+  if (( $vcs_async_sentinel >= 2 )); then
+      sleep 3
+  fi
+
   # Signal the parent shell to update the prompt.
   kill -USR2 $$
 }
