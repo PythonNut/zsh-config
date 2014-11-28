@@ -90,22 +90,23 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 }
 
 typeset -F SECONDS
-float vcs_async_start=0
-float vcs_async_delay=0
-integer vcs_async_sentinel=0
-zsh_pickle -i async-sentinel vcs_async_sentinel
+float vcs_async_start
+float vcs_async_delay
+integer vcs_async_sentinel
 integer vcs_inotify_pid=-1
+
+zsh_pickle -i async-sentinel vcs_async_sentinel
 
 function vcs_async_info () {
   zsh_unpickle -s -i async-sentinel
-  if (( $vcs_async_sentinel == 0 )); then
-    vcs_async_start=$SECONDS
-    vcs_async_sentinel=1
-    vcs_async_info_worker $1 &!
-  else
-    (( vcs_async_sentinel++ ))
-  fi
+  (( vcs_async_sentinel++ ))
   zsh_pickle -i async-sentinel vcs_async_sentinel
+
+  # i.e. Was originally zero
+  if (( $vcs_async_sentinel == 1 )); then
+    vcs_async_start=$SECONDS
+    vcs_async_info_worker $1 &!
+  fi
 }
 
 function vcs_async_info_worker () {
@@ -117,30 +118,18 @@ function vcs_async_info_worker () {
 
   # Signal the parent shell to update the prompt.
   kill -USR2 $$
-  if (( $? != 0 )); then
-    vcs_async_cleanup
-  fi
 }
 
 function TRAPUSR2 {
   local current_pwd
-
-  if [[ -n $VCS_PAUSE ]]; then
-    return 0;
-  fi
-
   zsh_unpickle -s -c -i vcs-data
 
   vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$vcs_super_info
+  vcs_raw_data=$vcs_super_raw_data
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
-
-  vcs_raw_data=$vcs_super_raw_data
-  if [[ ! -n $vcs_raw_data ]]; then
-    unset vcs_raw_data
-  fi
 
   # we use yet another pickle to track when the pwd changes
   # TODO: only restart inotify if we move out of its tracked zone
@@ -148,23 +137,19 @@ function TRAPUSR2 {
 
   current_pwd=${${:-.}:A}
   # if we're in a vcs, start an inotify process
-  if [[ $vcs_last_dir == $current_pwd ]]; then
-    if [[ -n $vcs_info_msg_0_ ]]; then
-        if (( $vcs_inotify_pid == -1 )); then
-            vcs_inotify_watch $current_pwd &!
-            vcs_inotify_pid=$!
-        fi
-    elif (( $vcs_inotify_pid != -1 )); then
-        vcs_async_cleanup &!
-    fi
-  else
-    if [[ -n $vcs_info_msg_0_ ]]; then
+  if [[ -n $vcs_info_msg_0_ ]]; then
+    if [[ $vcs_last_dir == $current_pwd ]]; then
+      if (( $vcs_inotify_pid == -1 )); then
+        vcs_inotify_watch $current_pwd &!
+        vcs_inotify_pid=$!
+      fi
+    else
       vcs_async_cleanup &!
       vcs_inotify_watch $current_pwd &!
       vcs_inotify_pid=$!
-    elif (( $vcs_inotify_pid != -1 )); then
-      vcs_async_cleanup &!
     fi
+  else
+    vcs_async_cleanup &!
   fi
 
   vcs_last_dir=$current_pwd
@@ -175,17 +160,16 @@ function TRAPUSR2 {
   vcs_async_sentinel=0
   zsh_pickle -i async-sentinel vcs_async_sentinel
 
-  if [[ $temp_sentinel == 2 ]]; then
+  if (( $temp_sentinel >= 2 )); then
     vcs_async_info &!
   fi
 }
 
 function vcs_async_auto_update {
-  emulate -LR zsh
-  setopt function_argzero
   if [[ -n $VCS_PAUSE ]]; then
     return 0;
   fi
+
   vcs_async_sentinel=0
   zsh_pickle -i async-sentinel vcs_async_sentinel
   vcs_async_info
