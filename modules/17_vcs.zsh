@@ -5,7 +5,7 @@ zstyle ':vcs_info:*' enable git svn hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
-ZSH_VCS_PROMPT_USING_PYTHON='false'
+ZSH_VCS_PROMPT_USING_PYTHON='true'
 
 if (( $degraded_terminal[unicode] != 1 )); then
   ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
