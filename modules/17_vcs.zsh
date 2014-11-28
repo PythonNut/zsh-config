@@ -206,6 +206,9 @@ function vcs_inotify_watch () {
 
 function vcs_inotify_do () {
   emulate -LR zsh
+  if [[ $file == */index.lock ]]; then
+    return 0
+  fi
   vcs_async_info $file
 }
 
