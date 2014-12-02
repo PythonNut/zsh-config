@@ -1,7 +1,7 @@
 # ======================
 # Version Control System
 # ======================
-zstyle ':vcs_info:*' enable git svn hg bzr
+zstyle ':vcs_info:*' enable git svn cvs hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
@@ -118,7 +118,7 @@ function vcs_async_info_worker () {
 
   zsh_unpickle -s -i async-sentinel
   if (( $vcs_async_sentinel >= 2 )); then
-      sleep 3
+    sleep 3
   fi
 
   # Signal the parent shell to update the prompt.
