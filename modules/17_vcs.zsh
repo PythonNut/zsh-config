@@ -89,6 +89,47 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
   fi
 }
 
+function vcs_get_root_dir () {
+  case $1 in
+    (git)
+      git rev-parse --show-toplevel;;
+    (hg)
+      hg root;;
+    (svn)
+      if [[ -d ".svn" ]]; then
+        if [[ -d "../.svn" ]]; then
+          # case 2: SVN < 1.7, any directory
+          local parent=""
+          local grandparent="."
+
+          while [[ -d "$grandparent/.svn" ]]; do
+              parent=$grandparent
+              grandparent="$parent/.."
+          done
+
+          echo ${parent:A}
+        else
+          # case 2: SVN >= 1.7, root directory
+          echo ${${:-.}:A}
+        fi
+      else
+        # case 3: SVN >= 1.7, non root directory
+        local parent="."
+        while [[ ! -d "$parent/.svn" ]]; do
+            parent+="/.."
+        done
+
+        echo ${parent:A}
+      fi;;
+    (bzr)
+      bzr root;;
+    (cvs)
+      echo $CVSROOT;;
+    (*)
+      echo $(pwd);;
+  esac
+}
+
 typeset -F SECONDS
 float vcs_async_start
 float vcs_async_delay
