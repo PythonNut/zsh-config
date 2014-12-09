@@ -5,7 +5,7 @@
 function pcomplete() {
   emulate -L zsh
   {
-    setopt function_argzero prompt_subst
+    setopt function_argzero prompt_subst extended_glob
     setopt list_packed list_rows_first
 
     setopt auto_list              # list if multiple matches
@@ -68,9 +68,9 @@ function pcomplete() {
       local -a match mbegin mend
 
       # detect single auto-fu match
-      for i in $region_highlight; do
-        if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
-          i=("$match")
+      for param in $region_highlight; do
+        if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)(*) ]]; then
+          i=($match)
           if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
             $0_forward_word
             break
@@ -85,9 +85,9 @@ function pcomplete() {
         $0_forward_word
         if [[ $#RBUFFER == 0 ]]; then
             if [[ $LBUFFER[-1] == "/" ]]; then
-            $0_force_auto
+              $0_force_auto
             else
-            zle magic-space
+              zle magic-space
             fi
         else
           if [[ $LBUFFER[-2] == "/" ]]; then
