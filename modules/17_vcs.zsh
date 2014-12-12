@@ -153,9 +153,13 @@ function vcs_async_info () {
 function vcs_async_info_worker () {
   local vcs_super_info vcs_super_raw_data
 
+  vcs_current_pwd=${${:-.}:A}
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
-  zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
+  zsh_pickle -i vcs-data \
+             vcs_super_info \
+             vcs_super_raw_data \
+             vcs_current_pwd
 
   zsh_unpickle -s -i async-sentinel
   if (( $vcs_async_sentinel >= 2 )); then
@@ -183,7 +187,7 @@ function TRAPUSR2 {
 
   current_pwd=${${:-.}:A}
   # if we're in a vcs, start an inotify process
-  if [[ -n $vcs_info_msg_0_ ]]; then
+  if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
     if [[ $vcs_last_dir == $current_pwd ]]; then
       if (( $vcs_inotify_pid == -1 )); then
         vcs_inotify_watch $current_pwd &!
