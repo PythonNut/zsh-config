@@ -159,7 +159,7 @@ function vcs_async_info_worker () {
 
   zsh_unpickle -s -i async-sentinel
   if (( $vcs_async_sentinel >= 2 )); then
-    sleep 3
+    sleep 1
   fi
 
   # Signal the parent shell to update the prompt.
