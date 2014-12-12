@@ -9,8 +9,6 @@
   -zle-force-install() {}
   integer afu_enabled=1
   zle-line-init () {
-    emulate -LR zsh
-    setopt prompt_subst
     if (( $afu_enabled == 1 )); then
       auto-fu-init
     fi
