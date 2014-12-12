@@ -174,12 +174,13 @@ function TRAPUSR2 {
   local current_pwd
   zsh_unpickle -s -c -i vcs-data
 
-  vcs_async_delay=$(($SECONDS - $vcs_async_start))
   vcs_info_msg_0_=$vcs_super_info
   vcs_raw_data=$vcs_super_raw_data
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
+
+  vcs_async_delay=$(($SECONDS - $vcs_async_start))
 
   # we use yet another pickle to track when the pwd changes
   # TODO: only restart inotify if we move out of its tracked zone
