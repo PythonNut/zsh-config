@@ -231,13 +231,7 @@ function vcs_inotify_watch () {
     inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
                 -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
     while IFS= read -r file; do
-      # if parent is dead, kill self
-      if ps -p $$ &> /dev/null; then
-          vcs_inotify_do "$file"
-      else
-        kill -TERM -- -$$ -$! -$(exec $ZSH_NAME -fc 'print $PPID')
-        break
-      fi
+      vcs_inotify_do "$file"
     done
   else
     echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
