@@ -37,7 +37,7 @@ function compute_prompt () {
   fi
 
   # compressed_path
-  PS1+=" $chpwd_minify_smart_str"
+  PS1+=' $chpwd_minify_smart_str'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
