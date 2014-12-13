@@ -121,7 +121,8 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 # ================================
 
 function _cdpath(){
-  tmpcdpath=(${${(@)cdpath:#.}:#$PWD}) 
+  local tmpcdpath
+  tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
   (( $#tmpcdpath )) && alt=('path-directories:directory in cdpath:_path_files -W tmpcdpath -/')
   _alternative "$alt[@]"
 }
