@@ -135,6 +135,7 @@ float vcs_async_start
 float vcs_async_delay
 integer vcs_async_sentinel
 integer vcs_inotify_pid=-1
+integer VCS_PAUSE=0
 
 zsh_pickle -i async-sentinel vcs_async_sentinel
 
@@ -217,7 +218,7 @@ function TRAPUSR2 {
 }
 
 function vcs_async_auto_update {
-  if [[ -n $VCS_PAUSE ]]; then
+  if (( $VCS_PAUSE == 1 )); then
     return 0;
   fi
 
@@ -257,6 +258,14 @@ function vcs_async_cleanup () {
   if (( $vcs_inotify_pid != -1 )); then
     kill -TERM -- -$vcs_inotify_pid &> /dev/null
     vcs_inotify_pid=-1
+  fi
+}
+
+function vcs_pause () {
+  if (( $VCS_PAUSE == 1 )); then
+    VCS_PAUSE=0
+  else
+    VCS_PAUSE=1
   fi
 }
 
