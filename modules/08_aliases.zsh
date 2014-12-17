@@ -182,7 +182,7 @@ function expandAlias() {
     }
 
     function $0_smart_expand () {
-      zparseopts -D -E i=G
+      zparseopts -D -E g=G
       local expansion="${@[2,-1]}"
       local delta=$(($#expansion - $expansion[(i){}] - 1))
 
