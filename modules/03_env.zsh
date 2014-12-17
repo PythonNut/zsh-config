@@ -62,6 +62,7 @@ case $_OLD_TERM in
     emulate sh
     PS1="$ "
     unsetopt prompt_cr
+    unsetopt zle
     return 0;;
     
   (linux)
