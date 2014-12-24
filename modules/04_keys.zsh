@@ -11,11 +11,30 @@ git-escape-magic
 
 typeset -A key
 function {
-  emulate -LR zsh 
+  emulate -LR zsh
+  setopt function_argzero
   local zkbd_dest
   zkbd_dest=${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
-  if [[ ! -f $zkbd_dest ]]; then
+  local REPLY REPLY_PERM
+  {
+  if [[ -s $zkbd_dest ]]; then
+    source $zkbd_dest
+  elif [[ -f $zkbd_dest ]]; then
+    throw KeyFallback
+  else
     read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
+
+    if [[ $REPLY != [Yy]* ]]; then
+      echo
+      read -q "REPLY_PERM?Ask again? (y/n) " -n 1
+      if [[ $REPLY_PERM != [Yy]* ]]; then
+        touch $zkbd_dest
+        exec $SHELL
+      else
+        throw KeyFallback
+      fi
+    fi
+
     if [[ $REPLY == [Yy]* ]]; then
       echo
       export TERM=$_OLD_TERM
@@ -23,7 +42,10 @@ function {
       echo "Keys generated ... exiting"
       mv ${ZDOTDIR:-$HOME}/.zkbd/$TERM-:0 $zkbd_dest &> /dev/null
       source $zkbd_dest
-    else
+    fi
+  fi
+  } always {
+    if catch KeyFallback; then
       key[Home]=${terminfo[khome]}
       key[End]=${terminfo[kend]}
       key[Insert]=${terminfo[kich1]}
@@ -37,9 +59,7 @@ function {
       # key[Left]=${terminfo[kcub1]}
       # key[Right]=${terminfo[kcuf1]}
     fi
-  else
-    source $zkbd_dest
-  fi
+  }
 }
 
 [[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char

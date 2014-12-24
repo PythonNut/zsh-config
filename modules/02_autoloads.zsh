@@ -15,6 +15,8 @@
   autoload -Uz url-quote-magic    # automatically%20escape%20characters
   autoload -Uz add-zsh-hook       # a more modular way to hook
   autoload -Uz is-at-least        # enable graceful regression
+  autoload -Uz throw              # throw exceptions
+  autoload -Uz catch              # catch exceptions
 
   zmodload zsh/complist           # ensure complist is loaded
   zmodload zsh/sched              # delayed execution in zsh
