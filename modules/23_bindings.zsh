@@ -83,7 +83,7 @@ function () {
   zle -N zaw-autoload-git-show-branch
   
   global_bindkey "^X;" zaw
-  global_bindkey "^R^R" zaw-history
+  global_bindkey "^Xr" zaw-history
   global_bindkey "^Xo" zaw-open-file
   global_bindkey "^Xa" zaw-applications
 
