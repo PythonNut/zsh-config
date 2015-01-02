@@ -33,6 +33,36 @@ global_bindkey "^S" history-incremental-pattern-search-forward
 
 bindkey -M isearch "^R" history-incremental-pattern-search-backward
 
+autoload -Uz cycle-completion-positions
+zle -N cycle-completion-positions
+global_bindkey "^X^I" cycle-completion-positions
+
+
+autoload -Uz forward-word-match
+autoload -Uz backward-word-match
+autoload -Uz kill-word-match
+autoload -Uz backward-kill-word-match
+autoload -Uz transpose-words-match
+autoload -Uz select-word-style
+autoload -Uz match-word-context
+autoload -Uz match-words-by-style
+
+zle -N forward-word-match
+zle -N backward-word-match
+zle -N kill-word-match
+zle -N backward-kill-word-match
+zle -N transpose-words-match
+zle -N select-word-style
+zle -N match-word-context
+zle -N match-words-by-style
+
+select-word-style shell
+
+global_bindkey "^[^F" forward-word-match
+global_bindkey "^[^B" backward-word-match
+global_bindkey "^[^K" backward-kill-word-match
+global_bindkey "^[^T" transpose-words-match
+
 # M-, moves to the previous word on the current line, like M-.
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
