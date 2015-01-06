@@ -20,6 +20,9 @@ HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=50000
 SAVEHIST=50000
 
+# Forcefully disable the bell
+ZBEEP=""
+
 export EDITOR="vim"
 export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
