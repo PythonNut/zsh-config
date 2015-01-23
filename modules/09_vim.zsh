@@ -19,7 +19,6 @@ function _vi-insert () {
 }
 zle -N vi-insert _vi-insert
 
-source $ZDOTDIR/zsh-vim-pattern-search/en.zsh
 source $ZDOTDIR/zsh-vim-textobjects/opp.zsh
 source $ZDOTDIR/zsh-vim-textobjects/opp/surround.zsh
 
