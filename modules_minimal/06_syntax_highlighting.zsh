@@ -1,0 +1,1 @@
+../modules/06_syntax_highlighting.zsh
