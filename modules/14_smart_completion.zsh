@@ -57,8 +57,7 @@ function pcomplete() {
       _match \
       _files \
       _history \
-      _prefix \
-      _approximate
+      _prefix
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       zle predict-next-line  
