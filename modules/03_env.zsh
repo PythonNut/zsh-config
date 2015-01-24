@@ -91,7 +91,7 @@ if [[ -n ${EMACS+1} ]]; then
     degraded_terminal[title]=1
 fi
 
-if [[ -n "$SSH_CLIENT" || -n "SSH_TTY" ]]; then
+if [[ $(who am i) =~ \([-a-zA-Z0-9\.]+\)$ ]]; then
   degraded_terminal[display_host]=1
 elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
   degraded_terminal[display_host]=1
