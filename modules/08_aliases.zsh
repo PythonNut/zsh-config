@@ -217,7 +217,7 @@ function expandAlias() {
     fi
 
   } always {
-    unfunction -m "$0_*"
+    unfunction -m "$0_smart_space" "$0_smart_expand"
   }
 
   _zsh_highlight

@@ -128,7 +128,7 @@ function pcomplete() {
     zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
   } always {
-    unfunction -m "$0_*"
+    unfunction -m "$0_forward_word" "$0_force_auto"
   }
 }
 
