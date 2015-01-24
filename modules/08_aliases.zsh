@@ -165,7 +165,7 @@ function expandAlias() {
   {
     setopt function_argzero
     # hack a local function scope using unfuction
-    function $0_smart_space () {
+    function expandAlias_smart_space () {
       if [[ $RBUFFER[1] != ' ' ]]; then
         if [[ ! "$1" == "no_space" ]]; then
           zle magic-space
@@ -181,7 +181,7 @@ function expandAlias() {
       fi
     }
 
-    function $0_smart_expand () {
+    function expandAlias_smart_expand () {
       zparseopts -D -E g=G
       local expansion="${@[2,-1]}"
       local delta=$(($#expansion - $expansion[(i){}] - 1))
@@ -198,26 +198,26 @@ function expandAlias() {
     local cmd
     cmd=("${(@s/ /)LBUFFER}")
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
-      $0_smart_expand $cmd[-1] "$(${(s/ /e)command_abbrevs[$cmd[-1]]})"
+      expandAlias_smart_expand $cmd[-1] "$(${(s/ /e)command_abbrevs[$cmd[-1]]})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
-      $0_smart_expand -g $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
+      expandAlias_smart_expand -g $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
 
-    elif [[ ${(j: :)cmd} == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
+    elif [[ "${(j: :)cmd}" == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
       if [[ -n "$aliases[$cmd[-1]]" ]]; then
         LBUFFER="$aliases[$cmd[-1]] "
       fi
       
-    elif (( ! $+expand[(r)$cmd[-1]] )) && [[ $cmd[-1] != (\\*) ]]; then
+    elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\*) ]]; then
       zle _expand_alias
-      $0_smart_space $1
+      expandAlias_smart_space "$1"
       
     else
-      $0_smart_space $1
+      expandAlias_smart_space "$1"
     fi
 
   } always {
-    unfunction -m "$0_smart_space" "$0_smart_expand"
+    unfunction "expandAlias_smart_space" "expandAlias_smart_expand"
   }
 
   _zsh_highlight

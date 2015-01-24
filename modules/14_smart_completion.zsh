@@ -16,7 +16,7 @@ function pcomplete() {
     setopt auto_param_keys        # smart insert spaces " "
 
     # hack a local function scope using unfuction
-    function $0_forward_word () {
+    function pcomplete_forward_word () {
       local -i space_index
       space_index=${RBUFFER[(i) ]}
       if ((space_index == 0)); then
@@ -30,7 +30,7 @@ function pcomplete() {
         done
       fi
     }
-    function $0_force_auto () {
+    function pcomplete_force_auto () {
       zle magic-space
       zle backward-delete-char
     }
@@ -72,7 +72,7 @@ function pcomplete() {
         if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)(*) ]]; then
           i=($match)
           if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-            $0_forward_word
+            pcomplete_forward_word
             break
           elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
             single_match=1
@@ -82,24 +82,24 @@ function pcomplete() {
       done
 
       if [[ $single_match == 1 ]]; then
-        $0_forward_word
+        pcomplete_forward_word
         if [[ $#RBUFFER == 0 ]]; then
             if [[ $LBUFFER[-1] == "/" ]]; then
-              $0_force_auto
+              pcomplete_force_auto
             else
               zle magic-space
             fi
         else
           if [[ $LBUFFER[-2] == "/" ]]; then
             zle backward-char
-            $0
+            pcomplete
           fi
         fi
         if [[ $LBUFFER[-1] == " " ]]; then
           zle .backward-delete-char
         fi
       else
-        $0_forward_word
+        pcomplete_forward_word
         cur_rbuffer=$RBUFFER
         if [[ ! -o globcomplete ]]; then
           zle expand-word
@@ -128,7 +128,7 @@ function pcomplete() {
     zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
   } always {
-    unfunction -m "$0_forward_word" "$0_force_auto"
+    unfunction "pcomplete_forward_word" "pcomplete_force_auto"
   }
 }
 
