@@ -29,7 +29,10 @@ My goal is to continue adding features and deep integration with other tools. I 
 * Ubuntu
   + 14.10 x64 Working (with minor bugs)
 * FreeBSD
-  + 10 Mostly broken
+  + 10 Mostly working
+* Raspberry pi
+  + Jessie working
+  + Wheezy working
 
 And with the following zsh versions
 
