@@ -20,4 +20,5 @@ echo git fetch...
 git fetch --all
 
 echo ensuring link...
-ln -s ~/.zsh.d/.zshrc ~/.zshrc 2> /dev/null
+ln -s ~/.zsh.d/.zshrc_full ~/.zsh.d/.zshrc 2> /dev/null
+ln -s ~/.zsh.d/.zshrc_full ~/.zshrc 2> /dev/null
