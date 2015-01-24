@@ -61,7 +61,14 @@ function title_compress_command () {
       host="$(print -P '%m') "
     fi
 
-    cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
+    if [[ $1 == *sudo* ]]; then
+      cur_command=\!${${1##[[:space:]]#sudo[[:space:]]#}%%[[:space:]]*}
+    elif [[ $1 == [[:space:]]#(noglob|nocorrect|time|builtin|command|exec)* ]]; then
+      cur_command=${${1##[[:space:]]#[^[:space:]]#[[:space:]]#}%%[[:space:]]*}
+    else
+      cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
+    fi
+
     _settitle "${host}$(print -P '%1~') $cur_command"
   fi
 }
