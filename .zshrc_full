@@ -1,6 +1,13 @@
 #!/bin/zsh
 
 # core zsh setup
+if [[ $TERM == dumb ]]; then
+    emulate sh
+    PS1="$ "
+    unsetopt prompt_cr
+    unsetopt zle
+    return 0
+fi
 
 # disable traps until we define them later
 TRAPUSR1(){ echo "USR1 called before init!" }

@@ -61,13 +61,6 @@ degraded_terminal=(
 
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
-  (dumb)
-    emulate sh
-    PS1="$ "
-    unsetopt prompt_cr
-    unsetopt zle
-    return 0;;
-    
   (linux)
     degraded_terminal[unicode]=1;;
 
