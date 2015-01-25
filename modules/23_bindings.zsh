@@ -125,7 +125,7 @@ function () {
   global_bindkey "^Xgc" zaw-git-show-branch
   global_bindkey "^Xgr" zaw-git-reflog
 
-  global_bindkey "^Xr" zaw-open-file-recursive
+  global_bindkey "^Xf" zaw-open-file-recursive
   
   zstyle ':filter-select' extended-search yes
   zstyle ':filter-select' case-insensitive yes
