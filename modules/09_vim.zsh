@@ -21,7 +21,15 @@ function _vi-insert () {
   zle .vi-insert
   zle zle-line-init
 }
+
+function _vi-append () {
+  # hack to enable Auto-FU during vi-append
+  zle .vi-append
+  zle zle-line-init
+}
+
 zle -N vi-insert _vi-insert
+zle -N vi-append _vi-append
 
 source $ZDOTDIR/zsh-vim-textobjects/opp.zsh
 source $ZDOTDIR/zsh-vim-textobjects/opp/surround.zsh
