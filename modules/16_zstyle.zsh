@@ -12,8 +12,8 @@ zstyle ':completion:*' list-grouped true
 
 # formatting
 if (( $degraded_terminal[unicode] != 1 )); then
-zstyle ':completion:*' format '%B── %d%b' # distinct categories
-zstyle ':completion:*' list-separator '─' # distinct descriptions
+  zstyle ':completion:*' format '%B── %d%b' # distinct categories
+  zstyle ':completion:*' list-separator '─' # distinct descriptions
 else
   zstyle ':completion:*' format '%B-- %d%b' # distinct categories
   zstyle ':completion:*' list-separator '-' # distinct descriptions
