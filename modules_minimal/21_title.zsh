@@ -17,6 +17,8 @@ function _settitle() {
       if {hash tput && tput longname} &> /dev/null && [[ -n "$(tput tsl)" ]]; then
         titlestart='\e]0;'
         titlefinish='\a'
+      else
+        $degraded_terminal[title]=1
       fi;;
     (xterm*)
       titlestart='\e]0;'
@@ -37,11 +39,15 @@ function _settitle() {
       if {hash tput && tput longname} &>/dev/null; then
         titlestart="$(tput tsl)"
         titlefinish="$(tput fsl)"
+      else
+        $degraded_terminal[title]=1
       fi
   esac
 
   if [[ -z "${titlestart}" ]]; then
     return 0
+  else
+    $degraded_terminal[title]=1
   fi
 
   print -Pn "${(%)titlestart}$* ${(%)titlefinish}"
