@@ -32,14 +32,13 @@ function _settitle() {
         titlestart="$(tput tsl)"
         titlefinish="$(tput fsl)"
       else
-        $degraded_terminal[title]=1
+        degraded_terminal[title]=1
       fi
   esac
 
-  if test -z "${titlestart}"; then
+  if [[ -z "${titlestart}" ]]; then
+    degraded_terminal[title]=1
     return 0
-  else
-    $degraded_terminal[title]=1
   fi
 
   print -Pn "${(%)titlestart}$* ${(%)titlefinish}"
