@@ -60,7 +60,7 @@ function title_async_compress_command () {
     local cur_command
 
     local host=""
-    if (( $degraded_terminal[display_host] == 1 )); then
+    if (( $degraded_terminal[display_host] == 1 && ! -n $TMUX )); then
       host="$(print -P '%m') "
     fi
 
@@ -82,7 +82,7 @@ function title_async_compress () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
     local host=""
 
-    if (( $degraded_terminal[display_host] == 1 )); then
+    if (( $degraded_terminal[display_host] == 1 && ! -n $TMUX )); then
       host="$(print -P '%m') "
     fi
 
