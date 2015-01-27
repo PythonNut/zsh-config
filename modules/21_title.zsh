@@ -12,14 +12,6 @@ function _settitle() {
 
   # determine the terminals escapes
   case "$_OLD_TERM" in
-    (xterm-256color)
-      # it's possible we're recursing
-      if {hash tput && tput longname} &> /dev/null && [[ -n "$(tput tsl)" ]]; then
-        titlestart='\e]0;'
-        titlefinish='\a'
-      else
-        $degraded_terminal[title]=1
-      fi;;
     (xterm*)
       titlestart='\e]0;'
       titlefinish='\a';;
@@ -44,7 +36,7 @@ function _settitle() {
       fi
   esac
 
-  if [[ -z "${titlestart}" ]]; then
+  if test -z "${titlestart}"; then
     return 0
   else
     $degraded_terminal[title]=1
