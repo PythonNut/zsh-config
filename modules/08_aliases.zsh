@@ -68,7 +68,6 @@ alias -E -g ,,=';=read -n1 -rp "Press any key to continue..."'
 
 # regular aliases
 alias su='su -'
-alias -E cd='cdr'
 alias watch='\watch -n 1 -d '
 alias emacs='\emacs -nw'
 alias df='\df -h'
@@ -204,7 +203,7 @@ function expandAlias() {
       expandAlias_smart_expand -g $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
 
     elif [[ "${(j: :)cmd}" == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
-      if [[ -n "$aliases[$cmd[-1]]" ]]; then
+    if [[ -n "$aliases[$cmd[-1]]" ]]; then
         LBUFFER="$aliases[$cmd[-1]] "
       fi
       
