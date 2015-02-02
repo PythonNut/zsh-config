@@ -57,9 +57,8 @@ function settitle() {
 
 function title_async_compress_command () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
-    local cur_command
+    local cur_command host="" root=" "
 
-    local host=""
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]]; then
       host="$(print -P '%m') "
     fi
@@ -72,7 +71,11 @@ function title_async_compress_command () {
       cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
     fi
 
-    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str] $cur_command"
+    if (( $user_has_root == 1 )); then
+      root=" !"
+    fi
+
+    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}${cur_command}"
   fi
 }
 
@@ -80,13 +83,17 @@ add-zsh-hook preexec title_async_compress_command
 
 function title_async_compress () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
-    local host=""
+    local host="" root=""
 
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]] ; then
       host="$(print -P '%m') "
     fi
 
-    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]"
+    if (( $user_has_root == 1 )); then
+      root=" !"
+    fi
+
+    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}"
   fi
 }
 
