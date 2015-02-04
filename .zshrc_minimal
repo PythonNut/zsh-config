@@ -2,11 +2,11 @@
 
 # core zsh setup
 if [[ $TERM == dumb ]]; then
-    emulate sh
-    PS1="$ "
-    unsetopt prompt_cr
-    unsetopt zle
-    return 0
+  emulate sh
+  PS1="$ "
+  unsetopt prompt_cr
+  unsetopt zle
+  return 0
 fi
 
 zstyle :compinstall filename '~/.zshrc'
