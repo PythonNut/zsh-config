@@ -3,14 +3,14 @@
 # and whenever changes are made to files in modules
 
 for file in ~/.zsh.d/modules/*.zsh; do
-    echo zcompiling ${file}...
-    zcompile -U $file
+  echo zcompiling ${file}...
+  zcompile -U $file
 done
 
-# for file in ~/.zsh.d/modules_minimal/*.zsh; do
-#     echo zcompiling ${file}...
-#     zcompile -U $file
-# done
+for file in ~/.zsh.d/modules_minimal/*.zsh; do
+  echo zcompiling ${file}...
+  zcompile -U $file
+done
 
 echo changing to .zsh.d directory...
 cd ${${0:A}%/*}
