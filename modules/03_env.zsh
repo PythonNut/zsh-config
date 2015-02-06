@@ -23,7 +23,16 @@ SAVEHIST=50000
 # Forcefully disable the bell
 ZBEEP=""
 
-export EDITOR="vim"
+if (( $+commands[gvim] )); then
+  export EDITOR="gvim -v"
+elif (( $+commands[vim] )); then
+  export EDITOR="vim"
+elif (( $+commands[emacs] )); then
+  export EDITOR="emacs -nw"
+else
+    export EDITOR="vi"
+fi
+
 export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
 export REPORTTIME=10
