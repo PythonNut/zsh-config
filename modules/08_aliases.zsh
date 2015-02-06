@@ -113,6 +113,14 @@ if (( $+commands[yum] )); then
   fi
 fi
 
+# vim aliases
+if (( $+commands[gvim] )); then
+  alias -E vim="gvim -v"
+fi
+if (( $+commands[vim] )); then
+  alias -E vi="vim"
+fi
+
 # git aliases
 if (( $+commands[git] )); then
   alias gs='git status -s'
