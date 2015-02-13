@@ -194,7 +194,7 @@ function expandAlias() {
       local delta=$(($#expansion - $expansion[(i){}] - 1))
 
       alias ${G:+-g} $1=${expansion/{}/}
-      
+
       zle _expand_alias
       
       for ((i=0; i < $delta; i++)); do
@@ -205,13 +205,13 @@ function expandAlias() {
     local cmd
     cmd=("${(@s/ /)LBUFFER}")
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
-      expandAlias_smart_expand $cmd[-1] "$(${(s/ /e)command_abbrevs[$cmd[-1]]})"
+      expandAlias_smart_expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
-      expandAlias_smart_expand -g $cmd[-1] "$(${(s/ /e)global_abbrevs[$cmd[-1]]})"
+      expandAlias_smart_expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
 
     elif [[ "${(j: :)cmd}" == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
-    if [[ -n "$aliases[$cmd[-1]]" ]]; then
+      if [[ -n "$aliases[$cmd[-1]]" ]]; then
         LBUFFER="$aliases[$cmd[-1]] "
       fi
       
