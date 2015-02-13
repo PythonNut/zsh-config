@@ -140,7 +140,7 @@ if (( $+commands[git] )); then
   alias gca!='git commit -v -a --amend'
 
   alias gck='git checkout'
-  alias -ec gfork='echo git checkout -b {} ${${(f)vcs_raw_data}[4]}'
+  alias -ec gfork='echo git checkout -b {} $(git rev-parse --abbrev-ref HEAD)'
 
   alias gb='git branch'
   alias gm='git merge -X patience --no-ff'
@@ -153,7 +153,7 @@ if (( $+commands[git] )); then
 
   alias gl='git log --oneline --graph --decorate'
 
-  alias -eg .B='echo ${${(f)vcs_raw_data}[4]}'
+  alias -eg .B='git rev-parse --abbrev-ref HEAD'
 fi
 
 if (( $+commands[emacsclient] )); then
