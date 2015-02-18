@@ -57,3 +57,6 @@ if (( $+commands[xsel] )); then
   global_bindkey '^W' zsh-x-kill-region
   global_bindkey '^y' zsh-x-yank
 fi
+
+global_bindkey "^A" beginning-of-line
+global_bindkey "^E" end-of-line
