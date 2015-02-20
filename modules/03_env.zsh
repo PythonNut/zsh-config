@@ -106,7 +106,7 @@ if [[ $(who am i) =~ \([-a-zA-Z0-9\.]+\)$ ]]; then
   degraded_terminal[display_host]=1
 elif [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
-elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
+elif [[ $(ps -o comm= -p $PPID 2>/dev/null) == (sshd|*/sshd) ]]; then
   degraded_terminal[display_host]=1
 fi
 
