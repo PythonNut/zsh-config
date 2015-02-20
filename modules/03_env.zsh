@@ -79,6 +79,9 @@ case $_OLD_TERM in
       export TERM='screen'
     fi;;
 
+  (xterm-256color)
+    ;;
+
   (*)
     export TERM=xterm
     if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
