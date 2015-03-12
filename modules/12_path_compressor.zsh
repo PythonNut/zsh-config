@@ -9,7 +9,7 @@ function minify_path () {
   local full_path="/" ppath cur_path dir
   local -a revise
   local -i matches
-  eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
+  eval "1=\${\${1:A}:gs/${HOME:A:gs/\//\\\//}/\~}"
   for token in ${(s:/:)1}; do
     cur_path=${full_path:s/\~/$HOME/}
     local -i col=1
