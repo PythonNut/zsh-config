@@ -123,7 +123,7 @@ fi
 
 # git aliases
 if (( $+commands[git] )); then
-  alias gs='git status -s'
+  alias gs='git status -sb'
   alias gst='git status'
 
   alias gp="git pull --rebase -X patience"
