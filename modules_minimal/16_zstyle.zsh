@@ -4,8 +4,8 @@
 
 zstyle ':completion:*' verbose false
 zstyle ':completion:*:options' verbose true
-zstyle ':completion:*' extra-verbose false
-zstyle ':completion:*' show-completer false
+zstyle ':completion:*' extra-verbose true
+zstyle ':completion:*' show-completer true
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path $ZDOTDIR/cache
 zstyle ':completion:*' list-grouped true
@@ -33,7 +33,14 @@ export SPROMPT="Correct $fg_bold[red]%R$reset_color to $fg_bold[green]%r?$reset_
 zstyle ':completion:*' group-name ''
 
 # adaptive correction
-zstyle ':completion:*' completer _oldlist _complete
+zstyle ':completion:*' completer \
+       _expand \
+       _oldlist \
+       _complete \
+       _match \
+       _files \
+       _history \
+       _prefix
 
 zstyle ':completion:*:match:*' original only
 zstyle ':completion::correct*:*' prefix-needed false
@@ -45,7 +52,13 @@ zstyle ':completion::approximate:*' origional true
 
 # 0 -- vanilla completion    (abc => abc)
 # 1 -- smart case completion (abc => Abc)
-zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+# 2 -- word flex completion  (abc => A-big-Car)
+# 3 -- full flex completion  (abc => ABraCadabra)
+zstyle ':completion:*' matcher-list '' \
+       'm:{a-z\-}={A-Z\_}' \
+       'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+       'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
+
 zstyle ':completion:*:parameters' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 zstyle ':completion:*:functions' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
@@ -59,7 +72,9 @@ zstyle ':completion:*:user-expand:*' tag-order expansions all-expansions
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
 # Don't complete directory we are already in (../here)
+zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' ignore-parents parent pwd
+zstyle ':completion:*' insert-unambiguous true
 
 # ignore completions for functions I don't use
 zstyle ':completion:*:functions' ignored-patterns '(_|.)*'
@@ -81,7 +96,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 # Don't prompt for a huge list, page it!
 # Don't prompt for a huge list, menu it!
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*:default' menu 'select=0' interactive
+zstyle ':completion:*' menu select=1 interactive
 
 # order files first by default, dirs if command operates on dirs (ls)
 
@@ -120,7 +135,7 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 # command layer completion scripts
 # ================================
 
-function _cdpath(){
+function _cdpath() {
   local tmpcdpath
   tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
   (( $#tmpcdpath )) && alt=('path-directories:directory in cdpath:_path_files -W tmpcdpath -/')
@@ -137,5 +152,3 @@ function _cmd() {
 }
 
 compdef "_cmd" "-command-"
-
-zstyle ':completion:*' special-dirs true
