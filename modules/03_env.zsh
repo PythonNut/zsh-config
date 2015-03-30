@@ -37,7 +37,7 @@ export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
 export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
-export PATH=$PATH:~/sbin:~/bin:~/usr/bin
+export PATH=$PATH:/sbin:~/bin:~/usr/bin
 
 
 typeset -TU LD_LIBRARY_PATH ld_library_path
