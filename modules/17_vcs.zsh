@@ -188,21 +188,22 @@ function TRAPUSR2 {
   zsh_unpickle -s -i vcs_last_dir
 
   current_pwd=${${:-.}:A}
-  # if we're in a vcs, start an inotify process
-  if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
-    if [[ $vcs_last_dir == $current_pwd ]]; then
-      if (( $vcs_inotify_pid == -1 )); then
-        vcs_inotify_watch $current_pwd &!
-        vcs_inotify_pid=$!
-      fi
-    else
-      vcs_async_cleanup &!
-      vcs_inotify_watch $current_pwd &!
-      vcs_inotify_pid=$!
-    fi
-  else
-    vcs_async_cleanup &!
-  fi
+
+  # # if we're in a vcs, start an inotify process
+  # if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
+  #   if [[ $vcs_last_dir == $current_pwd ]]; then
+  #     if (( $vcs_inotify_pid == -1 )); then
+  #       vcs_inotify_watch $current_pwd &!
+  #       vcs_inotify_pid=$!
+  #     fi
+  #   else
+  #     vcs_async_cleanup &!
+  #     vcs_inotify_watch $current_pwd &!
+  #     vcs_inotify_pid=$!
+  #   fi
+  # else
+  #   vcs_async_cleanup &!
+  # fi
 
   vcs_last_dir=$current_pwd
   zsh_pickle -i vcs-last-dir vcs_last_dir
