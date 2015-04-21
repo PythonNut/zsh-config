@@ -90,7 +90,7 @@ fi
 
 # sudo aliases
 if (( $+commands[sudo] )); then
-  alias sudo='nocorrect sudo '
+  alias -E sudo='nocorrect sudo '
   alias -ec please='echo sudo ${history[$#history]}'
 fi
 
