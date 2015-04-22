@@ -10,7 +10,6 @@ function {
   source $fasd_path
 
   if [[ ! -w $fasd_cache ]]; then
-    echo setting fasd up
     touch $fasd_cache
     $fasd_path --init \
       zsh-hook \
