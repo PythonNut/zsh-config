@@ -21,7 +21,10 @@ function {
   source $fasd_cache
 }
 
-alias sd='fasd -sid'     # interactive directory selection
-alias sf='fasd -sif'     # interactive file selection
+# interactive directory selection
+# interactive file selection
+alias sd='fasd -sid'
+alias sf='fasd -sif'
 
-alias j='fasd -e cd -d'     # cd, same functionality as j in autojump
+# cd, same functionality as j in autojump
+alias j='fasd -e cd -d'
