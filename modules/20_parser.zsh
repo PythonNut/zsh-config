@@ -50,12 +50,6 @@ function _accept-line() {
   done
 
   zle .accept-line
-
-  # hack the syntax highlighter to highlight old lines
-  zle magic-space
-  _zsh_highlight
-  zle backward-delete-char
-  _zsh_highlight
 }
 
 zle -N accept-line _accept-line
