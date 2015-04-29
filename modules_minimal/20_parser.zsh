@@ -4,7 +4,7 @@
 
 function _accept-line() {
   emulate -LR zsh
-  setopt extended_glob prompt_subst transient_rprompt
+  setopt prompt_subst transient_rprompt
 
   if [[ ! -n $BUFFER ]]; then
     zle clear-screen
