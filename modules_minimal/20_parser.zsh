@@ -6,7 +6,7 @@ function _accept-line() {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
 
-  if [[ ! -n $BUFFER ]]; then
+  if [[ -z $BUFFER ]]; then
     zle clear-screen
     zle-line-init
     return 0
