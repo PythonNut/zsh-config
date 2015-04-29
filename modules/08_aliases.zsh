@@ -170,7 +170,6 @@ fi
 function expandAlias() {
   emulate -LR zsh
   {
-    setopt function_argzero
     # hack a local function scope using unfuction
     function expandAlias_smart_space () {
       if [[ $RBUFFER[1] != ' ' ]]; then

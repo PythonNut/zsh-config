@@ -12,7 +12,6 @@ git-escape-magic
 typeset -A key
 function {
   emulate -LR zsh
-  setopt function_argzero
   local zkbd_dest
   zkbd_dest=${ZDOTDIR:-$HOME}/.zkbd/$_OLD_TERM-$VENDOR-$OSTYPE
   local REPLY REPLY_PERM
