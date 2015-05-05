@@ -2,7 +2,7 @@
 # unified key system
 # ==================
 
-autoload -U url-quote-magic
+autoload -Uz url-quote-magic
 zle -N self-insert url-quote-magic
 
 fpath+=$ZDOTDIR/zsh-git-escape-magic
