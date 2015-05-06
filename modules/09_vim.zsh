@@ -34,25 +34,26 @@ zle -N vi-append _vi-append
 source $ZDOTDIR/zsh-vim-textobjects/opp.zsh
 source $ZDOTDIR/zsh-vim-textobjects/opp/surround.zsh
 
-zsh-x-kill-region () {
-  zle kill-region
-  print -rn $CUTBUFFER | xsel -i
-}
+if (( $+commands[xclip] )); then
+  zsh-x-kill-region () {
+    zle kill-region
+    print -rn $CUTBUFFER | xclip -i -selection clipboard
+  }
 
-zsh-x-yank () {
-  CUTBUFFER=$(xsel -o -p </dev/null)
-  zle yank
-}
+  zsh-x-yank () {
+    CUTBUFFER=$(xclip -o -selection clipboard)
+    zle yank
+  }
 
-zsh-x-copy-region-as-kill () {
-  zle copy-region-as-kill
-  print -rn $CUTBUFFER | xsel -i
-}
+  zsh-x-copy-region-as-kill () {
+    zle copy-region-as-kill
+    print -rn $CUTBUFFER | xclip -i -selection clipboard
+  }
 
-if (( $+commands[xsel] )); then
   zle -N zsh-x-yank
   zle -N zsh-x-kill-region
   zle -N zsh-x-copy-region-as-kill
+
   global_bindkey '\eW' zsh-x-copy-region-as-kill
   global_bindkey '^W' zsh-x-kill-region
   global_bindkey '^y' zsh-x-yank
