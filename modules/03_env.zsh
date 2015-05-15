@@ -105,7 +105,7 @@ if [[ -n ${EMACS+1} ]]; then
     degraded_terminal[title]=1
 fi
 
-if [[ $(who am i) =~ \([-a-zA-Z0-9\.]+\)$ ]]; then
+if [[ $(who am i) =~ \([-a-zA-Z0-9\.]+.*\)$ ]]; then
   degraded_terminal[display_host]=1
 elif [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
