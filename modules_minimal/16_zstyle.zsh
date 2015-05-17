@@ -34,8 +34,8 @@ zstyle ':completion:*' group-name ''
 
 # adaptive correction
 zstyle ':completion:*' completer \
-       _expand \
        _oldlist \
+       _expand \
        _complete \
        _match \
        _files \

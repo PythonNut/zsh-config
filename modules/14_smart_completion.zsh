@@ -51,8 +51,8 @@ function pcomplete() {
       'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
     
     zstyle ':completion:*' completer \
-      _expand \
       _oldlist \
+      _expand \
       _complete \
       _match \
       _files \
