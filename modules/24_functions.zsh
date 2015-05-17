@@ -7,20 +7,21 @@ _exitForce=0
 # use logout for normal exit or EXIT
 function disown_running() {
   emulate -LR zsh
+  local running_jobs
+
   # disown running jobs
-  tmpfile==(:)
-  jobs -r > $tmpfile
-  running=$(awk '{gsub("[][]","",$1);print "%"$1}' < $tmpfile)
-  if [ -n "$running" ] ; then disown $running; fi
+  running_jobs=${${${(@f)"$(jobs -r)"}/\[/%}%%\]*}
+  if [[ -n "$running_jobs" ]]; then
+    disown $running_jobs
+  fi
   
   # check for remaining jobs
-  jobs >! $tmpfile
-  [ -z "`<$tmpfile`" ] ; retval=$?
-  
-  /bin/rm $tmpfile
-  
   # returns 1 if jobs still remaining, else 0
-  return $retval
+  if [[ -n $(jobs) ]]; then
+    return 1
+  else
+    return 0
+  fi
 }
 
 add-zsh-hook zshexit disown_running
