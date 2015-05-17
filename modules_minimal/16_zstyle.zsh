@@ -48,13 +48,12 @@ zstyle ':completion:*:match:*' original only
 # 1 -- smart case completion (abc => Abc)
 # 2 -- word flex completion  (abc => A-big-Car)
 # 3 -- full flex completion  (abc => ABraCadabra)
-zstyle ':completion:*' matcher-list '' \
+zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+
+zstyle ':completion:*:files:*' matcher-list '' \
        'm:{a-z\-}={A-Z\_}' \
        'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
        'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
-
-zstyle ':completion:*:parameters' matcher-list '' 'm:{a-z\-}={A-Z\_}'
-zstyle ':completion:*:functions' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
