@@ -51,6 +51,7 @@ function lv() {
   [[ -d $p ]] && { argv[-1]=(); } || p='.'
   find $p ! -type d | sed 's:^./::' | egrep "${@:-.}"
 }
+alias -E lv="noglob lv"
 
 # super powerful ls
 function lr() {
