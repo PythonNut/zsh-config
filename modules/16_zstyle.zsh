@@ -36,12 +36,6 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' completer _oldlist _complete
 
 zstyle ':completion:*:match:*' original only
-zstyle ':completion::correct*:*' prefix-needed false
-zstyle ':completion::correct:*' max-errors 2 numeric 
-
-zstyle ':completion::approximate*:*' prefix-needed false
-zstyle ':completion::approximate:*' max-errors 2 numeric 
-zstyle ':completion::approximate:*' origional true
 
 # 0 -- vanilla completion    (abc => abc)
 # 1 -- smart case completion (abc => Abc)
@@ -72,7 +66,6 @@ zstyle ':completion:*:manuals' separate-sections true
 
 # sort reverse by modification time so the newer the better
 zstyle ':completion:*' file-sort modification reverse
-#zstyle ':completion:*' file-sort change
 
 # try to automagically generate descriptions from manpage
 zstyle ':completion:*:options' description yes
