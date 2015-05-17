@@ -58,9 +58,6 @@ zstyle ':completion:*:files:*' matcher-list '' \
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
 
-zstyle ':completion:*' user-expand _uexpand
-zstyle ':completion:*:user-expand:*' tag-order expansions all-expansions
-
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
