@@ -71,18 +71,6 @@ function lr() {
   sed '/^[^l]/s/ -> $//; '$classify' '$long
 }
 
-# search by file contents
-function g() {
-  emulate -LR zsh
-  local p=$argv[-1]
-  [[ -d $p ]] && { p=$p/; argv[-1]=(); } || p=''
-  grep --exclude "*~" --exclude "*.o" --exclude "tags" \
-    --exclude-dir .bzr --exclude-dir .git --exclude-dir .hg --exclude-dir .svn \
-    --exclude-dir CVS  --exclude-dir RCS --exclude-dir _darcs \
-    --exclude-dir _build \
-    -r -P ${@:?regexp missing} $p
-}
-
 # search for process without matching self
 alias px="nocorrect noglob px"
 function px() {
