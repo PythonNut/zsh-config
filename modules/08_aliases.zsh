@@ -99,7 +99,7 @@ if (( $+commands[yaourt] )); then
   alias y='yaourt'
   alias yi='yaourt -Sa'
   alias yu='yaourt -Syyua --noconfirm'
-  alias yuu='yaourt --sucre'
+  alias yuu='yaourt -Syyua --noconfirm --devel'
 fi
 
 # yum aliases
