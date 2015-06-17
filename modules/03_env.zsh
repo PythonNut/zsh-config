@@ -37,8 +37,7 @@ export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
 export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
-export PATH=$PATH:/sbin:~/bin:~/usr/bin
-
+export PATH
 
 typeset -TU LD_LIBRARY_PATH ld_library_path
 typeset -TU PERL5LIB        perl5lib
@@ -47,6 +46,17 @@ typeset -U path
 typeset -U manpath
 typeset -U fpath 
 typeset -U cdpath
+
+path+=(
+  /usr/local/bin
+  /sbin
+  /usr/sbin
+  /usr/local/sbin
+  ~/bin
+  ~/usr/bin
+)
+
+path=( ${(u)^path:A}(N-/) )
 
 NULLCMD="cat"
 READNULLCMD="less"
