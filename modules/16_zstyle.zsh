@@ -127,7 +127,6 @@ function _cmd() {
   _tilde
   _files
   _cdpath
-  _options
 }
 
 compdef "_cmd" "-command-"

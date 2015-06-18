@@ -102,15 +102,6 @@ function parser() {
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
 
-      # If it's an option, set/unset it
-    elif [[ -n $options[${1:l:gs/_/}] ]]; then
-      if [[ -o $1 ]]; then
-        alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
-      else
-        alias "$1"="echo \"setopt: $1\"; setopt $1"
-      fi
-      _preAlias+=($1)
-
       # if it's a parameter, echo it
     elif [[ -n ${(P)1} ]]; then
       alias "$1"="echo ${(P)1}"
