@@ -39,7 +39,13 @@ zstyle ':completion:*:match:*' original only
 
 # 0 -- vanilla completion    (abc => abc)
 # 1 -- smart case completion (abc => Abc)
-zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+# 2 -- word flex completion  (abc => A-big-Car)
+# 3 -- full flex completion  (abc => ABraCadabra)
+zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
+       'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+       'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
+
+zstyle ':completion:*:functions' matcher '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
@@ -69,7 +75,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 # Don't prompt for a huge list, page it!
 # Don't prompt for a huge list, menu it!
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*:default' menu 'select=0' interactive
+zstyle ':completion:*' menu select=1 interactive
 
 # order files first by default, dirs if command operates on dirs (ls)
 
