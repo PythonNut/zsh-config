@@ -9,7 +9,7 @@ function minify_path () {
   local full_path="/" ppath cur_path dir
   local -a revise
   local -i matches
-  eval "1=\${\${1:A}:gs/${HOME:gs/\//\\\//}/\~}"
+  eval "1=\${\${1:A}:gs/${HOME:A:gs/\//\\\//}/\~}"
   for token in ${(s:/:)1}; do
     cur_path=${full_path:s/\~/$HOME/}
     local -i col=1
@@ -98,11 +98,11 @@ function minify_path_smart () {
   cur_path=$(minify_path_full $1)
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
     glob=${(l:$((2*$i))::\/:)}
-    eval "cur_path=\${cur_path:gs/$glob/\%\{\$FX[underline]\%\}$i\%\{\$FX[no-underline]\%\}}"
+    eval "cur_path=\${cur_path:gs/$glob/\%U$i\%u}"
   done
   cur_path=${cur_path:s/\~\//\~}
   for char in {a-zA-Z}; do
-    eval "cur_path=\${cur_path:gs/\/$char/\%\{\$FX[underline]\%\}$char\%\{\$FX[no-underline]\%\}}"
+    eval "cur_path=\${cur_path:gs/\/$char/\%U$char\%u}"
   done
   echo $cur_path
 }
@@ -141,3 +141,4 @@ function minify_path_fasd () {
     printf " "
   fi
 }
+

@@ -8,7 +8,7 @@ function _settitle() {
     return 0
   fi
   
-  local titlestart='' titlefinish=''
+  local titlestart titlefinish
 
   # determine the terminals escapes
   case "$_OLD_TERM" in
@@ -31,10 +31,16 @@ function _settitle() {
       if {hash tput && tput longname} &>/dev/null; then
         titlestart="$(tput tsl)"
         titlefinish="$(tput fsl)"
+      else
+        degraded_terminal[title]=1
       fi
   esac
 
-  test -z "${titlestart}" && return 0
+  if [[ -z "${titlestart}" ]]; then
+    degraded_terminal[title]=1
+    return 0
+  fi
+
   print -Pn "${(%)titlestart}$* ${(%)titlefinish}"
 }
 
@@ -51,16 +57,25 @@ function settitle() {
 
 function title_async_compress_command () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
-    local cur_command
+    local cur_command host="" root=" "
 
-    local host=""
-    if (( $degraded_terminal[display_host] == 1 )); then
+    if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]]; then
       host="$(print -P '%m') "
     fi
 
-    cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
-    # minify_path will not change over time, fasd will
-    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str] $cur_command"
+    if [[ $1 == *sudo* ]]; then
+      cur_command=\!${${1##[[:space:]]#sudo[[:space:]]#}%%[[:space:]]*}
+    elif [[ $1 == [[:space:]]#(noglob|nocorrect|time|builtin|command|exec)* ]]; then
+      cur_command=${${1##[[:space:]]#[^[:space:]]#[[:space:]]#}%%[[:space:]]*}
+    else
+      cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
+    fi
+
+    if (( $user_has_root == 1 )); then
+      root=" !"
+    fi
+
+    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}${cur_command}"
   fi
 }
 
@@ -68,17 +83,19 @@ add-zsh-hook preexec title_async_compress_command
 
 function title_async_compress () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
+    local host="" root=""
 
-    local host=""
-    if (( $degraded_terminal[display_host] == 1 )); then
+    if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]] ; then
       host="$(print -P '%m') "
-
     fi
-    # minify_path will not change over time, fasd will
-    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]"
+
+    if (( $user_has_root == 1 )); then
+      root=" !"
+    fi
+
+    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}"
   fi
 }
 
 add-zsh-hook precmd title_async_compress
-
 title_async_compress

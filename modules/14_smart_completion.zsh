@@ -5,7 +5,7 @@
 function pcomplete() {
   emulate -L zsh
   {
-    setopt function_argzero prompt_subst
+    setopt function_argzero prompt_subst extended_glob
     setopt list_packed list_rows_first
 
     setopt auto_list              # list if multiple matches
@@ -16,7 +16,7 @@ function pcomplete() {
     setopt auto_param_keys        # smart insert spaces " "
 
     # hack a local function scope using unfuction
-    function $0_forward_word () {
+    function pcomplete_forward_word () {
       local -i space_index
       space_index=${RBUFFER[(i) ]}
       if ((space_index == 0)); then
@@ -30,7 +30,7 @@ function pcomplete() {
         done
       fi
     }
-    function $0_force_auto () {
+    function pcomplete_force_auto () {
       zle magic-space
       zle backward-delete-char
     }
@@ -38,27 +38,16 @@ function pcomplete() {
     zstyle ':completion:*' show-completer true
     zstyle ':completion:*' extra-verbose true
     zstyle ':completion:*' verbose true
-    zstyle ':completion:*' menu select=1 interactive
     zstyle ':completion:*' insert-unambiguous true
 
-    # 0 -- vanilla completion    (abc => abc)
-    # 1 -- smart case completion (abc => Abc)
-    # 2 -- word flex completion  (abc => A-big-Car)
-    # 3 -- full flex completion  (abc => ABraCadabra)
-    zstyle ':completion:*' matcher-list '' \
-      'm:{a-z\-}={A-Z\_}' \
-      'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
-      'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
-    
     zstyle ':completion:*' completer \
-      _expand \
       _oldlist \
+      _expand \
       _complete \
       _match \
       _files \
       _history \
-      _prefix \
-      _approximate
+      _prefix
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
       zle predict-next-line  
@@ -68,11 +57,11 @@ function pcomplete() {
       local -a match mbegin mend
 
       # detect single auto-fu match
-      for i in $region_highlight; do
-        if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
-          i=("$match")
+      for param in $region_highlight; do
+        if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)(*) ]]; then
+          i=($match)
           if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-            $0_forward_word
+            pcomplete_forward_word
             break
           elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
             single_match=1
@@ -82,24 +71,24 @@ function pcomplete() {
       done
 
       if [[ $single_match == 1 ]]; then
-        $0_forward_word
+        pcomplete_forward_word
         if [[ $#RBUFFER == 0 ]]; then
             if [[ $LBUFFER[-1] == "/" ]]; then
-            $0_force_auto
+              pcomplete_force_auto
             else
-            zle magic-space
+              zle magic-space
             fi
         else
           if [[ $LBUFFER[-2] == "/" ]]; then
             zle backward-char
-            $0
+            pcomplete
           fi
         fi
         if [[ $LBUFFER[-1] == " " ]]; then
           zle .backward-delete-char
         fi
       else
-        $0_forward_word
+        pcomplete_forward_word
         cur_rbuffer=$RBUFFER
         if [[ ! -o globcomplete ]]; then
           zle expand-word
@@ -125,10 +114,9 @@ function pcomplete() {
     zstyle ':completion:*' extra-verbose false
     zstyle ':completion:*' verbose false
     zstyle ':completion:*' completer _oldlist _complete
-    zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
 
   } always {
-    unfunction -m "$0_*"
+    unfunction "pcomplete_forward_word" "pcomplete_force_auto"
   }
 }
 

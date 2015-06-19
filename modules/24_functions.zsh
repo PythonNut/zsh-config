@@ -7,20 +7,21 @@ _exitForce=0
 # use logout for normal exit or EXIT
 function disown_running() {
   emulate -LR zsh
+  local running_jobs
+
   # disown running jobs
-  tmpfile==(:)
-  jobs -r > $tmpfile
-  running=$(awk '{gsub("[][]","",$1);print "%"$1}' < $tmpfile)
-  if [ -n "$running" ] ; then disown $running; fi
+  running_jobs=${${${(@f)"$(jobs -r)"}/\[/%}%%\]*}
+  if [[ -n "$running_jobs" ]]; then
+    disown $running_jobs
+  fi
   
   # check for remaining jobs
-  jobs >! $tmpfile
-  [ -z "`<$tmpfile`" ] ; retval=$?
-  
-  /bin/rm $tmpfile
-  
   # returns 1 if jobs still remaining, else 0
-  return $retval
+  if [[ -n $(jobs) ]]; then
+    return 1
+  else
+    return 0
+  fi
 }
 
 add-zsh-hook zshexit disown_running
@@ -50,6 +51,7 @@ function lv() {
   [[ -d $p ]] && { argv[-1]=(); } || p='.'
   find $p ! -type d | sed 's:^./::' | egrep "${@:-.}"
 }
+alias -E lv="noglob lv"
 
 # super powerful ls
 function lr() {
@@ -69,18 +71,6 @@ function lr() {
   find "$@" -printf "%M %2n %u %g %9s %TY-%Tm-%Td %TH:%TM /%p -> %l\n" |
   $=sort | $=numfmt |
   sed '/^[^l]/s/ -> $//; '$classify' '$long
-}
-
-# search by file contents
-function g() {
-  emulate -LR zsh
-  local p=$argv[-1]
-  [[ -d $p ]] && { p=$p/; argv[-1]=(); } || p=''
-  grep --exclude "*~" --exclude "*.o" --exclude "tags" \
-    --exclude-dir .bzr --exclude-dir .git --exclude-dir .hg --exclude-dir .svn \
-    --exclude-dir CVS  --exclude-dir RCS --exclude-dir _darcs \
-    --exclude-dir _build \
-    -r -P ${@:?regexp missing} $p
 }
 
 # search for process without matching self

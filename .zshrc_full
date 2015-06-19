@@ -1,0 +1,35 @@
+#!/bin/zsh
+
+# core zsh setup
+if [[ $TERM == dumb ]]; then
+    emulate sh
+    PS1="$ "
+    unsetopt prompt_cr
+    unsetopt zle
+    return 0
+fi
+
+# disable traps until we define them later
+TRAPUSR1(){ echo "USR1 called before init!" }
+TRAPUSR2(){ echo "USR2 called before init!" }
+
+export ZDOTDIR=~/.zsh.d
+mkdir -p $ZDOTDIR
+
+zstyle :compinstall filename '~/.zshrc'
+skip_global_compinit=1
+fpath=($ZDOTDIR/completers $fpath)
+autoload -Uz compinit  && compinit -d $ZDOTDIR/zcompdump
+echo -n > $ZDOTDIR/startup.log
+setopt function_argzero
+
+
+# let us begin
+for zsh_module in $ZDOTDIR/modules/*.zsh(n); do
+  source $zsh_module
+done
+
+# and source host specific files
+for file in $ZDOTDIR/local/*.zsh(n); do
+  source $file
+done

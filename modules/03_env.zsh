@@ -20,13 +20,24 @@ HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=50000
 SAVEHIST=50000
 
-export EDITOR="vim"
+# Forcefully disable the bell
+ZBEEP=""
+
+if (( $+commands[gvim] )); then
+  export EDITOR="gvim -v"
+elif (( $+commands[vim] )); then
+  export EDITOR="vim"
+elif (( $+commands[emacs] )); then
+  export EDITOR="emacs -nw"
+else
+    export EDITOR="vi"
+fi
+
 export GEDITOR="emacsclient -c -a \"emacs\" --create-frame"
 export ALTERNATE_EDITOR="emacs"
 export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
-export PATH=$PATH:~/bin:~/usr/bin
-
+export PATH
 
 typeset -TU LD_LIBRARY_PATH ld_library_path
 typeset -TU PERL5LIB        perl5lib
@@ -35,6 +46,17 @@ typeset -U path
 typeset -U manpath
 typeset -U fpath 
 typeset -U cdpath
+
+path+=(
+  /usr/local/bin
+  /sbin
+  /usr/sbin
+  /usr/local/sbin
+  ~/bin
+  ~/usr/bin
+)
+
+path=( ${(u)^path:A}(N-/) )
 
 NULLCMD="cat"
 READNULLCMD="less"
@@ -58,24 +80,28 @@ degraded_terminal=(
 
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
-  (dumb)
-    emulate sh
-    PS1="$ "
-    unsetopt prompt_cr
-    return 0;;
-    
-  (linux)
+  (linux|vt100)
     degraded_terminal[unicode]=1;;
 
   (screen*|tmux*)
-    export TERM='linux';;
-    
+    # check for lack of 256color support
+    if [[ $TTY == /dev/tty*  ]]; then
+      export TERM='screen'
+    fi;;
+
+  (xterm-256color)
+    ;;
+
   (*)
     export TERM=xterm
     if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
       export TERM=xterm-256color
-    elif [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
+    elif [[ -f /lib/terminfo/x/xterm-256color ]]; then
       export TERM=xterm-256color
+    elif [[ -f /usr/share/misc/termcap ]]; then
+      if [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
+        export TERM=xterm-256color
+      fi
     fi;;
 esac
 
@@ -89,9 +115,11 @@ if [[ -n ${EMACS+1} ]]; then
     degraded_terminal[title]=1
 fi
 
-if [[ -n "$SSH_CLIENT" || -n "SSH_TTY" ]]; then
+if [[ $(who am i) == *\([-a-zA-Z0-9.]##*\)(#e) ]]; then
   degraded_terminal[display_host]=1
-elif [[ $(ps -o comm= -p $PPID) == (sshd|*/sshd) ]]; then
+elif [[ -n $TMUX && -n $SSH_CLIENT ]]; then
+  degraded_terminal[display_host]=1
+elif [[ $(ps -o comm= -p $PPID 2>/dev/null) == (sshd|*/sshd) ]]; then
   degraded_terminal[display_host]=1
 fi
 

@@ -14,7 +14,7 @@ function _accept-line() {
 
   # if buffer is empty, clear instead
   # otherwise pass through
-  elif [[ ! -n $BUFFER ]]; then
+  elif [[ -z $BUFFER ]]; then
     zle clear-screen
     zle-line-init
     return 0
@@ -50,12 +50,6 @@ function _accept-line() {
   done
 
   zle .accept-line
-
-  # hack the syntax highlighter to highlight old lines
-  zle magic-space
-  _zsh_highlight
-  zle backward-delete-char
-  _zsh_highlight
 }
 
 zle -N accept-line _accept-line
@@ -107,15 +101,6 @@ function parser() {
     elif [[ -f "$1" && $(type $1) == (*not*)  && ! -x $1 ]]; then
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
-
-      # If it's an option, set/unset it
-    elif [[ -n $options[${1:l:gs/_/}] ]]; then
-      if [[ -o $1 ]]; then
-        alias "$1"="echo \"unsetopt: $1\"; unsetopt $1"
-      else
-        alias "$1"="echo \"setopt: $1\"; setopt $1"
-      fi
-      _preAlias+=($1)
 
       # if it's a parameter, echo it
     elif [[ -n ${(P)1} ]]; then

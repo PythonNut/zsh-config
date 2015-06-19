@@ -1,11 +1,11 @@
 # ======================
 # Version Control System
 # ======================
-zstyle ':vcs_info:*' enable git svn hg bzr
+zstyle ':vcs_info:*' enable git svn cvs hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 
 ZSH_VCS_PROMPT_ENABLE_CACHING='false'
-ZSH_VCS_PROMPT_USING_PYTHON='false'
+ZSH_VCS_PROMPT_USING_PYTHON='true'
 
 if (( $degraded_terminal[unicode] != 1 )); then
   ZSH_VCS_PROMPT_AHEAD_SIGIL='↑'
@@ -45,14 +45,14 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
   if command svn info &> /dev/null; then
     local svn_status=${(F)$(command svn status)}
 
-    local modified_count=${(F)$(echo $svn_status | \grep '^[MDA!]')}
-    if [[ ${#${(f)modified_count}} != 0 ]]; then
+    local modified_count=${#${(F)$(echo $svn_status | \grep '^[MDA!]')}}
+    if (( $modified_count != 0 )); then
       modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
       hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
     fi
 
     local unstaged_count=${#${(f)${(F)$(echo $svn_status | \grep '^?')}}}
-    if [[ $unstaged_count != 0 ]]; then
+    if (( $unstaged_count != 0 )); then
       unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL$unstaged_count
       hook_com[unstaged]+="%f%b$unstaged_count%f"
     fi
@@ -71,14 +71,14 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
   if command hg id &> /dev/null; then
     local hg_status=${(F)$(command hg status)}
 
-    local modified_count=${(F)$(echo $hg_status | \grep '^[MDA!]')}
-    if [[ ${#${(f)modified_count}} != 0 ]]; then
+    local modified_count=${#${(F)$(echo $hg_status | \grep '^[MDA!]')}}
+    if (( $modified_count != 0 )); then
       modified_count=$ZSH_VCS_PROMPT_UNSTAGED_SIGIL${#${(f)modified_count}}
       hook_com[unstaged]+="%b%F{yellow}$modified_count%f"
     fi
 
     local unstaged_count=${#${(f)${(F)$(echo $hg_status | \grep '^?')}}}
-    if [[ $unstaged_count != 0 ]]; then
+    if (( $unstaged_count != 0 )); then
       unstaged_count=$ZSH_VCS_PROMPT_UNTRACKED_SIGIL$unstaged_count
       hook_com[unstaged]+="%f%b$unstaged_count%f"
     fi
@@ -89,86 +89,142 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
   fi
 }
 
+function vcs_get_root_dir () {
+  case $1 in
+    (git)
+      git rev-parse --show-toplevel;;
+    (hg)
+      hg root;;
+    (svn)
+      if [[ -d ".svn" ]]; then
+        if [[ -d "../.svn" ]]; then
+          # case 2: SVN < 1.7, any directory
+          local parent=""
+          local grandparent="."
+
+          while [[ -d "$grandparent/.svn" ]]; do
+              parent=$grandparent
+              grandparent="$parent/.."
+          done
+
+          echo ${parent:A}
+        else
+          # case 2: SVN >= 1.7, root directory
+          echo ${${:-.}:A}
+        fi
+      else
+        # case 3: SVN >= 1.7, non root directory
+        local parent="."
+        while [[ ! -d "$parent/.svn" ]]; do
+            parent+="/.."
+        done
+
+        echo ${parent:A}
+      fi;;
+    (bzr)
+      bzr root;;
+    (cvs)
+      echo $CVSROOT;;
+    (*)
+      echo $(pwd);;
+  esac
+}
+
 typeset -F SECONDS
-float vcs_async_last=0
-float vcs_async_start=0
-float vcs_async_delay=0
-integer vcs_async_sentinel=0
-zsh_pickle -i async-sentinel vcs_async_sentinel
+float vcs_async_start
+float vcs_async_delay
+integer vcs_async_sentinel
 integer vcs_inotify_pid=-1
+integer VCS_PAUSE=0
+
+zsh_pickle -i async-sentinel vcs_async_sentinel
 
 function vcs_async_info () {
   zsh_unpickle -s -i async-sentinel
-  if [[ ${vcs_async_sentinel:-0} == 0 ]]; then
+  (( vcs_async_sentinel++ ))
+  zsh_pickle -i async-sentinel vcs_async_sentinel
+
+  # i.e. Was originally zero
+  if (( $vcs_async_sentinel == 1 )); then
     vcs_async_start=$SECONDS
     vcs_async_info_worker $1 &!
-    vcs_async_last=$SECONDS
-    vcs_async_sentinel=1
-  else
-    vcs_async_sentinel=2
   fi
-  zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
 function vcs_async_info_worker () {
-  emulate -LR zsh
-  setopt noclobber multios
-  local vcs_raw_data vcs_super_info
+  local vcs_super_info vcs_super_raw_data
 
+  vcs_current_pwd=${${:-.}:A}
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
+  zsh_pickle -i vcs-data \
+             vcs_super_info \
+             vcs_super_raw_data \
+             vcs_current_pwd
 
-  zsh_pickle -i vcs-data vcs_super_info vcs_super_raw_data
-  
+  zsh_unpickle -s -i async-sentinel
+  if (( $vcs_async_sentinel >= 2 )); then
+    sleep 1
+  fi
+
   # Signal the parent shell to update the prompt.
-  kill -USR1 $$
+  kill -USR2 $$
 }
 
-function TRAPUSR1 {
-  emulate -LR zsh
-  setopt zle 2>/dev/null
-  setopt prompt_subst transient_rprompt no_clobber
+function TRAPUSR2 {
+  local current_pwd
   zsh_unpickle -s -c -i vcs-data
-  
-  vcs_async_delay=$(($SECONDS - $vcs_async_start))
+
   vcs_info_msg_0_=$vcs_super_info
+  vcs_raw_data=$vcs_super_raw_data
 
   # Force zsh to redisplay the prompt.
   zle && zle reset-prompt
 
-  vcs_raw_data=$vcs_super_raw_data
-  if [[ ! -n $vcs_raw_data ]]; then
-    unset vcs_raw_data
-  fi
-  
-  # if we're in a vcs, start an inotify process
-  if [[ -n $vcs_info_msg_0_ ]]; then
-    if (( $vcs_inotify_pid == -1 )); then
-      vcs_inotify_watch ${${:-.}:A} &!
-      vcs_inotify_pid=$!
-    fi
-  elif (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid 2>/dev/null
-    vcs_inotify_pid=-1
-  fi
+  vcs_async_delay=$(($SECONDS - $vcs_async_start))
+
+  # we use yet another pickle to track when the pwd changes
+  # TODO: only restart inotify if we move out of its tracked zone
+  zsh_unpickle -s -i vcs_last_dir
+
+  current_pwd=${${:-.}:A}
+
+  # # if we're in a vcs, start an inotify process
+  # if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
+  #   if [[ $vcs_last_dir == $current_pwd ]]; then
+  #     if (( $vcs_inotify_pid == -1 )); then
+  #       vcs_inotify_watch $current_pwd &!
+  #       vcs_inotify_pid=$!
+  #     fi
+  #   else
+  #     vcs_async_cleanup &!
+  #     vcs_inotify_watch $current_pwd &!
+  #     vcs_inotify_pid=$!
+  #   fi
+  # else
+  #   vcs_async_cleanup &!
+  # fi
+
+  vcs_last_dir=$current_pwd
+  zsh_pickle -i vcs-last-dir vcs_last_dir
 
   zsh_unpickle -s -i async-sentinel
-  local temp_sentinel=$vcs_async_sentinel
+  local -i temp_sentinel=$vcs_async_sentinel
   vcs_async_sentinel=0
-  if [[ $vcs_async_sentinel == 2 ]]; then
+  zsh_pickle -i async-sentinel vcs_async_sentinel
+
+  if (( $temp_sentinel >= 2 )); then
     vcs_async_info &!
   fi
-  
-  zsh_pickle -i async-sentinel vcs_async_sentinel
 }
 
-
 function vcs_async_auto_update {
-  emulate -LR zsh
-  setopt local_options function_argzero
-  if [[ -n $VCS_PAUSE ]]; then
+  if (( $VCS_PAUSE == 1 )); then
     return 0;
   fi
+
+  vcs_async_sentinel=0
+  zsh_pickle -i async-sentinel vcs_async_sentinel
   vcs_async_info
 }
 
@@ -180,21 +236,37 @@ function vcs_inotify_watch () {
   emulate -LR zsh
   if hash inotifywait &>/dev/null; then
     inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
-      -mqr --format %w%f $1 2> ~/.zsh.d/startup.log \
-      | while IFS= read -r file; do
+                -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
+    while IFS= read -r file; do
       vcs_inotify_do "$file"
     done
+  else
+    echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
+    return 1
   fi
 }
 
 function vcs_inotify_do () {
   emulate -LR zsh
+  if [[ $file == */index.lock ]]; then
+    return 0
+  fi
   vcs_async_info $file
 }
 
 function vcs_async_cleanup () {
+  emulate -LR zsh
   if (( $vcs_inotify_pid != -1 )); then
-    kill $vcs_inotify_pid 2>/dev/null
+    kill -TERM -- -$vcs_inotify_pid &> /dev/null
+    vcs_inotify_pid=-1
+  fi
+}
+
+function vcs_pause () {
+  if (( $VCS_PAUSE == 1 )); then
+    VCS_PAUSE=0
+  else
+    VCS_PAUSE=1
   fi
 }
 

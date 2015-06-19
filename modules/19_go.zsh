@@ -2,7 +2,7 @@
 # BEGIN HOLISTIC HANDLER
 # ======================
 
-alias go="nocorrect go"
+alias -E go="nocorrect go"
 function go() {
   emulate -LR zsh
   setopt no_case_glob no_case_match equals
@@ -11,7 +11,7 @@ function go() {
   if [[ -f "$1" ]]; then
     if file $1 |& grep '\(ASCII text\|Unicode text\|no magic\)' &>/dev/null; then
       if [[ -r "$1" ]]; then
-        if ps ax |& egrep -i 'emacs --daemon' &>/dev/null; then
+        if ps ax |& egrep -i 'emacs.*--daemon' &>/dev/null; then
           # launch GUI editor
           emacsclient -t -a "emacs" $1
         else

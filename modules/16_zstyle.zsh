@@ -9,9 +9,16 @@ zstyle ':completion:*' show-completer false
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path $ZDOTDIR/cache
 zstyle ':completion:*' list-grouped true
+
 # formatting
-zstyle ':completion:*' format '%B── %d%b'             # distinct categories
-zstyle ':completion:*' list-separator '─'             # distinct descriptions
+if (( $degraded_terminal[unicode] != 1 )); then
+  zstyle ':completion:*' format '%B── %d%b' # distinct categories
+  zstyle ':completion:*' list-separator '─' # distinct descriptions
+else
+  zstyle ':completion:*' format '%B-- %d%b' # distinct categories
+  zstyle ':completion:*' list-separator '-' # distinct descriptions
+fi
+
 zstyle ':completion:*' auto-description 'specify: %d' # auto description
 zstyle ':completion:*:descriptions' format '%B%d%b'   # description
 zstyle ':completion:*:messages' format '%d'           # messages
@@ -29,24 +36,19 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' completer _oldlist _complete
 
 zstyle ':completion:*:match:*' original only
-zstyle ':completion::correct*:*' prefix-needed false
-zstyle ':completion::correct:*' max-errors 2 numeric 
-
-zstyle ':completion::approximate*:*' prefix-needed false
-zstyle ':completion::approximate:*' max-errors 2 numeric 
-zstyle ':completion::approximate:*' origional true
 
 # 0 -- vanilla completion    (abc => abc)
 # 1 -- smart case completion (abc => Abc)
-zstyle ':completion:*' matcher-list '' 'm:{a-z\-}={A-Z\_}'
-zstyle ':completion:*:parameters' matcher-list '' 'm:{a-z\-}={A-Z\_}'
-zstyle ':completion:*:functions' matcher-list '' 'm:{a-z\-}={A-Z\_}'
+# 2 -- word flex completion  (abc => A-big-Car)
+# 3 -- full flex completion  (abc => ABraCadabra)
+zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
+       'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+       'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
+
+zstyle ':completion:*:functions' matcher '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
-
-zstyle ':completion:*' user-expand _uexpand
-zstyle ':completion:*:user-expand:*' tag-order expansions all-expansions
 
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
@@ -60,12 +62,11 @@ zstyle ':completion:*:functions' ignored-patterns '(_|.)*'
 # ignore completions that are aleady on the line
 zstyle ':completion:*:(rm|kill|diff|mv|cp):*' ignore-line true
 
-# seperate manpage sections
+# separate manpage sections
 zstyle ':completion:*:manuals' separate-sections true
 
 # sort reverse by modification time so the newer the better
 zstyle ':completion:*' file-sort modification reverse
-#zstyle ':completion:*' file-sort change
 
 # try to automagically generate descriptions from manpage
 zstyle ':completion:*:options' description yes
@@ -74,7 +75,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 # Don't prompt for a huge list, page it!
 # Don't prompt for a huge list, menu it!
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*:default' menu 'select=0' interactive
+zstyle ':completion:*' menu select=1 interactive
 
 # order files first by default, dirs if command operates on dirs (ls)
 
@@ -114,7 +115,8 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 # ================================
 
 function _cdpath(){
-  tmpcdpath=(${${(@)cdpath:#.}:#$PWD}) 
+  local tmpcdpath
+  tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
   (( $#tmpcdpath )) && alt=('path-directories:directory in cdpath:_path_files -W tmpcdpath -/')
   _alternative "$alt[@]"
 }
@@ -125,7 +127,6 @@ function _cmd() {
   _tilde
   _files
   _cdpath
-  _options
 }
 
 compdef "_cmd" "-command-"

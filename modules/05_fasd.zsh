@@ -10,7 +10,6 @@ function {
   source $fasd_path
 
   if [[ ! -w $fasd_cache ]]; then
-    echo setting fasd up
     touch $fasd_cache
     $fasd_path --init \
       zsh-hook \
@@ -22,12 +21,31 @@ function {
   source $fasd_cache
 }
 
-alias a='fasd -a'        # any
-alias s='fasd -si'       # show / search / select
-alias d='fasd -d'        # directory
-alias f='fasd -f'        # file
-alias sd='fasd -sid'     # interactive directory selection
-alias sf='fasd -sif'     # interactive file selection
+# interactive directory selection
+# interactive file selection
+alias sd='fasd -sid'
+alias sf='fasd -sif'
 
-alias z='fasd -e cd -d'     # cd, same functionality as j in autojump
-alias zz='fasd -e cd -d -i' # cd with interactive selection
+# cd, same functionality as j in autojump
+alias j='fasd -e cd -d'
+
+_mydirstack() {
+  local -a lines list
+  for d in $dirstack; do
+    lines+="$(($#lines+1)) -- $d"
+    list+="$#lines"
+  done
+  _wanted -V directory-stack expl 'directory stack' \
+          compadd "$@" -ld lines -S']/' -Q -a list
+}
+
+zsh_directory_name() {
+  case $1 in
+    (c) _mydirstack;;
+    (n) case $2 in
+          (<0-9>) reply=($dirstack[$2]);;
+          (*) reply=($dirstack[(r)*$2*]);;
+        esac;;
+    (d) false;;
+  esac
+}

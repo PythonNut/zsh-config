@@ -5,12 +5,8 @@
 {
   setopt local_options no_rc_expand_param
   source $ZDOTDIR/auto-fu/auto-fu.zsh
-  afu-zle-aysce-install() {}
-  -zle-force-install() {}
   integer afu_enabled=1
   zle-line-init () {
-    emulate -LR zsh
-    setopt prompt_subst
     if (( $afu_enabled == 1 )); then
       auto-fu-init
     fi

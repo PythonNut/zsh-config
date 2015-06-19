@@ -1,6 +1,14 @@
 #!/bin/zsh
 
 # core zsh setup
+if [[ $TERM == dumb ]]; then
+  emulate sh
+  PS1="$ "
+  unsetopt prompt_cr
+  unsetopt zle
+  return 0
+fi
+
 zstyle :compinstall filename '~/.zshrc'
 skip_global_compinit=1
 fpath=(~/.zsh.d/completers $fpath)
@@ -12,7 +20,7 @@ mkdir -p ~/.zsh.d
 export ZDOTDIR=~/.zsh.d
 
 # let us begin
-for zsh_module in ~/.zsh.d/modules/*.zsh(n); do
+for zsh_module in ~/.zsh.d/modules_minimal/*.zsh(n); do
   source $zsh_module
 done
 
