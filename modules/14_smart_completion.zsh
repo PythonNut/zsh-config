@@ -88,25 +88,7 @@ function pcomplete() {
           zle .backward-delete-char
         fi
       else
-        pcomplete_forward_word
-        cur_rbuffer=$RBUFFER
-        if [[ ! -o globcomplete ]]; then
-          zle expand-word
-        fi
-
-        # store a temporary copy of the buffer
-        local TEMP_BUFFER
-        TEMP_BUFFER=$BUFFER
-        zle complete-word
-
-        # if the line is unchanged, show possible continuations
-        if [[ $BUFFER == $TEMP_BUFFER ]]; then
-          zle menu-complete
-        fi
-        RBUFFER=$cur_rbuffer
-        if [[ $LBUFFER[-1] == " " || $LBUFFER[-2] == " " ]]; then
-          zle .backward-delete-char
-        fi
+        zle menu-expand-or-complete
       fi
     fi
 
