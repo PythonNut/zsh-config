@@ -42,8 +42,7 @@ zstyle ':completion:*:match:*' original only
 # 2 -- word flex completion  (abc => A-big-Car)
 # 3 -- full flex completion  (abc => ABraCadabra)
 zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
-       'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
-       'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
+  'r:|?=** m:{a-z\-}={A-Z\_}'
 
 zstyle ':completion:*:functions' matcher '' 'm:{a-z\-}={A-Z\_}'
 zstyle ':completion:*:parameters' matcher '' 'm:{a-z\-}={A-Z\_}'
