@@ -117,16 +117,21 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 
 function _cdpath(){
   local tmpcdpath
-  tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
-  (( $#tmpcdpath )) && alt=('path-directories:directory in cdpath:_path_files -W tmpcdpath -/')
-  _alternative "$alt[@]"
+  # tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
+  tmpcdpath=(/etc/)
+  if [[ $PREFIX != (\~|/|./|../)* && $IPREFIX != ../* ]]; then
+    if (( $#tmpcdpath )); then
+      alt=("path-directories:directory in cdpath:_path_files -W $tmpcdpath -/")
+      _alternative "$alt[@]"
+    fi
+  fi
 }
 
 function _cmd() {
   _command_names
   _functions
   _tilde
-  _files
+  _path_files -g "*(^-/)"
   _cdpath
 }
 
