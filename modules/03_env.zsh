@@ -130,18 +130,7 @@ fi
 # ======
 # Colors
 # ======
-typeset -Ag FX
 colors
-
-# effects
-FX=(
-  reset     "[00m"
-  bold      "[01m" no-bold      "[22m"
-  italic    "[03m" no-italic    "[23m"
-  underline "[04m" no-underline "[24m"
-  blink     "[05m" no-blink     "[25m"
-  reverse   "[07m" no-reverse   "[27m"
-)
 
 if (( $+commands[dircolors] )); then
   function () {
