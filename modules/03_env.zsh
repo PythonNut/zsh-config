@@ -143,13 +143,13 @@ FX=(
   reverse   "[07m" no-reverse   "[27m"
 )
 
-function () {
-  if (( $+commands[dircolors] )); then
+if (( $+commands[dircolors] )); then
+  function () {
     local DIRCOLORS
     DIRCOLORS=$ZDOTDIR/dircolors-solarized/dircolors.ansi-universal
     eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
-  fi
-}
+  }
+fi
 
 # ==========================
 # Persistent directory stack
