@@ -34,6 +34,9 @@ function alias () {
   fi
 }
 
+# history supression aliases
+alias -E clear=' clear'
+
 # proxy aliases
 BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
 if [[ $OSTYPE != (#i)(free|open|net)bsd* ]]; then
