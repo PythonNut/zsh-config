@@ -81,24 +81,24 @@ zstyle ':completion:*' menu select=1 interactive
 # order files first by default, dirs if command operates on dirs (ls)
 
 zstyle ':completion:*' file-patterns \
-  "^($BORING_FILES|.*)(-/):directories:normal\ directories %p~($BORING_FILES|.*)(^-/):globbed-files:normal\ files" \
-  "^($BORING_FILES|.*)(^-/):noglob-files:noglob\ files" \
-  ".*~($BORING_FILES)(^-/):hidden-files:hidden\ files .*~($BORING_FILES)(-/):hidden-directories:hidden\ directories" \
-  "($BORING_FILES)(^-/):boring-files:boring\ files ($BORING_FILES)(-/):boring-directories:boring\ directories" \
-  
+  "(%p~($BORING_FILES))(-/^D):directories:normal\ directories (%p~($BORING_FILES))(^-/D):files:normal\ files" \
+  "(^($BORING_FILES))(-/^D):noglob-directories:noglob\ directories (^($BORING_FILES))(^-/D):noglob-files:noglob\ files" \
+  "(.*~($BORING_FILES))(D^-/):hidden-files:hidden\ files (.*~($BORING_FILES))(D-/):hidden-directories:hidden\ directories" \
+  "($BORING_FILES)(D^-/):boring-files:boring\ files ($BORING_FILES)(D-/):boring-directories:boring\ directories" \
+
 zstyle ':completion:*' group-order \
-  builtins expansions aliases functions commands globbed-files \
-  directories hidden-files hidden-directories \
+  builtins expansions aliases functions commands files \
+  directories noglob-files noglob-directories hidden-files hidden-directories \
   boring-files boring-directories keywords viewable
 
 zstyle ':completion:*:-command-:*' group-order \
-  builtins expansions aliases functions commands directories \
-  globbed-files hidden-directories hidden-files \
+  builtins expansions aliases functions commands executables directories \
+  files noglob-directories noglob-files hidden-directories hidden-files \
   boring-directories boring-files keywords viewable
 
 zstyle ':completion:*:(\ls|ls):*' group-order \
-  directories globbed-files hidden-directories hidden-files \
-  boring-directories boring-files  
+  directories noglob-directories hidden-directories boring-directories\
+  files noglob-files hidden-files boring-files
 
 # complete more processes, typing names substitutes PID
 zstyle ':completion:*:*:kill:*:processes' list-colors \
