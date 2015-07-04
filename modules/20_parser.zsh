@@ -63,9 +63,8 @@ function parser() {
     if [[ $1 == (*=*) ]]; then
       return 0
     
-      # handle "/" teleport case
-    elif [[ $1 == "/" ]]; then
-      alias "$1"="cd /"
+    elif [[ -d ${1/(#s)\~/$HOME} ]]; then
+      alias "$1"="cd $1"
       _preAlias+=($1)
       
       # if it's in CDPATH, teleport there
