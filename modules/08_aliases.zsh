@@ -36,15 +36,17 @@ function alias () {
 
 # history supression aliases
 alias -E clear=' clear'
+alias -E pwd=' pwd'
+alias -E exit=' exit'
 
 # proxy aliases
 BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old'
 if [[ $OSTYPE != (#i)(free|open|net)bsd* ]]; then
   alias lsa='\ls --color --group-directories-first'
-  alias -E lst="lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
+  alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
 else
   # in BSD, -G is the equivalent of --color
-  alias -E lst='\ls -G'
+  alias -E lst=' \ls -G'
 fi
 alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 
