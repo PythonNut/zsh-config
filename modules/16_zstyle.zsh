@@ -143,5 +143,3 @@ function _list_colors () {
 }
 
 zstyle -e ':completion:*:default' list-colors _list_colors
-
-zstyle ':completion:*' special-dirs true
