@@ -46,6 +46,7 @@ zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
        'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
 
 zstyle ':completion:*:functions' matcher '' 'm:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:parameters' matcher '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
