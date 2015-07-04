@@ -9,7 +9,7 @@ function minify_path () {
   local full_path="/" ppath cur_path dir
   local -a revise
   local -i matches
-  eval "1=\${\${1:A}:gs/${HOME:A:gs/\//\\\//}/\~}"
+  1=${${1:A}/${HOME:A}/\~}
   for token in ${(s:/:)1}; do
     cur_path=${full_path:s/\~/$HOME/}
     local -i col=1
@@ -63,9 +63,8 @@ function minify_path () {
 # take every possible branch on the file system into account
 function minify_path_full () {
   emulate -LR zsh
-  # setopt caseglob
   setopt extended_glob null_glob
-    local glob
+    local glob temp_glob result
     glob=("${(@s:/:)$(minify_path $1)}")
     local -i index=$(($#glob - 1))
     while ((index >= 1)); do
@@ -73,7 +72,12 @@ function minify_path_full () {
         break
       fi
       local old_token=${glob[$index]}
-      while [[ ${#$(eval "echo ${${(j:*/:)glob}:s/*//}*(/)")} == 1 ]]; do
+      while true; do
+        temp_glob=${${(j:*/:)glob}:s/*//}*(/)
+        result=(${~temp_glob})
+        if (( $#result != 1 )); then
+          break
+        fi
         old_token=${glob[$index]}
         if [[ ${#glob[$index]} == 0 ]]; then
           break
@@ -92,17 +96,18 @@ function minify_path_full () {
 
 # collapse empty runs too
 function minify_path_smart () {
-  # emulate -LR zsh
+  emulate -LR zsh
+  setopt brace_ccl
   local cur_path glob
   local -i i
   cur_path=$(minify_path_full $1)
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
-    glob=${(l:$((2*$i))::\/:)}
-    eval "cur_path=\${cur_path:gs/$glob/\%U$i\%u}"
+    glob=${(l:$i::/:)}
+    cur_path=${cur_path//$glob/%U$i%u}
   done
   cur_path=${cur_path:s/\~\//\~}
   for char in {a-zA-Z}; do
-    eval "cur_path=\${cur_path:gs/\/$char/\%U$char\%u}"
+    cur_path=${cur_path//\/$char/%U$char%u}
   done
   echo $cur_path
 }
