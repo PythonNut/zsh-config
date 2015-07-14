@@ -118,10 +118,9 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 # ================================
 
 function _cdpath(){
-  local tmpcdpath
-  # tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
-  tmpcdpath=(/etc/)
   if [[ $PREFIX != (\~|/|./|../)* && $IPREFIX != ../* ]]; then
+    local tmpcdpath
+    tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
     if (( $#tmpcdpath )); then
       alt=("path-directories:directory in cdpath:_path_files -W $tmpcdpath -/")
       _alternative "$alt[@]"
@@ -129,11 +128,51 @@ function _cdpath(){
   fi
 }
 
+_command_names_noexecutables () {
+  local args defs ffilt
+  local -a cmdpath
+  if zstyle -t ":completion:${curcontext}:commands" rehash; then
+    rehash
+  fi
+
+  if zstyle -t ":completion:${curcontext}:functions" prefix-needed; then
+    if [[ $PREFIX != [_.]* ]]; then
+      ffilt='[(I)[^_.]*]'
+    fi
+  fi
+
+  defs=('commands:external command:_path_commands')
+  if [[ "$1" = -e ]]; then
+    shift
+  else
+    [[ "$1" = - ]] && shift
+    defs=(
+      "$defs[@]"
+      'builtins:builtin command:compadd -Qk builtins'
+      "functions:shell function:compadd -k 'functions$ffilt'"
+      'aliases:alias:compadd -Qk aliases'
+      'suffix-aliases:suffix alias:_suffix_alias_files'
+      'reserved-words:reserved word:compadd -Qk reswords'
+      'jobs:: _jobs -t'
+      'parameters:: _parameters -g "^*readonly*" -qS= -r "\n\t\- =["'
+    )
+  fi
+  args=("$@")
+  if zstyle -a ":completion:${curcontext}" command-path cmdpath; then
+    if [[ $#cmdpath -gt 0 ]]; then
+      local -a +h path
+      local -A +h commands
+      path=($cmdpath)
+    fi
+  fi
+  _alternative -O args "$defs[@]"
+}
+
 function _cmd() {
-  _command_names
+  _command_names_noexecutables
   _functions
   _tilde
-  _path_files -g "*(^-/)"
+  _files
   _cdpath
 }
 
