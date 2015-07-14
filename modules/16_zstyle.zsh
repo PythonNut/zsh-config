@@ -99,6 +99,9 @@ zstyle ':completion:*:(\ls|ls):*' group-order \
   directories noglob-directories hidden-directories boring-directories\
   files noglob-files hidden-files boring-files
 
+zstyle ':completion:*:(\cd|cd):*' group-order \
+       directories noglob-directories hidden-directories boring-directories\
+
 # complete more processes, typing names substitutes PID
 zstyle ':completion:*:*:kill:*:processes' list-colors \
   '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
