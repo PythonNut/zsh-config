@@ -78,7 +78,6 @@ zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*' menu select=1 interactive
 
 # order files first by default, dirs if command operates on dirs (ls)
-
 zstyle ':completion:*' file-patterns \
   "(%p~($BORING_FILES))(-/^D):directories:normal\ directories (%p~($BORING_FILES))(^-/D):files:normal\ files" \
   "(^($BORING_FILES))(-/^D):noglob-directories:noglob\ directories (^($BORING_FILES))(^-/D):noglob-files:noglob\ files" \

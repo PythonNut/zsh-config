@@ -50,10 +50,8 @@ zstyle ':completion:*:match:*' original only
 # 3 -- full flex completion  (abc => ABraCadabra)
 zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}'
 
-zstyle ':completion:*:files:*' matcher '' \
-       'm:{a-z\-}={A-Z\_}' \
-       'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
-       'r:[[:ascii:]]||[[:ascii:]]=** r:|=* m:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:files:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
+       'r:|?=** m:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
@@ -62,7 +60,6 @@ zstyle ':completion:*:expand:*' tag-order expansions all-expansions
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
 # Don't complete directory we are already in (../here)
-zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*' insert-unambiguous true
 
@@ -88,26 +85,28 @@ zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*' menu select=1 interactive
 
 # order files first by default, dirs if command operates on dirs (ls)
-
 zstyle ':completion:*' file-patterns \
-  "^($BORING_FILES|.*)(-/):directories:normal\ directories %p~($BORING_FILES|.*)(^-/):globbed-files:normal\ files" \
-  "^($BORING_FILES|.*)(^-/):noglob-files:noglob\ files" \
-  ".*~($BORING_FILES)(^-/):hidden-files:hidden\ files .*~($BORING_FILES)(-/):hidden-directories:hidden\ directories" \
-  "($BORING_FILES)(^-/):boring-files:boring\ files ($BORING_FILES)(-/):boring-directories:boring\ directories" \
+  "(%p~($BORING_FILES))(-/^D):directories:normal\ directories (%p~($BORING_FILES))(^-/D):files:normal\ files" \
+  "(^($BORING_FILES))(-/^D):noglob-directories:noglob\ directories (^($BORING_FILES))(^-/D):noglob-files:noglob\ files" \
+  "(.*~($BORING_FILES))(D^-/):hidden-files:hidden\ files (.*~($BORING_FILES))(D-/):hidden-directories:hidden\ directories" \
+  "($BORING_FILES)(D^-/):boring-files:boring\ files ($BORING_FILES)(D-/):boring-directories:boring\ directories" \
 
-  zstyle ':completion:*' group-order \
-  builtins expansions aliases functions commands globbed-files \
-  directories hidden-files hidden-directories \
+zstyle ':completion:*' group-order \
+  builtins expansions aliases functions commands files \
+  directories noglob-files noglob-directories hidden-files hidden-directories \
   boring-files boring-directories keywords viewable
 
 zstyle ':completion:*:-command-:*' group-order \
-  builtins expansions aliases functions commands directories \
-  globbed-files hidden-directories hidden-files \
+  builtins expansions aliases functions commands executables directories \
+  files noglob-directories noglob-files hidden-directories hidden-files \
   boring-directories boring-files keywords viewable
 
 zstyle ':completion:*:(\ls|ls):*' group-order \
-  directories globbed-files hidden-directories hidden-files \
-  boring-directories boring-files
+  directories noglob-directories hidden-directories boring-directories\
+  files noglob-files hidden-files boring-files
+
+zstyle ':completion:*:(\cd|cd):*' group-order \
+       directories noglob-directories hidden-directories boring-directories\
 
 # complete more processes, typing names substitutes PID
 zstyle ':completion:*:*:kill:*:processes' list-colors \
@@ -124,15 +123,59 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 # command layer completion scripts
 # ================================
 
-function _cdpath() {
-  local tmpcdpath
-  tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
-  (( $#tmpcdpath )) && alt=('path-directories:directory in cdpath:_path_files -W tmpcdpath -/')
-  _alternative "$alt[@]"
+function _cdpath(){
+  if [[ $PREFIX != (\~|/|./|../)* && $IPREFIX != ../* ]]; then
+    local tmpcdpath
+    tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
+    if (( $#tmpcdpath )); then
+      alt=("path-directories:directory in cdpath:_path_files -W $tmpcdpath -/")
+      _alternative "$alt[@]"
+    fi
+  fi
+}
+
+_command_names_noexecutables () {
+  local args defs ffilt
+  local -a cmdpath
+  if zstyle -t ":completion:${curcontext}:commands" rehash; then
+    rehash
+  fi
+
+  if zstyle -t ":completion:${curcontext}:functions" prefix-needed; then
+    if [[ $PREFIX != [_.]* ]]; then
+      ffilt='[(I)[^_.]*]'
+    fi
+  fi
+
+  defs=('commands:external command:_path_commands')
+  if [[ "$1" = -e ]]; then
+    shift
+  else
+    [[ "$1" = - ]] && shift
+    defs=(
+      "$defs[@]"
+      'builtins:builtin command:compadd -Qk builtins'
+      "functions:shell function:compadd -k 'functions$ffilt'"
+      'aliases:alias:compadd -Qk aliases'
+      'suffix-aliases:suffix alias:_suffix_alias_files'
+      'reserved-words:reserved word:compadd -Qk reswords'
+      'jobs:: _jobs -t'
+      'parameters:: _parameters -g "^*readonly*" -qS= -r "\n\t\- =["'
+    )
+  fi
+  args=("$@")
+  if zstyle -a ":completion:${curcontext}" command-path cmdpath; then
+    if [[ $#cmdpath -gt 0 ]]; then
+      local -a +h path
+      local -A +h commands
+      path=($cmdpath)
+    fi
+  fi
+  _alternative -O args "$defs[@]"
 }
 
 function _cmd() {
-  _command_names
+  _command_names_noexecutables
   _functions
   _tilde
   _files
