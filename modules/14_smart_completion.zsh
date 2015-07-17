@@ -107,7 +107,7 @@ bindkey -M menuselect . self-insert
 zle -N pcomplete
 
 global_bindkey '^i' pcomplete
-bindkey -M menuselect '^i' pcomplete
+bindkey -M menuselect '^i' forward-char
 
 function _magic-space () {
   emulate -LR zsh
