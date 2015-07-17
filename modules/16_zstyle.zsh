@@ -45,7 +45,6 @@ zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
   'r:|?=** m:{a-z\-}={A-Z\_}'
 
 zstyle ':completion:*:functions' matcher '' 'm:{a-z\-}={A-Z\_}'
-zstyle ':completion:*:parameters' matcher '' 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
@@ -153,7 +152,6 @@ _command_names_noexecutables () {
       'suffix-aliases:suffix alias:_suffix_alias_files'
       'reserved-words:reserved word:compadd -Qk reswords'
       'jobs:: _jobs -t'
-      'parameters:: _parameters -g "^*readonly*" -qS= -r "\n\t\- =["'
     )
   fi
   args=("$@")
