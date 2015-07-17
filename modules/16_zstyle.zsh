@@ -175,7 +175,7 @@ function _cmd() {
 
 compdef "_cmd" "-command-"
 
-ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;]##/$MATCH\${(r:\$((\$#PREFIX_d*$((4+$#MATCH))))::=04;$MATCH:)${:-}}}/\*/'(*files)=(#bl)$PREFIX_p*'}}
+ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;](c2,)/$MATCH\${(r:\$((\$#PREFIX_d*$((4+$#MATCH))))::=04;$MATCH:)${:-}}}/\*/'(*files)=(#bl)$PREFIX_p*'}}
 
 function _list_colors () {
   local PREFIX_d=${PREFIX:t} MATCH
