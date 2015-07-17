@@ -177,14 +177,17 @@ function _cmd() {
 
 compdef "_cmd" "-command-"
 
-ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;]##/$MATCH=$MATCH=04;$MATCH}/\*/'(*files|*directories)=(#b)($PREFIX:t)(?)*'}}
+ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;]##/$MATCH\${(r:\$((\$#PREFIX_d*$((4+$#MATCH))))::=04;$MATCH:)${:-}}}/\*/'(*files)=(#bl)${PREFIX_d//(#m)?/[^$MATCH]#($MATCH)}*'}}
 
 function _list_colors () {
-  local MATCH
+  local MATCH PREFIX_d=${PREFIX:t}
   reply=("${(e@s/ /)ls_colors_parsed}")
- 
+
+  # special for directories
+ reply+=("(*directories)=(#bl)${PREFIX_d//(#m)?/[^$MATCH]#($MATCH)}*=1;30${(r:$(($#PREFIX_d*7+1))::=1;4;30:)${:-}}")
+
   # fallback to a catch-all
-  reply+=("=(#b)($PREFIX:t)(?)*===04")
+  reply+=("=(#bl)${PREFIX_d//(#m)?/[^$MATCH]#($MATCH)}*=00${(r:$(($#PREFIX_d*3+1))::=04:)${:-}}")
 }
 
 zstyle -e ':completion:*:default' list-colors _list_colors
