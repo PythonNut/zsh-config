@@ -138,22 +138,15 @@ _command_names_noexecutables () {
       ffilt='[(I)[^_.]*]'
     fi
   fi
-
-  defs=('commands:external command:_path_commands')
-  if [[ "$1" = -e ]]; then
-    shift
-  else
-    [[ "$1" = - ]] && shift
-    defs=(
-      "$defs[@]"
-      'builtins:builtin command:compadd -Qk builtins'
-      "functions:shell function:compadd -k 'functions$ffilt'"
-      'aliases:alias:compadd -Qk aliases'
-      'suffix-aliases:suffix alias:_suffix_alias_files'
-      'reserved-words:reserved word:compadd -Qk reswords'
-      'jobs:: _jobs -t'
-    )
-  fi
+  defs=(
+    'commands:external command:_path_commands'
+    'builtins:builtin command:compadd -Qk builtins'
+    "functions:shell function:compadd -k 'functions$ffilt'"
+    'aliases:alias:compadd -Qk aliases'
+    'suffix-aliases:suffix alias:_suffix_alias_files'
+    'reserved-words:reserved word:compadd -Qk reswords'
+    'jobs:: _jobs -t'
+  )
   args=("$@")
   if zstyle -a ":completion:${curcontext}" command-path cmdpath; then
     if [[ $#cmdpath -gt 0 ]]; then
