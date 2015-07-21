@@ -44,14 +44,11 @@ zstyle ':completion:*' completer \
 
 zstyle ':completion:*:match:*' original only
 
-# 0 -- vanilla completion    (abc => abc)
-# 1 -- smart case completion (abc => Abc)
-# 2 -- word flex completion  (abc => A-big-Car)
-# 3 -- full flex completion  (abc => ABraCadabra)
-zstyle ':completion:*' matcher '' 'm:{a-z\-}={A-Z\_}'
+# smart case completion (abc => Abc)
+zstyle ':completion:*' matcher 'm:{a-z\-}={A-Z\_}'
 
-zstyle ':completion:*:files:*' matcher '' 'm:{a-z\-}={A-Z\_}' \
-       'r:|?=** m:{a-z\-}={A-Z\_}'
+# full flex completion  (abc => ABraCadabra)
+zstyle ':completion:*:files:*' matcher 'r:|?=** m:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
