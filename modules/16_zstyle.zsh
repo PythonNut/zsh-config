@@ -165,18 +165,21 @@ function _cmd() {
 
 compdef "_cmd" "-command-"
 
-ls_colors_parsed=${${(@s.:.)LS_COLORS}/(#m)\**=[0-9;]#/${${MATCH/(#m)[0-9;](c2,)/$MATCH\${(r:\$((\$#PREFIX_d*$((4+$#MATCH))))::=04;$MATCH:)${:-}}}/\*/'(*files)=(#bl)$PREFIX_p*'}}
+ls_colors_parsed="${(@s.:.)LS_COLORS}/(#m)\**/${${MATCH/(#m)[^=]##(#e)/$MATCH\${(r:\$((\$#PF_d*$((4+$#MATCH))))::=04;$MATCH:)${:-}}}}"
+ls_colors_parsed=("${(s/ /)ls_colors_parsed/\*/(*files)=(#bl)\$PF_p*}")
 
 function _list_colors () {
-  local PREFIX_d=${PREFIX:t} MATCH
-  local PREFIX_p=${PREFIX_d//(#m)?/[^$MATCH]#($MATCH)}
-  reply=("${(e@s/ /)ls_colors_parsed}")
+  local MATCH PF_d=""
+  if [[ $PREFIX != */ ]]; then
+    PF_d="${PREFIX:t}"
+  fi
+  local PF_p="${PF_d//(#m)?/[^$MATCH]#($MATCH)}"
+  reply=(${(e)ls_colors_parsed})
 
   # special for directories
-  reply+=("(*directories)=(#bl)$PREFIX_p*=1;30${(r:$(($#PREFIX_d*7+1))::=1;4;30:)${:-}}")
-
+  reply+=("(*directories)=(#bl)$PF_p*=1;30${(r:$(($#PF_d*7+1))::=1;4;30:)${:-}}")
   # fallback to a catch-all
-  reply+=("=(#bl)$PREFIX_p*=00${(r:$(($#PREFIX_d*3+1))::=04:)${:-}}")
+  reply+=("=(#bl)$PF_p*=00${(r:$(($#PF_d*3+1))::=04:)${:-}}")
 }
 
 zstyle -e ':completion:*:default' list-colors _list_colors
