@@ -64,34 +64,42 @@ function minify_path () {
 function minify_path_full () {
   emulate -LR zsh
   setopt extended_glob null_glob glob_dots
-  local glob temp_glob result
-  glob=("${(@s:/:)$(minify_path $1)}")
-  local -i index=$(($#glob - 1))
+  local glob temp_glob result official_result seg
+  glob=${${1:A}/${HOME:A}/\~}
+  glob=("${(@s:/:)glob}")
+
+  local -i index=$(($#glob)) k
+
+  temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
+  temp_glob=${${(j:/:)temp_glob}:s/~*/~/}(/)
+  official_result=(${~temp_glob})
+
   while ((index >= 1)); do
     if [[ ${glob[$index]} == "~" ]]; then
       break
     fi
-    local old_token=${glob[$index]}
+    k=${#glob[$index]}
     while true; do
-      temp_glob=${${(j:*/:)glob}:s/*//}*(/)
+      seg=$glob[$index]
+      temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
+      temp_glob=${${(j:/:)temp_glob}:s/~*/~/}(/)
       result=(${~temp_glob})
-      if (( $#result != 1 )); then
+
+      if [[ $result != $official_result ]]; then
+        glob[$index]=$old_glob
+        seg=$old_glob
+      fi
+
+      if (( $k == 0 )); then
         break
       fi
-      old_token=${glob[$index]}
-      if [[ ${#glob[$index]} == 0 ]]; then
-        break
-      fi
-      glob[$index]=${glob[$index][0,-2]}
+      old_glob=${glob[$index]}
+      glob[$index]=${seg[0,$(($k-1))]}${seg[$(($k+1)),-1]}
+      ((k--))
     done
-    glob[$index]=$old_token
     ((index--))
   done
-  if [[ ${#${(j:/:)glob}} == 0 ]]; then
-    echo /
-  else
-    echo ${(j:/:)glob}
-  fi
+  echo ${(j:/:)glob}
 }
 
 # collapse empty runs too
