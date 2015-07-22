@@ -39,6 +39,7 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
 +vi-svn-untracked() {
   emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   if ! hash svn; then
     return 0;
   fi
@@ -65,6 +66,7 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
 +vi-hg-untracked() {
   emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   if ! hash hg; then
     return 0;
   fi
@@ -234,6 +236,7 @@ vcs_inotify_events=(modify move create delete)
 
 function vcs_inotify_watch () {
   emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   if hash inotifywait &>/dev/null; then
     inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
                 -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
@@ -248,6 +251,7 @@ function vcs_inotify_watch () {
 
 function vcs_inotify_do () {
   emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   if [[ $file == */index.lock ]]; then
     return 0
   fi
@@ -256,6 +260,7 @@ function vcs_inotify_do () {
 
 function vcs_async_cleanup () {
   emulate -LR zsh
+  setopt prompt_subst transient_rprompt
   if (( $vcs_inotify_pid != -1 )); then
     kill -TERM -- -$vcs_inotify_pid &> /dev/null
     vcs_inotify_pid=-1
