@@ -61,7 +61,7 @@ function minify_path_full () {
   local -i index=$(($#glob)) k
 
   temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
-  temp_glob=${${(j:/:)temp_glob}:s/~*/~/}(/)
+  temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/)
   official_result=(${~temp_glob})
 
   while ((index >= 1)); do
@@ -72,12 +72,18 @@ function minify_path_full () {
     while true; do
       seg=$glob[$index]
       temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
-      temp_glob=${${(j:/:)temp_glob}:s/~*/~/}(/)
+      temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/)
       result=(${~temp_glob})
 
       if [[ $result != $official_result ]]; then
         glob[$index]=$old_glob
         seg=$old_glob
+        if [[ $old_glob[$(($k+1))] == [[:upper:]] ]]; then
+          temp_glob=$old_glob
+          temp_glob[$(($k+1))]=${temp_glob[$(($k+1))]:l}
+          glob[$index]=$temp_glob
+          continue
+        fi
       fi
 
       if (( $k == 0 )); then
