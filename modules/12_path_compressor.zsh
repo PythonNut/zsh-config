@@ -6,20 +6,18 @@
 function minify_path () {
   emulate -LR zsh
   setopt glob_dots extended_glob
-  local full_path="/" ppath cur_path dir
+  local full_path="/" ppath cur_path dir glob
   local -a revise
-  local -i matches
-  1=${${1:A}/${HOME:A}/\~}
-  for token in ${(s:/:)1}; do
+  local -i matches col
+  for token in ${(s:/:)${1:A}/${HOME:A}/\~}; do
     cur_path=${full_path:s/\~/$HOME/}
-    local -i col=1
-    local glob="${token[0,1]}"
+    col=1
+    glob="${token[0,1]}"
     cur_path=($cur_path/*(/))
     # prune the single dir case
     if [[ $#cur_path == 1 ]]; then
       ppath+="/"
-      full_path=${full_path%%(/##)}
-      full_path+="/$token"
+      full_path=${full_path%%(/##)}/$token
       continue
     fi
     while; do
@@ -27,27 +25,19 @@ function minify_path () {
       revise=()
       for fulldir in $cur_path; do
         dir=${${fulldir%%/}##*/}
-        if [[ ! -o caseglob ]]; then
-          if (( ${#dir##(#i)($glob)} < $#dir )); then
-            ((matches++))
-            revise+=$fulldir
-            if ((matches > 1)); then
-              break
-            fi
-          fi
-        else
-          if (( ${#dir##($glob)} < $#dir )); then
-            ((matches++))
-            revise+=$fulldir
-            if ((matches > 1)); then
-              break
-            fi
+        if (( ${#dir##(#l)($glob)} < $#dir )); then
+          ((matches++))
+          revise+=$fulldir
+          if (( matches > 1 )); then
+            break
           fi
         fi
       done
       if (( $matches > 1 )); then
         glob=${token[0,$((col++))]}
-        (( $col -1 > $#token )) && break
+        if (( $col -1 > $#token )); then
+          break
+        fi
       else
         break
       fi
@@ -94,7 +84,7 @@ function minify_path_full () {
         break
       fi
       old_glob=${glob[$index]}
-      glob[$index]=${seg[0,$(($k-1))]}${seg[$(($k+1)),-1]}
+      glob[$index]=$seg[0,$(($k-1))]$seg[$(($k+1)),-1]
       ((k--))
     done
     ((index--))
@@ -123,35 +113,35 @@ function minify_path_smart () {
 # find shortest unique fasd prefix. Heavily optimized
 function minify_path_fasd () {
   zparseopts -D -E a=ALL
-  # emulate -LR zsh
-  if [[ $(type fasd) == *function* ]]; then
-    local dirs index above higher base test
-    local -i escape i k
-    1=${${1:A}%/}
-    dirs=${(nOa)$(fasd)##[0-9.[:space:]]##}
-    if (( ${+dirs[(r)$1]} )); then
-      dirs=($(print ${(f)dirs}))
-      index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
-      1=$1:t
-      for ((i=0; i<=$#1+1; i++)); do
-        for ((k=1; k<=$#1-$i; k++)); do
-          test=${1[$k,$(($k+$i))]}
-          if (( ! ${+index[(r)*$test*]} )); then
-            if [[ $(type $test) == *not* && ! -n ${(P)temp} || -n $ALL ]]; then
-              echo $test
-              escape=1
-              break
-            fi
-          fi
-        done
-        (( $escape == 1 )) && break
-      done
-    else
-      printf " "
-      return 1
-    fi
-  else
+  if [[ $(type fasd) != *function* ]]; then
     printf " "
+    return
   fi
+  local dirs index above higher base test
+  local -i escape i k
+  1=${${1:A}%/}
+  dirs=${(nOa)$(fasd)##[0-9.[:space:]]##}
+  if ! (( ${+dirs[(r)$1]} )); then
+    printf " "
+    return 1
+  fi
+  dirs=($(print ${(f)dirs}))
+  index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
+  1=$1:t
+  for ((i=0; i<=$#1+1; i++)); do
+    for ((k=1; k<=$#1-$i; k++)); do
+      test=${1[$k,$(($k+$i))]}
+      if [[ -z ${index[(r)*$test*]} ]]; then
+        if [[ $(type $test) == *not* && -z ${(P)temp} || -n $ALL ]]; then
+          echo $test
+          escape=1
+          break
+        fi
+      fi
+    done
+    if (( $escape == 1 )); then
+      break
+    fi
+  done
 }
 
