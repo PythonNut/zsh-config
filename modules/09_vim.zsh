@@ -31,9 +31,6 @@ function _vi-append () {
 zle -N vi-insert _vi-insert
 zle -N vi-append _vi-append
 
-source $ZDOTDIR/zsh-vim-textobjects/opp.zsh
-source $ZDOTDIR/zsh-vim-textobjects/opp/surround.zsh
-
 if (( $+commands[xclip] )); then
   zsh-x-kill-region () {
     zle kill-region
