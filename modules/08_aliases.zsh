@@ -131,7 +131,7 @@ if (( $+commands[git] )); then
   alias gs='git status -sb'
   alias gst='git status'
 
-  alias gp="git pull --rebase -X patience"
+  alias gp="git pull --rebase -X histogram"
 
   alias ga='git add'
   alias gau='git add -u'
@@ -148,11 +148,11 @@ if (( $+commands[git] )); then
   alias -ec gfork='echo git checkout -b {} $(git rev-parse --abbrev-ref HEAD 2>/dev/null)'
 
   alias gb='git branch'
-  alias gm='git merge -X patience --no-ff'
-  alias gr="git rebase -X patience"
+  alias gm='git merge -X histogram --no-ff'
+  alias gr="git rebase -X histogram"
 
-  alias gd='git diff --patience'
-  alias gdc='git diff --patience --cached'
+  alias gd='git diff --histogram'
+  alias gdc='git diff --histogram --cached'
   alias gd!='git diff --word-diff'
   alias gdc!='git diff --word-diff --cached'
 
