@@ -54,7 +54,7 @@ function minify_path () {
 function minify_path_full () {
   emulate -LR zsh
   setopt extended_glob null_glob glob_dots
-  local glob temp_glob result official_result seg
+  local glob temp_glob result official_result seg limit
   glob=${${1:A}/${HOME:A}/\~}
   glob=("${(@s:/:)glob}")
 
@@ -64,6 +64,9 @@ function minify_path_full () {
   temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/)
   official_result=(${~temp_glob})
 
+  # set glob short circuit level
+  limit="(/Y$(( ${#official_result} + 1 )))"
+
   while ((index >= 1)); do
     if [[ ${glob[$index]} == "~" ]]; then
       break
@@ -72,7 +75,8 @@ function minify_path_full () {
     while true; do
       seg=$glob[$index]
       temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
-      temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/)
+      temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}
+      temp_glob+=$limit
       result=(${~temp_glob})
 
       if [[ $result != $official_result ]]; then
