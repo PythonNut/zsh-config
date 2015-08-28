@@ -82,9 +82,13 @@ function minify_path_full () {
       if [[ $result != $official_result ]]; then
         glob[$index]=$old_glob
         seg=$old_glob
-        if [[ $old_glob[$(($k+1))] == [[:upper:]] ]]; then
+      else
+        # if we succeeded, try smart casing
+        if [[ ${${glob[$index]}[$k]} == [[:upper:]] ]]; then
+          old_glob=$glob[$index]
+
           temp_glob=$old_glob
-          temp_glob[$(($k+1))]=${temp_glob[$(($k+1))]:l}
+          temp_glob[$k]=${temp_glob[$k]:l}
           glob[$index]=$temp_glob
           continue
         fi
@@ -93,6 +97,7 @@ function minify_path_full () {
       if (( $k == 0 )); then
         break
       fi
+
       old_glob=${glob[$index]}
       glob[$index]=$seg[0,$(($k-1))]$seg[$(($k+1)),-1]
       ((k--))
