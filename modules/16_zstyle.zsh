@@ -41,7 +41,7 @@ zstyle ':completion:*:match:*' original only
 zstyle ':completion:*' matcher 'r:|?=** m:{a-z\-}={A-Z\_}'
 
 # smart case completion (abc => Abc)
-zstyle ':completion:*:functions' matcher 'm:{a-z\-}={A-Z\_}'
+# zstyle ':completion:*:functions' matcher 'm:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
@@ -53,7 +53,7 @@ zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 zstyle ':completion:*' ignore-parents parent pwd
 
 # ignore completions for functions I don't use
-zstyle ':completion:*:functions' ignored-patterns '(_|.)*'
+zstyle ':completion:*:functions' ignored-patterns '(_|.)*|*afu(+|-)*'
 
 # ignore completions that are aleady on the line
 zstyle ':completion:*:(rm|kill|diff|mv|cp):*' ignore-line true
