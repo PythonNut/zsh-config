@@ -40,7 +40,7 @@ function prompt_async_compress () {
   else
     chpwd_minify_smart_str="$(minify_path .)"
     chpwd_minify_fast_str="$chpwd_minify_smart_str"
-    chpwd_async_worker &!
+    (chpwd_async_worker &) &> /dev/null
   fi
 }
 

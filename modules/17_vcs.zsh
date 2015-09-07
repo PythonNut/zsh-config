@@ -149,16 +149,16 @@ function vcs_async_info () {
   # i.e. Was originally zero
   if (( $vcs_async_sentinel == 1 )); then
     vcs_async_start=$SECONDS
-    vcs_async_info_worker $1 &!
+    (vcs_async_info_worker $1 &) 2> /dev/null
   fi
 }
 
 function vcs_async_info_worker () {
   local vcs_super_info vcs_super_raw_data
-
   vcs_current_pwd=${${:-.}:A}
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data="$(vcs_super_info_raw_data)"
+
   zsh_pickle -i vcs-data \
              vcs_super_info \
              vcs_super_raw_data \
@@ -191,21 +191,26 @@ function TRAPUSR2 {
 
   current_pwd=${${:-.}:A}
 
-  # # if we're in a vcs, start an inotify process
-  # if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
-  #   if [[ $vcs_last_dir == $current_pwd ]]; then
-  #     if (( $vcs_inotify_pid == -1 )); then
-  #       vcs_inotify_watch $current_pwd &!
-  #       vcs_inotify_pid=$!
-  #     fi
-  #   else
-  #     vcs_async_cleanup &!
-  #     vcs_inotify_watch $current_pwd &!
-  #     vcs_inotify_pid=$!
-  #   fi
-  # else
-  #   vcs_async_cleanup &!
-  # fi
+  # if we're in a vcs, start an inotify process
+  if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
+    if [[ $vcs_last_dir == $current_pwd ]]; then
+      if (( $vcs_inotify_pid == -1 )); then
+        (
+            vcs_inotify_watch $current_pwd &
+            echo $!
+        ) 2> /dev/null | read vcs_inotify_pid
+        vcs_inotify_pid=$!
+      fi
+    else
+      vcs_async_cleanup
+      (
+          vcs_inotify_watch $current_pwd &
+          echo $!
+      ) 2> /dev/null | read vcs_inotify_pid
+    fi
+  else
+    vcs_async_cleanup
+  fi
 
   vcs_last_dir=$current_pwd
   zsh_pickle -i vcs-last-dir vcs_last_dir
@@ -216,7 +221,7 @@ function TRAPUSR2 {
   zsh_pickle -i async-sentinel vcs_async_sentinel
 
   if (( $temp_sentinel >= 2 )); then
-    vcs_async_info &!
+    (vcs_async_info &) 2>/dev/null
   fi
 }
 
@@ -262,7 +267,7 @@ function vcs_async_cleanup () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   if (( $vcs_inotify_pid != -1 )); then
-    kill -TERM -- -$vcs_inotify_pid &> /dev/null
+    kill -TERM $vcs_inotify_pid
     vcs_inotify_pid=-1
   fi
 }
