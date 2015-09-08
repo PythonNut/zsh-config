@@ -124,6 +124,17 @@ elif [[ $(ps -o comm= -p $PPID 2>/dev/null) == (sshd|*/sshd) ]]; then
   degraded_terminal[display_host]=1
 fi
 
+# auto-connect to tmux when avalible
+if [[ $degraded_terminal[display_host] == 1 ]]; then
+  if (( $+commands[tmux] )) && [[ -z $TMUX ]]; then
+    if tmux ls 2> /dev/null; then
+      exec tmux attach
+    else
+      exec tmux
+    fi
+  fi
+fi
+
 if [[ $(locale) != *LANG=*UTF-8* ]]; then
   degraded_terminal[unicode]=1
 fi
