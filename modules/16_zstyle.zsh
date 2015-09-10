@@ -56,7 +56,7 @@ zstyle ':completion:*' ignore-parents parent pwd
 zstyle ':completion:*:functions' ignored-patterns '(_|.)*|*afu(+|-)*'
 
 # ignore completions that are aleady on the line
-zstyle ':completion:*:(rm|kill|diff|mv|cp):*' ignore-line true
+zstyle ':completion:*:(rm|kill|diff|mv|cp|trash):*' ignore-line true
 
 # separate manpage sections
 zstyle ':completion:*:manuals' separate-sections true
