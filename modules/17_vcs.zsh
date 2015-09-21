@@ -267,7 +267,7 @@ function vcs_async_cleanup () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   if (( $vcs_inotify_pid != -1 )); then
-    kill -TERM $vcs_inotify_pid
+    kill -TERM $vcs_inotify_pid &> /dev/null
     vcs_inotify_pid=-1
   fi
 }
