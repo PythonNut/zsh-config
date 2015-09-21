@@ -21,6 +21,7 @@ function {
   elif [[ -f $zkbd_dest ]]; then
     throw KeyFallback
   else
+    echo "No keybinding definitions found in ${zkbd_dest}"
     read -q "REPLY?Generate keybindings for $_OLD_TERM? (y/n) " -n 1
 
     if [[ $REPLY != [Yy]* ]]; then
