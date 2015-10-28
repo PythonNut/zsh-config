@@ -62,7 +62,7 @@ zstyle ':completion:*:(rm|kill|diff|mv|cp|trash):*' ignore-line true
 zstyle ':completion:*:manuals' separate-sections true
 
 # sort reverse by modification time so the newer the better
-zstyle ':completion:*' file-sort modification reverse
+zstyle ':completion:*' file-sort modification
 
 # try to automagically generate descriptions from manpage
 zstyle ':completion:*:options' description yes
