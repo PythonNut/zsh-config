@@ -27,8 +27,8 @@ function zsh_unpickle () {
   zparseopts -D -E i:=ID s=S l=L c=C
   {
     if [[ ! -n "$L" ]]; then
+      disable -r typeset
       # force variables to go up scope 
-      declare() { builtin declare -g "$@"; }
       typeset() { builtin typeset -g "$@"; }
     fi
     
@@ -40,7 +40,8 @@ function zsh_unpickle () {
     if [[ -n "$C" ]]; then
       zsh_pickle_cleanup -i "$ID"
     fi
-    unset -f typeset declare 2>/dev/null
+    unset -f typeset 2>/dev/null
+    enable -r typeset
   }
 }
 
