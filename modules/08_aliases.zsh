@@ -219,7 +219,7 @@ function expandAlias() {
         LBUFFER="$aliases[$cmd[-1]] "
       fi
       
-    elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\*) ]]; then
+    elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\|\"|\')* ]]; then
       zle _expand_alias
       expandAlias_smart_space "$1"
       
