@@ -47,7 +47,7 @@ function minify_path () {
     full_path=${full_path%%(/##)}
     full_path+="/$token"
   done
-  echo ${ppath:s/\/\~/\~/}
+  echo ${${ppath:s/\/\~/\~/}:-/}
 }
 
 # take every possible branch on the file system into account
