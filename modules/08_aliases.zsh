@@ -107,10 +107,9 @@ if (( $+commands[yaourt] )); then
   alias yuu='yaourt -Syyua --noconfirm --devel'
 fi
 
-# yum aliases
-if (( $+commands[yum] )); then
-  alias -E yum-config-manager='nocorrect noglob \yum-config-manager'
-  alias -E yum='nocorrect noglob \yum'
+# dnf aliases
+if (( $+commands[dnf] )); then
+  alias -E dnf='nocorrect noglob \dnf'
 fi
 
 # vim aliases
