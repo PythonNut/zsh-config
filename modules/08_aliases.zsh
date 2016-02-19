@@ -109,13 +109,8 @@ fi
 
 # yum aliases
 if (( $+commands[yum] )); then
-  if (( $user_has_root == 1 )); then
-    alias -E yum-config-manager='nocorrect noglob \yum-config-manager'
-    alias -E yum='nocorrect noglob \yum'
-  else
-    alias -E yum-config-manager='nocorrect noglob sudo \yum-config-manager'
-    alias -E yum='nocorrect noglob sudo \yum'
-  fi
+  alias -E yum-config-manager='nocorrect noglob \yum-config-manager'
+  alias -E yum='nocorrect noglob \yum'
 fi
 
 # vim aliases
