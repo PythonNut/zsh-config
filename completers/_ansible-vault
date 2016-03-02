@@ -1,4 +1,4 @@
-#compdef mina
+#compdef ansible-vault
 # ------------------------------------------------------------------------------
 # Copyright (c) 2016 Github zsh-users - http://github.com/zsh-users
 # All rights reserved.
@@ -28,36 +28,62 @@
 # Description
 # -----------
 #
-#  Completion script for Mina (http://nadarei.co/mina/).
+#  Completion script for ansible v1.9.2 (http://ansible.org)
 #
 # ------------------------------------------------------------------------------
 # Authors
 # -------
 #
-#  * Kazuya Takeshima (https://github.com/mitukiii)
+#  * Rick van Hattem (https://github.com/wolph)
 #
 # ------------------------------------------------------------------------------
+#
 
+_ansible-vault-commands() {
+  local -a commands
+  
+  commands=(
+    'create:Create new encrypted file'
+    'decrypt:Decrypt encrypted file'
+    'edit:Edit encrypted file'
+    'encrypt:Encrypt unencrypted file'
+    'rekey:Change password for encrypted file'
+    'view:View encrypted file'
+  )
+  
+  _arguments -s : $nul_args && ret=0
+  _describe -t commands 'ansible-vault command' commands && ret=0
+}
 
-local curcontext="$curcontext" state line cmds ret=1
+_ansible-vault-command(){
+  args=(
+    '--debug[enable debugging]' \
+    '--vault-password-file[vault password file]:password_file:_files'
+    $nul_args
+    "1::file_name:_files"
+  )
+  _arguments -s : $args && ret=0
+}
 
-_arguments -C \
-  {-h,--help}'[Show help]' \
-  {-V,--version}'[Show program version]' \
-  {-v,--verbose}'[Show commands as they happen]' \
-  {-s,--simulate}'[Run in simulation mode]' \
-  {-t,--trace}'[Show backtraces when errors occur]' \
-  -f'[Use FILE as the deploy configuration]:file:_files' \
-  '*: :->cmds' && ret=0
+_ansible-vault() {
+  local -a nul_args
+  nul_args=(
+    '(-h --help)'{-h,--help}'[show help message and exit.]'
+  )
+  
+  local curcontext=$curcontext ret=1
+  
+  if ((CURRENT == 2)); then
+    _ansible-vault-commands
+  else
+    shift words
+    (( CURRENT -- ))
+    curcontext="${curcontext%:*:*}:ansible-vault-$words[1]:"
+    _call_function ret _ansible-vault-command
+  fi
+}
 
-case $state in
-  cmds)
-    cmds=( ${(f)"$(_call_program commands mina -T 2> /dev/null | sed -e 's/:/\\:/g; s/\[/\\[/g; s/\]/\\]/g; s/mina \([^ ]*\) .*# /\1:/g')"} )
-    _describe -t commands 'mina command' cmds && ret=0
-    ;;
-esac
-
-return ret
+_ansible-vault "$@"
 
 # Local Variables:
 # mode: Shell-Script

@@ -1,5 +1,26 @@
 #compdef vagrant
 # ------------------------------------------------------------------------------
+# Copyright (c) 2009-2015 Robby Russell and contributors (see
+# https://github.com/robbyrussell/oh-my-zsh/contributors)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+# ------------------------------------------------------------------------------
 # Description
 # -----------
 #
@@ -29,15 +50,20 @@ _1st_arguments=(
     'halt:Halts the currently running vagrant environment'
     'help:[TASK] Describe available tasks or one specific task'
     'init:[box_name] [box_url] Initializes current folder for Vagrant usage'
+    'list-commands:Outputs all available Vagrant subcommands'
     'login:Authenticates against a Vagrant Cloud server to access protected boxes'
     'package:Packages a vagrant environment for distribution'
     'plugin:Manage plugins'
     'provision:Run the provisioner'
+    'push:Deploys code in this environment to a configured destination'
+    'rdp:Connects to machine via RDP'
     'reload:Reload the vagrant environment'
     'resume:Resumes a suspend vagrant environment'
+    'rsync:Syncs rsync synced folders to remote machine'
+    'rsync-auto:Syncs rsync synced folders automatically when files change'
     'share:Shares the Vagrant environment and allows remote access'
     'ssh:SSH into the currently running environment'
-    'ssh-config:outputs .ssh/config valid syntax for connecting to this environment via ssh'
+    'ssh-config:Outputs .ssh/config valid syntax for connecting to this environment via ssh'
     'status:Shows the status of the current Vagrant environment'
     'suspend:Suspends the currently running vagrant environment'
     'up:Creates the vagrant environment'
@@ -50,8 +76,10 @@ _box_arguments=(
     'add:NAME URI Add a box to the system'
     'help:COMMAND Describe subcommands or one specific subcommand'
     'list:Lists all installed boxes'
+    'outdated:Checks if there is a new version available for the box'
     'remove:NAME Remove a box from the system'
     'repackage:NAME Repackage an installed box into a `.box` file.'
+    'update:Updates the box, if there any updates available'
 )
 
 local -a _plugin_arguments

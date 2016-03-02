@@ -1,6 +1,6 @@
-#compdef mina
+#compdef gtk-launch
 # ------------------------------------------------------------------------------
-# Copyright (c) 2016 Github zsh-users - http://github.com/zsh-users
+# Copyright (c) 2011 Github zsh-users - http://github.com/zsh-users
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,36 +28,55 @@
 # Description
 # -----------
 #
-#  Completion script for Mina (http://nadarei.co/mina/).
+#  Completion script for gtk-launch on gtk+-3.14.8 (http://www.gtk.org/).
 #
 # ------------------------------------------------------------------------------
 # Authors
 # -------
 #
-#  * Kazuya Takeshima (https://github.com/mitukiii)
+#  * ncaq <ncaq@ncaq.net> (version 3.14.8)
 #
 # ------------------------------------------------------------------------------
 
+_gtk-launch() {
+  _arguments \
+    {-h,--help}'[Show help options]' \
+    --help-all'[Show all help options]' \
+    --help-gtk'[Show GTK+ Options]' \
+    --display='[X display to use]' \
+    '1: :_applications'
+}
 
-local curcontext="$curcontext" state line cmds ret=1
+_applications() {
+  local -a applications
 
-_arguments -C \
-  {-h,--help}'[Show help]' \
-  {-V,--version}'[Show program version]' \
-  {-v,--verbose}'[Show commands as they happen]' \
-  {-s,--simulate}'[Run in simulation mode]' \
-  {-t,--trace}'[Show backtraces when errors occur]' \
-  -f'[Use FILE as the deploy configuration]:file:_files' \
-  '*: :->cmds' && ret=0
+  for file in /usr/share/applications/*.desktop; do
+    applications+=`_format_entry $file`
+  done
 
-case $state in
-  cmds)
-    cmds=( ${(f)"$(_call_program commands mina -T 2> /dev/null | sed -e 's/:/\\:/g; s/\[/\\[/g; s/\]/\\]/g; s/mina \([^ ]*\) .*# /\1:/g')"} )
-    _describe -t commands 'mina command' cmds && ret=0
-    ;;
-esac
+  _values -w \
+          'applications' \
+          $applications
+}
 
-return ret
+_format_entry() {
+  echo "`_remove_path_extension $1`[`_get_description $1`]"
+}
+
+_remove_path_extension() {
+  # echo arg
+  # remove path string
+  # remove extension string
+  echo $1 | \
+    sed 's/.*\///' | \
+    sed 's/\.desktop//'
+}
+
+_get_description() {
+  # grep --no-messages option is handling of not UTF-8 text
+  grep --no-messages '^Comment=\|^Exec=' $1 | \
+    tr '\n' ' '
+}
 
 # Local Variables:
 # mode: Shell-Script
