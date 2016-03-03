@@ -29,9 +29,11 @@ add-zsh-hook zshexit disown_running
 function exit() {
   emulate -LR zsh
   if [[ -n $TMUX ]] && (( ${#${(f)"$(tmux list-clients)"}} > 1 )); then
-    echo Detaching from tmux session...
-    tmux detach
-    return 0
+    if (( ${#${(f)"$(tmux list-windows)"}} == 1 )); then
+      echo Detaching from tmux session...
+      tmux detach
+      return 0
+    fi
   fi
 
   disown_running && builtin exit "$@"
