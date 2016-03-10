@@ -3,6 +3,11 @@
 # ========================
 
 function pcomplete() {
+  if [[ -n $POSTDISPLAY ]]; then
+    zle autosuggest-accept
+    return 0
+  fi
+
   if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
     zle predict-next-line
   else
@@ -13,7 +18,7 @@ function pcomplete() {
   fi
 }
 
-bindkey -M menuselect . self-insert
+bindkey -M menuselect . self-insertq
 
 zle -N pcomplete
 

@@ -37,3 +37,6 @@
 [submodule "zsh-dwim"]
 	path = zsh-dwim
 	url = https://github.com/oknowton/zsh-dwim
+[submodule "zsh-autosuggestions"]
+	path = zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
