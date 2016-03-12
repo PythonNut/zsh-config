@@ -1,4 +1,5 @@
 {
+  source $ZDOTDIR/zsh-async/async.zsh
   source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
 } &>> $ZDOTDIR/startup.log
 

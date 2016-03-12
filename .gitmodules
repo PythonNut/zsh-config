@@ -40,3 +40,9 @@
 [submodule "zsh-autosuggestions"]
 	path = zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+	url = =
+	url = https://github.com/PythonNut/zsh-autosuggestions
+	branch = master
+[submodule "zsh-async"]
+	path = zsh-async
+	url = https://github.com/mafredri/zsh-async
