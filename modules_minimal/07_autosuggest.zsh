@@ -1,6 +1,7 @@
 {
   source $ZDOTDIR/zsh-async/async.zsh
   source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
+  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=("expand-or-complete" "pcomplete")
 } &>> $ZDOTDIR/startup.log
 
 function global_bindkey () {
