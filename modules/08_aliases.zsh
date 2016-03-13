@@ -96,7 +96,7 @@ fi
 # sudo aliases
 if (( $+commands[sudo] )); then
   alias -E sudo='nocorrect sudo '
-  alias -ec please='echo sudo ${history[$#history]}'
+  alias -ec please='echo -E sudo ${history[$#history]}'
 fi
 
 # yaourt aliases
@@ -132,14 +132,14 @@ if (( $+commands[git] )); then
   alias gaa='git add -A'
 
   alias gc='git commit -v'
-  alias -ec gcm="echo git commit -v -m '{}'"
+  alias -ec gcm="echo -E git commit -v -m '{}'"
   alias gc!='git commit -v --amend'
   alias gca='git commit -v -a'
-  alias -ec gcam="echo git commit -v -a -m '{}'"
+  alias -ec gcam="echo -E git commit -v -a -m '{}'"
   alias gca!='git commit -v -a --amend'
 
   alias gck='git checkout'
-  alias -ec gfork='echo git checkout -b {} $(git rev-parse --abbrev-ref HEAD 2>/dev/null)'
+  alias -ec gfork='echo -E git checkout -b {} $(git rev-parse --abbrev-ref HEAD 2>/dev/null)'
 
   alias gb='git branch'
   alias gm='git merge -X histogram --no-ff'
