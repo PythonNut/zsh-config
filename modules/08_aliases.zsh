@@ -95,6 +95,15 @@ fi
 
 # sudo aliases
 if (( $+commands[sudo] )); then
+  sudo () {
+    local precommands
+    while [[ $1 == (nocorrect|noglob) ]]; do
+      precommands+=$1
+      shift
+    done
+    eval "$precommands command sudo $@"
+  }
+
   alias -E sudo='nocorrect sudo '
   alias -ec please='echo -E sudo ${history[$#history]}'
 fi
