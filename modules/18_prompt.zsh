@@ -46,7 +46,7 @@ function compute_prompt () {
     # vim normal/textobject mode indicator
     local VIM_PROMPT="%B%F{black} [% N]% %b"
     local VIM_PROMPT_OPP="%B%F{black} [% N+]% %b"
-    RPS1="${${${KEYMAP/vicmd/$VIM_PROMPT}/opp/$VIM_PROMPT_OPP}/(afu)/}"
+    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(afu|main)/}"
     RPS1=$RPS1"\${vcs_info_msg_0_}"
 
   else
