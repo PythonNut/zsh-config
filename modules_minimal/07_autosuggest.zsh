@@ -14,3 +14,5 @@ function global_bindkey () {
 # because some other lines call this function to reset state
 zle-line-init () { }
 zle -N zle-line-init
+
+global_bindkey "^Hk" describe-key-briefly

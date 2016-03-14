@@ -75,6 +75,4 @@ function global_bindkey () {
   bindkey      $@
 }
 
-global_bindkey "^x^x^x" zle-line-init
-
 global_bindkey "^Hk" describe-key-briefly
