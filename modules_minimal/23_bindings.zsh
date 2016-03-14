@@ -1,1 +1,0 @@
-../modules/23_bindings.zsh

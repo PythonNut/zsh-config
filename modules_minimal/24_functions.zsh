@@ -1,1 +1,0 @@
-../modules/24_functions.zsh
