@@ -1,6 +1,6 @@
 [submodule "auto-fu"]
     path = auto-fu
-    url = https://github.com/hchbaw/auto-fu.zsh
+    url = https://github.com/PythonNut/auto-fu.zsh
 [submodule "zsh-syntax-highlighting"]
     path = zsh-syntax-highlighting
     url = https://github.com/zsh-users/zsh-syntax-highlighting
