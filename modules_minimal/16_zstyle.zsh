@@ -6,6 +6,7 @@ zstyle ':completion:*' verbose false
 zstyle ':completion:*:options' verbose true
 zstyle ':completion:*' extra-verbose true
 zstyle ':completion:*' show-completer true
+zstyle ':completion:*' show-ambiguity true
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path $ZDOTDIR/cache
 zstyle ':completion:*' list-grouped true
