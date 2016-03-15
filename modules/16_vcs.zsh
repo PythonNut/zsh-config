@@ -201,7 +201,7 @@ function vcs_inotify_watch () {
 }
 
 function vcs_inotify_callback () {
-  echo $1:$2:$3:$4:$5
+  echo $1:$2:$3:$4:$5 &>> $ZDOTDIR/startup.log
 }
 
 function TRAPUSR2 () {
