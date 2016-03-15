@@ -13,7 +13,7 @@ function pcomplete() {
   fi
 }
 
-bindkey -M menuselect . self-insert
+bindkey -M menuselect . self-insertq
 
 zle -N pcomplete
 

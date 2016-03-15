@@ -69,7 +69,7 @@ zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
 
 ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
-+vi-svn-untracked() {
+function +vi-svn-untracked {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   if ! hash svn; then
@@ -96,7 +96,7 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
   fi
 }
 
-+vi-hg-untracked() {
+function +vi-hg-untracked {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   if ! hash hg; then
@@ -165,109 +165,58 @@ function vcs_get_root_dir () {
 }
 
 typeset -F SECONDS
-float vcs_async_start
-float vcs_async_delay
-integer vcs_async_sentinel
-integer vcs_inotify_pid=-1
-integer VCS_PAUSE=0
-
-zsh_pickle -i async-sentinel vcs_async_sentinel
 
 function vcs_async_info () {
-  zsh_unpickle -s -i async-sentinel
-  (( vcs_async_sentinel++ ))
-  zsh_pickle -i async-sentinel vcs_async_sentinel
-
-  # i.e. Was originally zero
-  if (( $vcs_async_sentinel == 1 )); then
-    vcs_async_start=$SECONDS
-    (vcs_async_info_worker $1 &) 2> /dev/null
-  fi
+  async_job vcs_prompt vcs_async_info_worker ${${:-.}:A}
 }
 
 function vcs_async_info_worker () {
-  local vcs_super_info vcs_super_raw_data
-  vcs_current_pwd=${${:-.}:A}
+  local vcs_super_info
+  local vcs_root_dir
+  local -a vcs_super_raw_data
+  builtin cd $1
+  vcs_current_pwd=$1
   vcs_super_info="$(vcs_super_info)"
-  vcs_super_raw_data="$(vcs_super_info_raw_data)"
+  vcs_super_raw_data=($(vcs_super_info_raw_data))
+  vcs_root_dir=${$(vcs_get_root_dir $vcs_super_raw_data[2])%/}
 
-  zsh_pickle -i vcs-data \
-             vcs_super_info \
-             vcs_super_raw_data \
-             vcs_current_pwd
-
-  zsh_unpickle -s -i async-sentinel
-  if (( $vcs_async_sentinel >= 2 )); then
-    sleep 1
-  fi
-
-  # Signal the parent shell to update the prompt.
-  kill -USR2 $$
+  typeset -p vcs_current_pwd
+  typeset -p vcs_super_info
+  typeset -p vcs_super_raw_data
+  typeset -p vcs_root_dir
 }
 
-function TRAPUSR2 {
+function vcs_async_callback () {
   local current_pwd
-  zsh_unpickle -s -c -i vcs-data
+  local vcs_super_info
+  local vcs_super_raw_data
+  local vcs_root_dir
+  current_pwd=${${:-.}:A}
+
+  eval $3
 
   vcs_info_msg_0_=$vcs_super_info
   vcs_raw_data=$vcs_super_raw_data
 
-  # Force zsh to redisplay the prompt.
-  zle && zle reset-prompt
-
-  vcs_async_delay=$(($SECONDS - $vcs_async_start))
-
-  # we use yet another pickle to track when the pwd changes
-  # TODO: only restart inotify if we move out of its tracked zone
-  zsh_unpickle -s -i vcs_last_dir
-
-  current_pwd=${${:-.}:A}
+  zle reset-prompt
+  zle -R
 
   # if we're in a vcs, start an inotify process
-  if [[ -n $vcs_info_msg_0_ && $vcs_current_pwd == $current_pwd ]]; then
-    if [[ $vcs_last_dir == $current_pwd ]]; then
-      if (( $vcs_inotify_pid == -1 )); then
-        (
-            vcs_inotify_watch $current_pwd &
-            echo $!
-        ) 2> /dev/null | read vcs_inotify_pid
-        vcs_inotify_pid=$!
-      fi
-    else
-      vcs_async_cleanup
-      (
-          vcs_inotify_watch $current_pwd &
-          echo $!
-      ) 2> /dev/null | read vcs_inotify_pid
-    fi
-  else
+  if [[ $current_pwd/ != $vcs_last_root/* ]]; then
     vcs_async_cleanup
+    if [[ -n $vcs_info_msg_0_ ]]; then
+      async_job vcs_inotify vcs_inotify_watch $vcs_root_dir $$
+    fi
+    vcs_async_info
   fi
 
-  vcs_last_dir=$current_pwd
-  zsh_pickle -i vcs-last-dir vcs_last_dir
-
-  zsh_unpickle -s -i async-sentinel
-  local -i temp_sentinel=$vcs_async_sentinel
-  vcs_async_sentinel=0
-  zsh_pickle -i async-sentinel vcs_async_sentinel
-
-  if (( $temp_sentinel >= 2 )); then
-    (vcs_async_info &) 2>/dev/null
-  fi
+  vcs_last_root=$vcs_root_dir
 }
 
-function vcs_async_auto_update {
-  if (( $VCS_PAUSE == 1 )); then
-    return 0;
-  fi
+async_start_worker vcs_prompt -u
+async_register_callback vcs_prompt vcs_async_callback
 
-  vcs_async_sentinel=0
-  zsh_pickle -i async-sentinel vcs_async_sentinel
-  vcs_async_info
-}
-
-add-zsh-hook precmd vcs_async_auto_update
+add-zsh-hook precmd vcs_async_info
 
 vcs_inotify_events=(modify move create delete)
 
@@ -278,7 +227,10 @@ function vcs_inotify_watch () {
     inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
                 -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
     while IFS= read -r file; do
-      vcs_inotify_do "$file"
+      if [[ $file == */index.lock ]]; then
+        continue
+      fi
+      kill -USR2 $2
     done
   else
     echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
@@ -286,30 +238,29 @@ function vcs_inotify_watch () {
   fi
 }
 
-function vcs_inotify_do () {
+function vcs_inotify_callback () {
+  echo $1:$2:$3:$4:$5 &>> $ZDOTDIR/startup.log
+}
+
+function TRAPUSR2 () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
-  if [[ $file == */index.lock ]]; then
-    return 0
-  fi
-  vcs_async_info $file
+  vcs_async_info
 }
 
 function vcs_async_cleanup () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
-  if (( $vcs_inotify_pid != -1 )); then
-    kill -TERM $vcs_inotify_pid &> /dev/null
-    vcs_inotify_pid=-1
-  fi
+  async_flush_jobs vcs_inotify
 }
 
 function vcs_pause () {
-  if (( $VCS_PAUSE == 1 )); then
-    VCS_PAUSE=0
+  if [[ -n ${chpwd_functions[(r)vcs_async_info]} ]]; then
+    add-zsh-hook -d precmd vcs_async_info
   else
-    VCS_PAUSE=1
+    add-zsh-hook precmd vcs_async_info
   fi
 }
 
-add-zsh-hook zshexit vcs_async_cleanup
+async_start_worker vcs_inotify -u
+async_register_callback vcs_inotify vcs_inotify_callback

@@ -3,22 +3,28 @@
 # ========================================
 
 function chpwd_async_worker () {
-  chpwd_minify_smart_str="$(minify_path_smart .)"
-  chpwd_minify_fasd_str="$(minify_path_fasd .)"
-  zsh_pickle -i async-chpwd chpwd_minify_smart_str chpwd_minify_fasd_str
+  emulate -LR zsh
+  local chpwd_minify_smart_str="$(minify_path_smart $1)"
+  local chpwd_minify_fasd_str="$(minify_path_fasd $1)"
 
-  # Signal the parent shell to update the prompt.
-  kill -USR1 $$
+  typeset -p chpwd_minify_smart_str
+  typeset -p chpwd_minify_fasd_str
 }
 
-function TRAPUSR1 {
-  zsh_unpickle -s -c -i async-chpwd
+function chpwd_callback {
+  emulate -LR zsh
+  setopt prompt_subst transient_rprompt
+  {
+    disable -r typeset
+    # force variables to go up scope
+    typeset() { builtin typeset -g "$@"; }
+    eval $3
+  } always {
+    unset -f typeset 2>/dev/null
+    enable -r typeset
+  }
 
-  # Force zsh to redisplay the prompt.
-  compute_prompt
   zle && zle reset-prompt
-
-  # and update the title
   title_async_compress
 }
 
@@ -30,6 +36,9 @@ function recompute_cdpath() {
 add-zsh-hook chpwd recompute_cdpath
 recompute_cdpath
 
+async_start_worker chpwd_worker -u
+async_register_callback chpwd_worker chpwd_callback
+
 function prompt_async_compress () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
@@ -40,7 +49,7 @@ function prompt_async_compress () {
   else
     chpwd_minify_smart_str="$(minify_path .)"
     chpwd_minify_fast_str="$chpwd_minify_smart_str"
-    (chpwd_async_worker &) &> /dev/null
+    async_job chpwd_worker chpwd_async_worker ${${:-.}:A}
   fi
 }
 

@@ -1,6 +1,6 @@
 [submodule "auto-fu"]
     path = auto-fu
-    url = https://github.com/hchbaw/auto-fu.zsh
+    url = https://github.com/PythonNut/auto-fu.zsh
 [submodule "zsh-syntax-highlighting"]
     path = zsh-syntax-highlighting
     url = https://github.com/zsh-users/zsh-syntax-highlighting
@@ -34,3 +34,12 @@
 [submodule "zsh-dwim"]
 	path = zsh-dwim
 	url = https://github.com/oknowton/zsh-dwim
+[submodule "zsh-autosuggestions"]
+	path = zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+	url = =
+	url = https://github.com/PythonNut/zsh-autosuggestions
+	branch = master
+[submodule "zsh-async"]
+	path = zsh-async
+	url = https://github.com/mafredri/zsh-async

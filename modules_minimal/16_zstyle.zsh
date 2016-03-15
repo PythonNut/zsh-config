@@ -40,7 +40,6 @@ zstyle ':completion:*' completer \
        _complete \
        _match \
        _files \
-       _history \
        _prefix
 
 zstyle ':completion:*:match:*' original only
