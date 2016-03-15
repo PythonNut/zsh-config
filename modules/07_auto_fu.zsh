@@ -65,6 +65,13 @@
   source $ZDOTDIR/zsh-async/async.zsh
   source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=("expand-or-complete" "pcomplete")
+
+  # Start the autosuggestion widgets
+  _zsh_autosuggest_start() {
+    _zsh_autosuggest_check_deprecated_config
+    _zsh_autosuggest_bind_widgets
+    add-zsh-hook -d precmd _zsh_autosuggest_start
+  }
 } &>> $ZDOTDIR/startup.log
 
 function global_bindkey () {
