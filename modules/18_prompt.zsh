@@ -10,6 +10,19 @@ else
   nbsp=$' '
 fi
 
+PROMPT_HOSTNAME=
+if (( $degraded_terminal[display_host] == 1 )); then
+  if (( $degraded_terminal[colors256] != 1 )); then
+    if (( $+commands[md5sum] )); then
+      # hash hostname and generate one of 256 colors
+      PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5sum):1:2}))}"
+    elif (( $+commands[md5] )); then
+      PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5):1:2}))}"
+    fi
+    PROMPT_HOSTNAME+="@${HOST:0:3}%k%f"
+  fi
+fi
+
 function compute_prompt () {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt extended_glob
@@ -24,20 +37,8 @@ function compute_prompt () {
   # username and reset decorations
   PS1+='%n%{%b%F{default}%}'
 
-  if (( $degraded_terminal[display_host] == 1 )); then
-    if (( $degraded_terminal[colors256] != 1 )); then
-      if (( $+commands[md5sum] )); then
-        # hash hostname and generate one of 256 colors
-        PS1+="%F{$((0x${$(print -P '%m'|md5sum):1:2}))}"
-      elif (( $+commands[md5] )); then
-        PS1+="%F{$((0x${$(print -P '%m'|md5):1:2}))}"
-      fi
-      PS1+="@${${(j: :)$(print -P "%m")}:0:3}%k%f"
-    fi
-  fi
-
   # compressed_path
-  PS1+=' $chpwd_minify_smart_str'
+  PS1+='$PROMPT_HOSTNAME $chpwd_minify_smart_str'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
@@ -45,7 +46,6 @@ function compute_prompt () {
 
     # vim normal/textobject mode indicator
     local VIM_PROMPT="%B%F{black} [% N]% %b"
-    local VIM_PROMPT_OPP="%B%F{black} [% N+]% %b"
     RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(afu|main)/}"
     RPS1=$RPS1"\${vcs_info_msg_0_}"
 
@@ -57,13 +57,12 @@ function compute_prompt () {
   # finish the prompt
   PS1+="]%#$nbsp"
 
-
   pure_ascii=${$(print -P $PS1)//$(echo -e "\x1B")\[[0-9;]#[mK]/}
   if (( $degraded_terminal[colors] == 1)); then
-      PS1="$pure_ascii"
+    PS1="$pure_ascii"
   fi
 
-  PS2="$(printf ' %.0s' {1..$(( $#pure_ascii - 2 ))})> "
+  PS2="${(r:$(( $#pure_ascii - 2 )):: :)${:-}}> "
 }
 
 compute_prompt

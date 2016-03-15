@@ -60,7 +60,7 @@ function title_compress_command () {
     local cur_command host="" root=" "
 
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]]; then
-      host="$(print -P '%m') "
+      host="${HOST%%.*} "
     fi
 
     if [[ $1 == *sudo* ]]; then
@@ -79,14 +79,14 @@ function title_compress_command () {
   fi
 }
 
-add-zsh-hook preexec title_compress_command
+# add-zsh-hook preexec title_compress_command
 
 function title_compress () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
     local host="" root=""
 
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]]; then
-      host="$(print -P '%m') "
+      host="${HOST%%.*} "
     fi
 
     if (( $user_has_root == 1 )); then
@@ -97,5 +97,5 @@ function title_compress () {
   fi
 }
 
-add-zsh-hook precmd title_compress
+# add-zsh-hook precmd title_compress
 title_compress

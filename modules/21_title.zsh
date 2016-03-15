@@ -60,7 +60,7 @@ function title_async_compress_command () {
     local cur_command host="" root=" "
 
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]]; then
-      host="$(print -P '%m') "
+      host="${HOST%%.*} "
     fi
 
     if [[ $1 == *sudo* ]]; then
@@ -86,7 +86,7 @@ function title_async_compress () {
     local host="" root=""
 
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]] ; then
-      host="$(print -P '%m') "
+      host="${HOST%%.*} "
     fi
 
     if (( $user_has_root == 1 )); then
