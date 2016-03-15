@@ -16,9 +16,6 @@
 [submodule "zsh-vcs-prompt"]
     path = zsh-vcs-prompt
     url = https://github.com/yonchu/zsh-vcs-prompt
-[submodule "zsh-url-httplink"]
-    path = zsh-url-httplink
-    url = https://github.com/Valodim/zsh-_url-httplink
 [submodule "zaw-src-git-log"]
     path = zaw-src-git-log
     url = https://github.com/yonchu/zaw-src-git-log
