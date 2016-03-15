@@ -29,8 +29,40 @@ fi
 
 source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
 
+## Git without Action.
+ZSH_VCS_PROMPT_GIT_FORMATS='%{%B%F{yellow}%}#s%{%f%b%} ' # VCS name
+ZSH_VCS_PROMPT_GIT_FORMATS+='%{%B%F{red}%}#b%{%f%b%}'    # Branch name
+ZSH_VCS_PROMPT_GIT_FORMATS+='#c#d '                      # Ahead and Behind
+ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{blue}%}#e%{%f%b%}'     # Staged
+ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{red}%}#f%{%f%b%}'      # Conflicts
+ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{yellow}%}#g%{%f%b%}'   # Unstaged
+ZSH_VCS_PROMPT_GIT_FORMATS+='#h'                         # Untracked
+ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{cyan}%}#i%{%f%b%}'     # Stashed
+ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{green}%}#j%{%f%b%}'    # Clean
+
+### Git with Action.
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS='%{%B%F{yellow}%}#s%{%f%b%} ' # VCS name
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='%{%B%F{red}%}#b%{%f%b%}'    # Branch name
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+=':%{%B%F{red}%}#a%{%f%b%}'   # Action
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='#c#d '                      # Ahead and Behind
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='%{%F{blue}%}#e%{%f%}'       # Staged
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='%{%F{red}%}#f%{%f%}'        # Conflicts
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='%{%F{yellow}%}#g%{%f%}'     # Unstaged
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='#h'                         # Untracked
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='%{%F{cyan}%}#i%{%f%}'       # Stashed
+ZSH_VCS_PROMPT_GIT_ACTION_FORMATS+='%{%F{green}%}#j%{%f%}'      # Clean
+
+## Other VCS without Action.
+ZSH_VCS_PROMPT_VCS_FORMATS='%{%B%F{yellow}%}#s%{%f%b%} ' # VCS name
+ZSH_VCS_PROMPT_VCS_FORMATS+='%{%B%F{red}%}#b%{%f%b%}'    # Branch name
+
+## Other VCS with Action.
+ZSH_VCS_PROMPT_VCS_ACTION_FORMATS='%{%B%F{yellow}%}#s%{%f%b%} '  # VCS name
+ZSH_VCS_PROMPT_VCS_ACTION_FORMATS+='%{%B%F{red}%}#b%{%f%b%} '    # Branch name
+ZSH_VCS_PROMPT_VCS_ACTION_FORMATS+='%{%B%F{red}%}#a%{%f%b%}'     # Action
+
 # zstyle ':vcs_info:*+*:*' debug true
-zstyle ':vcs_info:(svn|csv|hg)*' formats "(%B%F{yellow}%s%%b%f)[%b|%u%c]"
+zstyle ':vcs_info:(svn|csv|hg)*' formats "%B%F{yellow}%s%%b%f %b %u%c"
 zstyle ':vcs_info:(svn|csv|hg)*' branchformat "%B%F{red}%b(%r)%%b%f"
 zstyle ':vcs_info:svn*+set-message:*' hooks svn-untracked
 zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked

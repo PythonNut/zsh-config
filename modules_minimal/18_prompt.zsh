@@ -2,6 +2,8 @@
 # Prompt
 # ======
 
+BORING_USERS=(pythonnut pi)
+
 if (( $degraded_terminal[unicode] != 1 )); then
   # a prompt that commits suicide when pasted
   nbsp=$'\u00A0'
@@ -31,13 +33,17 @@ function compute_prompt () {
   # show the last error code
   PS1=$'%{%F{red}%}%(?..Error: (%?%)\n)'
 
-  # highlight root in red
-  PS1+="%{%F{default}%}[%B%{%(!.%F{red}.%F{black})%}"
+  # user (highlight root in red)
+  if [[ -z $BORING_USERS[(R)$USER] ]]; then
+    PS1+='%{%F{default}%}%B%{%(!.%F{red}.%F{black})%}%n'
+  fi
 
   # username and reset decorations
-  PS1+='%n%{%b%F{default}%}'
+  PS1+='%{%b%F{default}%}'
 
-  PS1+='$PROMPT_HOSTNAME %1~'
+  PS1+='$PROMPT_HOSTNAME '
+  PS1+='%(1j.%{%B%F{yellow}%}%j%{%F{default}%b%} .)'
+  PS1+='%1~'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
@@ -52,7 +58,7 @@ function compute_prompt () {
   fi
 
   # finish the prompt
-  PS1+="]%#$nbsp"
+  PS1+=" %#$nbsp"
 
   pure_ascii=${$(print -P $PS1)//$(echo -e "\x1B")\[[0-9;]#[mK]/}
   if (( $degraded_terminal[colors] == 1)); then
