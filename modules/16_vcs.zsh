@@ -37,7 +37,7 @@ zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
 
 ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
-+vi-svn-untracked() {
+function +vi-svn-untracked {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   if ! hash svn; then
@@ -64,7 +64,7 @@ ZSH_VCS_PROMPT_VCS_FORMATS="#s"
   fi
 }
 
-+vi-hg-untracked() {
+function +vi-hg-untracked {
   emulate -LR zsh
   setopt prompt_subst transient_rprompt
   if ! hash hg; then
@@ -140,19 +140,25 @@ function vcs_async_info () {
 
 function vcs_async_info_worker () {
   local vcs_super_info
+  local vcs_root_dir
   local -a vcs_super_raw_data
   builtin cd $1
   vcs_current_pwd=$1
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data=($(vcs_super_info_raw_data))
+  vcs_root_dir=${$(vcs_get_root_dir $vcs_super_raw_data[2])%/}
 
   typeset -p vcs_current_pwd
   typeset -p vcs_super_info
   typeset -p vcs_super_raw_data
+  typeset -p vcs_root_dir
 }
 
 function vcs_async_callback () {
-  local current_pwd vcs_super_info vcs_super_raw_data
+  local current_pwd
+  local vcs_super_info
+  local vcs_super_raw_data
+  local vcs_root_dir
   current_pwd=${${:-.}:A}
 
   eval $3
@@ -164,15 +170,15 @@ function vcs_async_callback () {
   zle -R
 
   # if we're in a vcs, start an inotify process
-  if [[ $vcs_last_pwd != $current_pwd ]]; then
+  if [[ $current_pwd/ != $vcs_last_root/* ]]; then
     vcs_async_cleanup
     if [[ -n $vcs_info_msg_0_ ]]; then
-      async_job vcs_inotify vcs_inotify_watch $current_pwd $$
+      async_job vcs_inotify vcs_inotify_watch $vcs_root_dir $$
     fi
     vcs_async_info
   fi
 
-  vcs_last_pwd=$current_pwd
+  vcs_last_root=$vcs_root_dir
 }
 
 async_start_worker vcs_prompt -u
