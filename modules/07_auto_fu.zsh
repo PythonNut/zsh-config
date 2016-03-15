@@ -44,7 +44,6 @@
       if ((lines > LINES*0.75)) || ((lines > 30)); then
         compstate[list]=''
         [[ $WIDGET == afu+complete-word ]] || compstate[insert]=''
-        zle -M "$compstate[list_lines]($compstate[nmatches]) too many matches..."
       else
         compstate[list]=autolist
       fi
