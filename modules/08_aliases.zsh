@@ -96,7 +96,8 @@ fi
 # sudo aliases
 if (( $+commands[sudo] )); then
   sudo () {
-    local precommands
+    setopt local_options no_rc_expand_param
+    local precommands=()
     while [[ $1 == (nocorrect|noglob) ]]; do
       precommands+=$1
       shift
