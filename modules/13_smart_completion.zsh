@@ -45,7 +45,6 @@ function pcomplete() {
       _expand \
       _complete \
       _match \
-      _files \
       _prefix
 
     if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
