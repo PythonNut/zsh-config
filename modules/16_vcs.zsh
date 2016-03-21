@@ -191,10 +191,13 @@ function vcs_async_callback () {
   local vcs_super_info
   local vcs_super_raw_data
   local vcs_root_dir
+  typeset -g vcs_last_root
   current_pwd=${${:-.}:A}
 
   eval $3
 
+  typeset -g vcs_info_msg_0_
+  typeset -g vcs_raw_data
   vcs_info_msg_0_=$vcs_super_info
   vcs_raw_data=$vcs_super_raw_data
 

@@ -28,6 +28,7 @@ zsh-mime-setup
 function auto_recompile () {
   autoload -Uz zrecompile
   zrecompile $ZDOTDIR/.zshrc
+  local zsh_module file
 
   for zsh_module in $ZDOTDIR/modules/*.zsh(n); do
     zrecompile $zsh_module
