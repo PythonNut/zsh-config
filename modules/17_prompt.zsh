@@ -65,18 +65,13 @@ function compute_prompt () {
   
   # finish the prompt
   PS1+=" %#$nbsp"
-
-  pure_ascii=${$(print -P $PS1)//$(echo -e "\x1B")\[[0-9;]#[mK]/}
-  if (( $degraded_terminal[colors] == 1)); then
-    PS1="$pure_ascii"
-  fi
-
-  PS2="${(r:$(( $#pure_ascii - 2 )):: :)${:-}}> "
 }
+
 
 compute_prompt
 
-add-zsh-hook precmd compute_prompt
+PS2='${(l:${#${(%%)PS1}//$'\27'\[[0-9;]#[mK]/}-3:: :)${:-> }}'
+RPS2='%^'
 
 # intercept keymap selection
 function zle-keymap-select () {
