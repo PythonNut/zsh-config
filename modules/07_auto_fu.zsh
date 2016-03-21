@@ -63,7 +63,11 @@
 {
   source $ZDOTDIR/zsh-async/async.zsh
   source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
-  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=("expand-or-complete" "pcomplete")
+  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
+    "expand-or-complete"
+    "pcomplete"
+    "copy-earlier-word"
+  )
 
   # Start the autosuggestion widgets
   _zsh_autosuggest_start() {

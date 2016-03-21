@@ -1,7 +1,12 @@
 {
   source $ZDOTDIR/zsh-async/async.zsh
   source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
-  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=("expand-or-complete" "pcomplete")
+  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
+    "expand-or-complete"
+    "pcomplete"
+    "copy-earlier-word"
+  )
+
   _zsh_autosuggest_start() {
     _zsh_autosuggest_check_deprecated_config
     _zsh_autosuggest_bind_widgets

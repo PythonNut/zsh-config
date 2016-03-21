@@ -67,14 +67,7 @@ global_bindkey "^[^T" transpose-words-match
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
 global_bindkey "^[," copy-earlier-word
-
-# Move to the place where flags are to be added
-function after-first-word() {
-  zle beginning-of-line
-  zle forward-word
-}
-zle -N after-first-word
-global_bindkey "^X1" after-first-word
+global_bindkey "^[." insert-last-word
 
 # rationalize dots
 rationalise_dot () {
