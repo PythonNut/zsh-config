@@ -30,6 +30,7 @@
   setopt rc_expand_param        # a$abc ==> aa ab ac
   setopt no_case_glob           # lazy case for globs
   setopt glob_dots              # don't require a dot
+  setopt glob_star_short        # **.c ==> **/*.c
   setopt no_case_match          # lazy case for regex matches
   setopt bare_glob_qual         # can use qualifirs by themselves
   setopt mark_dirs              # glob directories end in "/"
