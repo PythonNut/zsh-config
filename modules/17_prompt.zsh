@@ -64,7 +64,11 @@ function compute_prompt () {
   fi
   
   # finish the prompt
-  PS1+=" %#$nbsp"
+  if [[ -n $TMUX ]]; then
+    PS1+=" %#$nbsp"
+  else
+    PS1+=" %(!.#.$)$nbsp"
+  fi
 }
 
 
