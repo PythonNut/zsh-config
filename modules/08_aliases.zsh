@@ -176,11 +176,11 @@ fi
 # ==============
 
 # expand aliases on space
-function expandAlias() {
-  emulate -LR zsh
+function expand_alias() {
+  emulate -LR zsh -o hist_subst_pattern
   {
     # hack a local function scope using unfuction
-    function expandAlias_smart_space () {
+    function expand_alias_smart_space () {
       if [[ $RBUFFER[1] != ' ' ]]; then
         if [[ ! "$1" == "no_space" ]]; then
           zle magic-space
@@ -196,7 +196,7 @@ function expandAlias() {
       fi
     }
 
-    function expandAlias_smart_expand () {
+    function expand_alias_smart_expand () {
       zparseopts -D -E g=G
       local expansion="${@[2,-1]}"
       local delta=$(($#expansion - $expansion[(i){}] - 1))
@@ -210,13 +210,12 @@ function expandAlias() {
       done
     }
 
-    local cmd
-    cmd=("${(@s/ /)LBUFFER}")
+    local cmd=(${(@s/;/)LBUFFER:gs/[^[:IDENT:]]/;})
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
-      expandAlias_smart_expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
+      expand_alias_smart_expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
-      expandAlias_smart_expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
+      expand_alias_smart_expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
 
     elif [[ "${(j: :)cmd}" == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
       if [[ -n "$aliases[$cmd[-1]]" ]]; then
@@ -225,22 +224,22 @@ function expandAlias() {
       
     elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\|\"|\')* ]]; then
       zle _expand_alias
-      expandAlias_smart_space "$1"
+      expand_alias_smart_space "$1"
       
     else
-      expandAlias_smart_space "$1"
+      expand_alias_smart_space "$1"
     fi
 
   } always {
-    unfunction "expandAlias_smart_space" "expandAlias_smart_expand"
+    unfunction "expand_alias_smart_space" "expand_alias_smart_expand"
   }
 
   _zsh_highlight
 }
 
-zle -N expandAlias
+zle -N expand_alias
 
-global_bindkey " " expandAlias
+global_bindkey " " expand_alias
 global_bindkey "^ " magic-space
 bindkey -M isearch " " magic-space
 

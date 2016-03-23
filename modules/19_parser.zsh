@@ -31,7 +31,7 @@ function _accept-line() {
 
   # expand all aliases on return
   if [[ $#RBUFFER == 0 ]]; then
-    expandAlias no_space
+    expand_alias no_space
   fi
   
   # ignore prefix commands

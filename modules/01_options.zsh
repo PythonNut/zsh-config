@@ -43,7 +43,7 @@
   setopt hist_ignore_space      # ignore lines starting with " "
   setopt hist_ignore_dups       # ignore immediate duplicates
   setopt hist_find_no_dups      # ignore all search duplicates
-  setopt hist_substpattern      # allow pattern substitutions
+  setopt hist_subst_pattern     # allow pattern substitutions
   setopt extended_history       # timestamps are nice, really
   setopt append_history         # append is good, append!
   setopt inc_append_history     # append in real time
