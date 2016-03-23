@@ -3,8 +3,7 @@
 # ============
 
 function _accept-line() {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
 
   if [[ -z $BUFFER ]]; then
     zle clear-screen

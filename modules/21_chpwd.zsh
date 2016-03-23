@@ -12,8 +12,7 @@ function chpwd_async_worker () {
 }
 
 function chpwd_callback {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   {
     disable -r typeset
     # force variables to go up scope
@@ -40,8 +39,7 @@ async_start_worker chpwd_worker -u
 async_register_callback chpwd_worker chpwd_callback
 
 function prompt_async_compress () {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   # check if we're running under Midnight Commander
   if (( $degraded_terminal[decorations] == 1 )); then
     chpwd_minify_smart_str=${${:-.}:A:t}

@@ -70,8 +70,7 @@ zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
 ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
 function +vi-svn-untracked {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   if ! hash svn; then
     return 0;
   fi
@@ -97,8 +96,7 @@ function +vi-svn-untracked {
 }
 
 function +vi-hg-untracked {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   if ! hash hg; then
     return 0;
   fi
@@ -224,8 +222,7 @@ add-zsh-hook precmd vcs_async_info
 vcs_inotify_events=(modify move create delete)
 
 function vcs_inotify_watch () {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   if hash inotifywait &>/dev/null; then
     inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
                 -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
@@ -246,14 +243,12 @@ function vcs_inotify_callback () {
 }
 
 function TRAPUSR2 () {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   vcs_async_info
 }
 
 function vcs_async_cleanup () {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt
   async_flush_jobs vcs_inotify
 }
 

@@ -2,10 +2,12 @@
 # AutoFU continuous completions
 # =============================
 
-{
-  setopt local_options no_rc_expand_param
+function {
+  emulate -LR zsh
   source $ZDOTDIR/auto-fu/auto-fu.zsh
-  integer afu_enabled=1
+  integer -g afu_enabled=1
+  integer -g afu_menu=1
+
   zle-line-init () {
     if (( $afu_enabled == 1 )); then
       auto-fu-init
@@ -21,7 +23,6 @@
   zstyle ':completion:*:options' description no
   zstyle ':completion:*' completer _oldlist _complete
 
-  integer afu_menu=1
   toggle_afu() {
     if [[ $afu_menu == 1 ]]; then
       afu_menu=0
@@ -57,7 +58,6 @@
     (( $compstate[nmatches] == 1 )) && afu_one_match_p=t
     afu_curcompleter=$_completer
   }
-  setopt rc_expand_param
 } &>> $ZDOTDIR/startup.log
 
 {

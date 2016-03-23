@@ -26,8 +26,7 @@ if (( $degraded_terminal[display_host] == 1 )); then
 fi
 
 function compute_prompt () {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt extended_glob
+  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local black=$fg_bold[black] pure_ascii
 
   # show the last error code

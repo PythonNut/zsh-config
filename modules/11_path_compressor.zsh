@@ -4,8 +4,7 @@
 
 # Reduce path to shortest prefixes. Heavily Optimized
 function minify_path () {
-  emulate -LR zsh
-  setopt glob_dots extended_glob
+  emulate -LR zsh -o glob_dots -o extended_glob
   local full_path="/" ppath cur_path dir glob
   local -a revise
   local -i matches col
@@ -52,8 +51,7 @@ function minify_path () {
 
 # take every possible branch on the file system into account
 function minify_path_full () {
-  emulate -LR zsh
-  setopt extended_glob null_glob glob_dots
+  emulate -LR zsh -o extended_glob -o null_glob -o glob_dots
   local glob temp_glob result official_result seg limit
   glob=${${1:A}/${HOME:A}/\~}
   glob=("${(@s:/:)glob}")

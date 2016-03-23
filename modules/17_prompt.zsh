@@ -26,8 +26,7 @@ if (( $degraded_terminal[display_host] == 1 )); then
 fi
 
 function compute_prompt () {
-  emulate -LR zsh
-  setopt prompt_subst transient_rprompt extended_glob
+  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local black=$fg_bold[black] pure_ascii
 
   # show the last error code
@@ -79,10 +78,8 @@ RPS2='%^'
 
 # intercept keymap selection
 function zle-keymap-select () {
-  emulate -LR zsh
-  setopt zle 2> /dev/null
-  setopt prompt_subst transient_rprompt extended_glob
+  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   compute_prompt
-  zle && zle reset-prompt
+  zle reset-prompt
 }
 zle -N zle-keymap-select

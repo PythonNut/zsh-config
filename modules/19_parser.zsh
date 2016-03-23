@@ -4,8 +4,7 @@
 typeset -a _preAlias
 
 function _accept-line() {
-  emulate -LR zsh
-  setopt extended_glob prompt_subst transient_rprompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local cmd i
   
   if [[ $BUFFER == [[:space:]]##* ||  $CONTEXT == "cont" ]]; then
@@ -56,8 +55,7 @@ zle -N accept-line _accept-line
 integer command_not_found=1
 
 function parser() {
-  emulate -LR zsh
-  setopt extended_glob null_glob ksh_glob
+  emulate -LR zsh -o extended_glob -o null_glob -o ksh_glob
   if [[ $(type $1) == (*not*|*suffix*) ]]; then
     # skip assignments
     if [[ $1 == (*=*) ]]; then
