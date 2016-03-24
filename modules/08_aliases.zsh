@@ -166,6 +166,8 @@ if (( $+commands[git] )); then
 fi
 
 if (( $+commands[emacsclient] )); then
+  alias emacsd="go -Q emacs --daemon"
+  alias emacsdk="emacsclient -e '(kill-emacs)'"
   alias -E ec='emacsclient -t -q'
   alias -E ecg='emacsclient -c -n -q'
 fi
