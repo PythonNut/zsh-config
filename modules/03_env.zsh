@@ -23,19 +23,21 @@ SAVEHIST=50000
 # Forcefully disable the bell
 ZBEEP=""
 
-if ps ax | grep "[e]macs --daemon" &> /dev/null; then
-  export EDITOR="emacsclient -t"
-elif (( $+commands[gvim] )); then
-  export EDITOR="gvim -v"
+if (( $+commands[gvim] )); then
+  export EDITOR="$ZDOTDIR/bin/gvim-with-flags"
 elif (( $+commands[vim] )); then
   export EDITOR="vim"
 elif (( $+commands[emacs] )); then
-  export EDITOR="emacs -nw"
+  export EDITOR="$ZDOTDIR/bin/emacs-with-flags"
 else
-    export EDITOR="vi"
+  export EDITOR="vi"
 fi
 
-export ALTERNATE_EDITOR="emacs"
+if (( $+commands[emacsclient] )); then
+  export ALTERNATE_EDITOR="$EDITOR"
+  export EDITOR="emacsclient -t -q"
+fi
+
 export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
 export PATH
