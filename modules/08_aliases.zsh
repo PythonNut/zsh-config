@@ -166,9 +166,8 @@ if (( $+commands[git] )); then
 fi
 
 if (( $+commands[emacsclient] )); then
-  alias -E ec='emacsclient -c -n'
-  alias -E ecn='emacsclient -n'
-  alias -E ect='emacsclient -t'
+  alias -E ec='emacsclient -t -q'
+  alias -E ecg='emacsclient -c -n -q'
 fi
 
 # ==============
