@@ -245,7 +245,7 @@ function expand_alias() {
     unfunction "expand_alias_smart_space" "expand_alias_smart_expand"
   }
 
-  _zsh_highlight
+  _zsh_highlight 2>/dev/null
 }
 
 zle -N expand_alias
