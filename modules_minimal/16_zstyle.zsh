@@ -47,7 +47,9 @@ zstyle ':completion:*:match:*' original only
 zstyle ':completion:*' matcher 'm:{a-z\-}={A-Z\_}'
 
 # full flex completion  (abc => ABraCadabra)
-zstyle ':completion:*:files:*' matcher 'r:|?=** m:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:files' matcher 'r:|?=** m:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:directories' matcher 'r:|?=** m:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:local-directories' matcher 'r:|?=** m:{a-z\-}={A-Z\_}'
 
 # insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order expansions all-expansions
