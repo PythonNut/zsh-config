@@ -168,8 +168,18 @@ fi
 if (( $+commands[emacsclient] )); then
   alias emacsd="go -Q emacs --daemon"
   alias emacsdk="emacsclient -e '(kill-emacs)'"
-  alias -E ec='emacsclient -t -q'
-  alias -E ecg='emacsclient -c -n -q'
+  function ec {
+    emacsclient -t -q $@
+  }
+  function ecg {
+    # Try handing the file to an existing emacs frame
+    local -a servers=(${TMPDIR:-/tmp}/emacs${UID}/*(=On))
+    if (( $# > 0 )); then
+      emacsclient -n -q -s $servers[1] $@
+    else
+      emacsclient -c -n -q -s $servers[1]
+    fi
+  }
 fi
 
 # ==============
