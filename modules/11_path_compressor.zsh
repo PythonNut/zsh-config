@@ -59,7 +59,7 @@ function minify_path_full () {
   local -i index=$(($#glob)) k
 
   temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
-  temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/)
+  temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/oN)
   official_result=(${~temp_glob})
 
   # set glob short circuit level
