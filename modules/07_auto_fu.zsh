@@ -34,28 +34,26 @@ function {
   # highjack afu-comppost function
   afu-comppost () {
     emulate -LR zsh
-    local -i will_complete
-    will_complete=$afu_menu
-    if [[ $BUFFER[1] == ' ' ]]; then
-      will_complete=0
-    fi
-    
-    if [[ $will_complete == 1 ]]; then
-      local lines=$((compstate[list_lines] + BUFFERLINES + 2))
-      if ((lines > LINES*0.75)) || ((lines > 30)); then
-        compstate[list]=''
-        [[ $WIDGET == afu+complete-word ]] || compstate[insert]=''
+    if [[ $afu_menu == 1 && $BUFFER[1] != ' ' ]]; then
+      local -i lines=$((compstate[list_lines] + BUFFERLINES + 2))
+      if ((lines > LINES*0.75 || lines > 30)); then
+        # If this is unset, the list of matches will never be listed
+        # according to zshall(1)
+        compstate[list]=
+        if [[ $WIDGET != afu+complete-word ]]; then
+          compstate[insert]=
+        fi
       else
         compstate[list]=autolist
       fi
     else
-      # If this is unset, the list of matches will never be listed
-      # according to zshall(1)
       compstate[list]=
     fi
 
     typeset -g afu_one_match_p=
-    (( $compstate[nmatches] == 1 )) && afu_one_match_p=t
+    if (( $compstate[nmatches] == 1 )); then
+      afu_one_match_p=t
+    fi
     afu_curcompleter=$_completer
   }
 } &>> $ZDOTDIR/startup.log
