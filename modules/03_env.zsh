@@ -84,6 +84,7 @@ degraded_terminal=(
 export _OLD_TERM=$TERM
 case $_OLD_TERM in
   (linux|vt100)
+    degraded_terminal[colors256]=1
     degraded_terminal[unicode]=1;;
 
   (screen*|tmux*)
