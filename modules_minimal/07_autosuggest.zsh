@@ -1,6 +1,9 @@
 {
   source $ZDOTDIR/zsh-async/async.zsh
   source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
+  if (( $degraded_terminal[colors256] == 1 )); then
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
+  fi
   ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
     "expand-or-complete"
     "pcomplete"
