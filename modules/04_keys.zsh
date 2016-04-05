@@ -9,6 +9,9 @@ fpath+=$ZDOTDIR/zsh-git-escape-magic
 autoload -Uz git-escape-magic
 git-escape-magic
 
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+
 typeset -A key
 function {
   emulate -LR zsh
