@@ -7,7 +7,10 @@ BORING_USERS=(pythonnut pi)
 if (( $degraded_terminal[unicode] != 1 )); then
   # a prompt that commits suicide when pasted
   nbsp=$'\u00A0'
-  global_bindkey $nbsp backward-kill-line
+  function kill_prompt_on_paste () {
+    PASTED=${(F)${${(f)PASTED}#*$nbsp}}
+  }
+  zstyle :bracketed-paste-magic paste-init kill_prompt_on_paste
 else
   nbsp=$' '
 fi
@@ -72,7 +75,7 @@ function compute_prompt () {
 
 
 compute_prompt
-PS2="\${(l:\${#\${(M)\${\${(%%S)PS1//\%([BSUbfksu]|([FBK]|)\{*\})/}}%%[^$'\n']#}}:: :)\${:-> }}"
+PS2="\${(l:\${#\${(M)\${\${(%%S)PS1//\%([BSUbfksu]|([FBK]|)\{*\})/}}%%[^$'\n']#}}:: :)\${:->$nbsp}}"
 RPS2='%^'
 
 # intercept keymap selection
