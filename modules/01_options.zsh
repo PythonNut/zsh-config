@@ -47,7 +47,6 @@
   setopt extended_history       # timestamps are nice, really
   setopt append_history         # append is good, append!
   setopt inc_append_history     # append in real time
-  setopt share_history          # share history between terminals
   setopt hist_no_store          # don't store history commands
   setopt hist_expire_dups_first # kill the dups! kill the dups!
   setopt hist_verify            # verify history expansions
