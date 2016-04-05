@@ -4,6 +4,10 @@
 
 function chpwd_async_worker () {
   emulate -LR zsh
+  TRAPTERM () {
+    kill -INT $$
+  }
+
   local chpwd_minify_smart_str="$(minify_path_smart $1)"
   local chpwd_minify_fasd_str="$(minify_path_fasd $1)"
 
@@ -13,6 +17,12 @@ function chpwd_async_worker () {
 
 function chpwd_callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
+
+  # Clear the timeout entry
+  local -i sched_id
+  sched_id=${zsh_scheduled_events[(i)*:*:prompt_async_timeout]}
+  sched -$sched_id &> /dev/null
+
   {
     disable -r typeset
     # force variables to go up scope
@@ -38,6 +48,11 @@ recompute_cdpath
 async_start_worker chpwd_worker -u
 async_register_callback chpwd_worker chpwd_callback
 
+function prompt_async_timeout () {
+  echo chpwd compressor timed out! >> $ZDOTDIR/startup.log
+  async_flush_jobs chpwd_worker
+}
+
 function prompt_async_compress () {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
   # check if we're running under Midnight Commander
@@ -48,6 +63,7 @@ function prompt_async_compress () {
     chpwd_minify_smart_str="$(minify_path .)"
     chpwd_minify_fast_str="$chpwd_minify_smart_str"
     async_job chpwd_worker chpwd_async_worker ${${:-.}:A}
+    sched +3 prompt_async_timeout
   fi
 }
 

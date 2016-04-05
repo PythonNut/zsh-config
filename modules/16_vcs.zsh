@@ -164,14 +164,25 @@ function vcs_get_root_dir () {
 
 typeset -F SECONDS
 
+function vcs_async_timeout () {
+  echo vcs status timed out! >> $ZDOTDIR/startup.log
+  async_flush_jobs vcs_prompt
+}
+
 function vcs_async_info () {
   async_job vcs_prompt vcs_async_info_worker ${${:-.}:A}
+  sched +3 vcs_async_timeout
 }
 
 function vcs_async_info_worker () {
   local vcs_super_info
   local vcs_root_dir
   local -a vcs_super_raw_data
+
+  TRAPTERM () {
+    kill -INT $$
+  }
+
   builtin cd $1
   vcs_current_pwd=$1
   vcs_super_info="$(vcs_super_info)"
@@ -189,6 +200,12 @@ function vcs_async_callback () {
   local vcs_super_info
   local vcs_super_raw_data
   local vcs_root_dir
+
+  # Clear the timeout entry
+  local -i sched_id
+  sched_id=${zsh_scheduled_events[(i)*:*:vcs_async_timeout]}
+  sched -$sched_id &> /dev/null
+
   typeset -g vcs_last_root
   current_pwd=${${:-.}:A}
 
