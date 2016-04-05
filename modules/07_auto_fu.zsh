@@ -9,7 +9,7 @@ function {
   integer -g afu_menu=1
 
   zle-line-init () {
-    if (( $afu_enabled == 1 )); then
+    if [[ -z ${(%%)${:-%^}} ]] && (( $afu_enabled == 1 )); then
       auto-fu-init
     fi
   }
