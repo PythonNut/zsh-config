@@ -68,7 +68,7 @@ READNULLCMD="less"
 # Terminal handling
 # =================
 
-# Indicates terminal does not support colors/decorations/unicode 
+# Indicates terminal does not support colors/decorations/unicode
 typeset -A degraded_terminal
 
 degraded_terminal=(
@@ -173,3 +173,17 @@ dirstack=(${(u@Q)$(<$ZDOTDIR/zdirs)})
 
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true
+
+# ===========
+# Detect sudo
+# ===========
+
+function detect_sudo_type {
+  if sudo -n true &> /dev/null; then
+    echo passwordless
+  elif [[ $(sudo -vS < /dev/null 2>&1) == (*password*|*askpass*) ]]; then
+    echo passworded
+  else
+    echo none
+  fi
+}

@@ -104,10 +104,43 @@ if (( $+commands[sudo] )); then
     done
     eval "$precommands command sudo $@"
   }
-
   alias -E sudo='nocorrect sudo '
-  alias -ec please='echo -E sudo ${history[$#history]}'
 fi
+
+function alias_create_please_command {
+  emulate -LR zsh -o extended_glob
+  if [[ $(detect_sudo_type) == none ]]; then
+    local cmdline="${history[$#history]##[[:space:]]#}"
+    local -i alias_found
+    local exp
+    # We're going to need to intelligently substitute aliases
+    # This uses recursive expansion, which keeps track of previously expanded
+    # aliases to avoid infinite loops with cyclic aliases
+    local -a expanded=()
+    while true; do
+      alias_found=0
+      for als in ${(k)aliases}; do
+        if [[ $cmdline = ${als}* ]] && ! (( ${+expanded[(r)$als]} )); then
+        expanded+=${als#\\}
+          exp=$aliases[$als]
+          cmdline="${cmdline/#(#m)${als}[^[:IDENT:]]/$exp${MATCH##[[:IDENT:]]#}}"
+          cmdline=${cmdline##[[:space:]]#}
+          alias_found=1
+          break
+        fi
+      done
+      if (( alias_found == 0 )); then
+        break
+      fi
+    done
+    # Needless to say, the result is rarely pretty
+    echo -E \\su -c \"$cmdline\"
+  else
+    echo -E sudo ${history[$#history]}
+  fi
+}
+
+alias -ec please='alias_create_please_command'
 
 # yaourt aliases
 if (( $+commands[yaourt] )); then
