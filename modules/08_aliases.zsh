@@ -102,7 +102,7 @@ if (( $+commands[sudo] )); then
       precommands+=$1
       shift
     done
-    eval "$precommands command sudo $@"
+    eval "$precommands command sudo ${(q)=@}"
   }
   alias -E sudo='nocorrect sudo '
 fi
