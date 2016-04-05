@@ -40,7 +40,7 @@ function compute_prompt () {
   # reset decorations
   PS1+='%u%{%b%F{default}%}'
 
-  PS1+='$PROMPT_HOSTNAME '
+  PS1+="$PROMPT_HOSTNAME "
 
   # show background jobs
   PS1+='%(1j.%{%B%F{yellow}%}%j%{%F{default}%b%} .)'
