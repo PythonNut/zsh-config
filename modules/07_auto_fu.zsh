@@ -9,7 +9,8 @@ function {
   integer -g afu_menu=1
 
   zle-line-init () {
-    if [[ -z ${(%%)${:-%^}} ]] && (( $afu_enabled == 1 )); then
+    local nesting=${(%%)${:-%^}}
+    if [[ -z $nesting ]] && (( $afu_enabled == 1 )); then
       auto-fu-init
     fi
   }
