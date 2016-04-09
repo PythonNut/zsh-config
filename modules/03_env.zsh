@@ -90,6 +90,10 @@ case $_OLD_TERM in
       export TERM='screen'
     fi;;
 
+  (eterm*)
+    degraded_terminal[unicode]=1
+    degraded_terminal[title]=1;;
+
   (xterm-256color)
     ;;
 
