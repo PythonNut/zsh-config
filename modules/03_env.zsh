@@ -120,21 +120,25 @@ if [[ -n ${EMACS+1} ]]; then
     degraded_terminal[title]=1
 fi
 
-if [[ $(who am i) == *\([-a-zA-Z0-9.]##*\)(#e) ]]; then
+if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
-elif [[ -n $TMUX && -n $SSH_CLIENT ]]; then
+elif [[ $(who am i) == *\([-a-zA-Z0-9.]##*\)(#e) ]]; then
   degraded_terminal[display_host]=1
 elif [[ $(cat /proc/$PPID/cmdline) == (sshd|*/sshd|mosh-server) ]]; then
   degraded_terminal[display_host]=1
 fi
 
-# auto-connect to tmux when avalible
-if [[ $degraded_terminal[display_host] == 1 ]]; then
-  if (( $+commands[tmux] )) && [[ -z $TMUX ]]; then
-    if tmux ls 2> /dev/null; then
-      exec tmux attach
-    else
-      exec tmux
+# Only start tmux if PWD wasn't overridden
+if [[ ${PWD:A} == (${${:-~}:A}|/) ]]; then
+  # And if the current session is remote
+  if [[ $degraded_terminal[display_host] == 1 ]]; then
+    # And if tmux is installed, but not currently running
+    if (( $+commands[tmux] )) && [[ -z $TMUX ]]; then
+      if tmux ls 2> /dev/null; then
+        exec tmux attach
+      else
+        exec tmux
+      fi
     fi
   fi
 fi
