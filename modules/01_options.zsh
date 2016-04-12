@@ -62,7 +62,6 @@
   setopt hash_list_all          # more accurate correction
   setopt list_rows_first        # rows are way better
   setopt hash_cmds              # don't search for commands
-  setopt cdable_vars            # in p, cd x ==> ~/x if x not p
   setopt short_loops            # sooo lazy: for x in y do cmd
   setopt chase_links            # resolve links to their location
   setopt notify                 # I want to know NOW!
