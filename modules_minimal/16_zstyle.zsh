@@ -2,6 +2,8 @@
 # completion stuff
 #=================
 
+unsetopt HASH_LIST_ALL # Faster completion on slow machines
+
 zstyle ':completion:*' verbose false
 zstyle ':completion:*:options' verbose true
 zstyle ':completion:*' extra-verbose true
