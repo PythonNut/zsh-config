@@ -121,17 +121,6 @@ zstyle ':completion:*:urls' urls $ZDOTDIR/urls/urls
 # command layer completion scripts
 # ================================
 
-function _cdpath(){
-  if [[ $PREFIX != (\~|/|./|../)* && $IPREFIX != ../* ]]; then
-    local tmpcdpath
-    tmpcdpath=(${${(@)cdpath:#.}:#$PWD})
-    if (( $#tmpcdpath )); then
-      alt=("path-directories:directory in cdpath:_path_files -W $tmpcdpath -/")
-      _alternative "$alt[@]"
-    fi
-  fi
-}
-
 _command_names_noexecutables () {
   local args defs ffilt
   local -a cmdpath
@@ -177,7 +166,6 @@ function _cmd() {
   _functions
   _tilde
   _files
-  _cdpath
 }
 
 compdef "_cmd" "-command-"

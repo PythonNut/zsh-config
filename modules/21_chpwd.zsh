@@ -37,14 +37,6 @@ function chpwd_callback {
   title_async_compress
 }
 
-function recompute_cdpath() {
-  emulate -LR zsh
-  cdpath=("${(@)raw_cdpath:#${${:-.}:A}/}")
-}
-
-add-zsh-hook chpwd recompute_cdpath
-recompute_cdpath
-
 async_start_worker chpwd_worker -u
 async_register_callback chpwd_worker chpwd_callback
 

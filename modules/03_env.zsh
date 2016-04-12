@@ -13,9 +13,6 @@ function {
   fi
 }
 
-raw_cdpath=(~/ /etc/ /run/media/$USER/)
-cdpath=(/etc/ /run/media/$USER/)
-
 HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=50000
 SAVEHIST=50000

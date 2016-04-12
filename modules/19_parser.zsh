@@ -65,12 +65,7 @@ function parser() {
       alias "$1"="cd $1"
       _preAlias+=($1)
       
-      # if it's in CDPATH, teleport there
-    elif [[ ${${${$(echo $cdpath*(/))%/}##*/}[(r)${1%/}]} == ${1%/} ]]; then
-      alias "$1"="cd ${1%/} >/dev/null; echo zsh: teleport: \$fg_bold[blue]\${${:-.}:A}\$reset_color"
-      _preAlias+=($1)
-      
-      # if it contains math special characters, try to evaluate it
+    # if it contains math special characters, try to evaluate it
     elif [[ ! -f "$1" && ! -d "$1" && $1 == *[\(\)\[\]/*-+%^]* ]]; then
       local s
       # check if it compiles
@@ -94,17 +89,17 @@ function parser() {
         _preAlias+=($1)
       fi
       
-      # it's a file forward to go
+    # it's a file forward to go
     elif [[ -f "$1" && $(type $1) == (*not*)  && ! -x $1 ]]; then
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
 
-      # if it's a parameter, echo it
+    # if it's a parameter, echo it
     elif [[ -n ${(P)1} ]]; then
       alias "$1"="echo ${(P)1}"
       _preAlias+=($1)
       
-      # last resort, forward to teleport handler
+    # last resort, forward to teleport handler
     elif [[ -n $(fasd -d $@) ]]; then
       alias $@="go $@"
       _preAlias+=($@)
