@@ -6,8 +6,7 @@ unsetopt HASH_LIST_ALL # Faster completion on slow machines
 
 zstyle ':completion:*' verbose false
 zstyle ':completion:*:options' verbose true
-zstyle ':completion:*' extra-verbose true
-zstyle ':completion:*' show-completer true
+zstyle ':completion:*:options' extra-verbose true
 zstyle ':completion:*' show-ambiguity true
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' cache-path $ZDOTDIR/cache
@@ -36,12 +35,7 @@ export SPROMPT="Correct $fg_bold[red]%R$reset_color to $fg_bold[green]%r?$reset_
 zstyle ':completion:*' group-name ''
 
 # adaptive correction
-zstyle ':completion:*' completer \
-       _oldlist \
-       _expand \
-       _complete \
-       _match \
-       _prefix
+zstyle ':completion:*' completer _complete _match
 
 zstyle ':completion:*:match:*' original only
 
