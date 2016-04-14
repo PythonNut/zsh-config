@@ -84,7 +84,7 @@ function lr() {
 }
 
 # search for process without matching self
-alias px="nocorrect noglob px"
+alias -E px="nocorrect noglob px"
 function px() {
   emulate -LR zsh
   ps uwwp ${$(pgrep -d, "${(j:|:)@}"):?no matches}
