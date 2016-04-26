@@ -3,6 +3,8 @@
 # ======================
 
 alias -E go="nocorrect go"
+compdef _cmd go
+
 function go() {
   emulate -LR zsh -o no_case_glob -o no_case_match -o equals
   zparseopts -D -E Q=FLAG_Q
