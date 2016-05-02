@@ -1,7 +1,7 @@
 # =============
 # Adaptive Exit
 # =============
-_exitForce=0
+integer _exitForce=0
 
 # exit with background jobs lists them
 # use logout for normal exit or EXIT
