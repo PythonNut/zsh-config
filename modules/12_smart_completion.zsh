@@ -47,47 +47,43 @@ function pcomplete() {
       _match \
       _prefix
 
-    if [[ $#LBUFFER == 0 || "$LBUFFER" == "$predict_buffer" ]]; then
-      zle predict-next-line  
-    else
-      local cur_rbuffer space_index i
-      local -i single_match
-      local -a match mbegin mend
+    local cur_rbuffer space_index i
+    local -i single_match
+    local -a match mbegin mend
 
-      # detect single auto-fu match
-      for param in $region_highlight; do
-        if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)(*) ]]; then
-          i=($match)
-          if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-            pcomplete_forward_word
-            break
-          elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
-            single_match=1
-            break
-          fi
+    # detect single auto-fu match
+    for param in $region_highlight; do
+      if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)(*) ]]; then
+        i=($match)
+        if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+          pcomplete_forward_word
+          break
+        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
+          single_match=1
+          break
         fi
-      done
-
-      if [[ $single_match == 1 ]]; then
-        pcomplete_forward_word
-        if [[ $#RBUFFER == 0 ]]; then
-            if [[ $LBUFFER[-1] == "/" ]]; then
-              pcomplete_force_auto
-            else
-              zle magic-space
-            fi
-        else
-          if [[ $LBUFFER[-2] == "/" ]]; then
-            zle backward-char
-            pcomplete
-          fi
-        fi
-        if [[ $LBUFFER[-1] == " " ]]; then
-          zle .backward-delete-char
-        fi
-      else
-        zle menu-expand-or-complete
       fi
+    done
+
+    if [[ $single_match == 1 ]]; then
+      pcomplete_forward_word
+      if [[ $#RBUFFER == 0 ]]; then
+          if [[ $LBUFFER[-1] == "/" ]]; then
+            pcomplete_force_auto
+          else
+            zle magic-space
+          fi
+      else
+        if [[ $LBUFFER[-2] == "/" ]]; then
+          zle backward-char
+          pcomplete
+        fi
+      fi
+      if [[ $LBUFFER[-1] == " " ]]; then
+        zle .backward-delete-char
+      fi
+    else
+      zle menu-expand-or-complete
     fi
 
     zstyle ':completion:*' show-completer false
