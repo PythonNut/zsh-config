@@ -12,9 +12,10 @@ function {
   if [[ ! -w $fasd_cache ]]; then
     touch $fasd_cache
     $fasd_path --init \
-      zsh-hook \
-      zsh-wcomp \
-      zsh-wcomp-install \
+               posix-alias \
+               zsh-hook \
+               zsh-wcomp \
+               zsh-wcomp-install \
       > $fasd_cache
   fi
 
