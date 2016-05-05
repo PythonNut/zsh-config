@@ -3,6 +3,7 @@
 /.zcompdump
 /.histfile
 /.histfile.LOCK
+/.fasd
 /cache
 /zcompdump
 /macros

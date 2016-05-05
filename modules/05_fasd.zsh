@@ -19,6 +19,10 @@ function {
   fi
 
   source $fasd_cache
+
+  _FASD_DATA=$ZDOTDIR/.fasd
+  _FASD_SHIFT+=(nocorrect noglob)
+  _FASD_VIMINFO=~/.vim/.viminfo
 }
 
 # interactive directory selection
