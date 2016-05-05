@@ -27,7 +27,7 @@ fi
 
 function compute_prompt () {
   emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
-  local black=$fg_bold[black] pure_ascii
+  local pure_ascii
 
   # show the last error code
   PS1=$'%{%F{red}%}%(?..Error %?\n)'

@@ -27,11 +27,12 @@ zstyle ':completion:*:messages' format '%d'           # messages
 
 # warnings
 #zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*:warnings' format "$fg_bold[red]-- no matches found -- $reset_color"
+zstyle ':completion:*:warnings' format \
+       "%B%F{red}── no matches found %F{default}%b"
 
 #corrections
 zstyle ':completion:*:corrections' format '%B%d (errors %e)%b'
-export SPROMPT="Correct $fg_bold[red]%R$reset_color to $fg_bold[green]%r?$reset_color (Yes, No, Abort, Edit) "
+export SPROMPT="Correct %B%F{red}%R%F{default}%b to %B%F{green}%r?%F{default}%b (Yes, No, Abort, Edit) "
 zstyle ':completion:*' group-name ''
 
 # adaptive correction

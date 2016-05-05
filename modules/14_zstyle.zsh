@@ -30,7 +30,7 @@ zstyle ':completion:*:warnings' format \
 
 #corrections
 zstyle ':completion:*:corrections' format '%B%d (errors %e)%b'
-export SPROMPT="Correct $fg_bold[red]%R$reset_color to $fg_bold[green]%r?$reset_color (Yes, No, Abort, Edit) "
+export SPROMPT="Correct %B%F{red}%R%F{default}%b to %B%F{green}%r?%F{default}%b (Yes, No, Abort, Edit) "
 zstyle ':completion:*' group-name ''
 
 # adaptive correction
