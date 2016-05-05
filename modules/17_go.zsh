@@ -49,7 +49,6 @@ function go() {
     local fasd_target=$(fasd -d $@)
     local teleport
     teleport=${(D)fasd_target}
-    teleport=" ${fg_bold[blue]}$teleport${fg_no_bold[default]}"
     if [[ $fasd_target != (*$@*) ]]; then
       read -k REPLY\?"zsh: teleport to$teleport? [ny] "
       if [[ $REPLY == [Yy]* ]]; then
@@ -57,8 +56,8 @@ function go() {
         cd $fasd_target
       fi
     else
-      echo -n "zsh: teleporting: $@"
-      echo $teleport
+      echo -n "zsh: teleporting: $@ →"
+      print -P "%B%F{magenta}$teleport%F{default}%b"
       cd $fasd_target
     fi
   else
