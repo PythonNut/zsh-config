@@ -30,7 +30,7 @@ function compute_prompt () {
   local pure_ascii
 
   # show the last error code
-  PS1=$'%{%F{red}%}%(?..Error %?\n)'
+  PS1=$'%{%F{red}%}%(?..Returned %?\n)'
 
   # user (highlight root in red)
   if [[ -z $BORING_USERS[(R)$USER] ]]; then
