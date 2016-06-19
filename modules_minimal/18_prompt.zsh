@@ -65,7 +65,7 @@ function compute_prompt () {
 }
 
 compute_prompt
-PS2="\${(l:\${#\${(M)\${\${(%%S)PS1//\%([BSUbfksu]|([FBK]|)\{*\})/}}%%[^$'\n']#}}:: :)\${:-> }}"
+PS2="\${(l:\${#\${(M)\${\${(%%S)\$(eval \"echo \${\${(q)PS1}//\\\\\$/\\\$}\")//\%([BSUbfksu]|([FBK]|)\{*\})/}}%%[^$'\n']#}}:: :)\${:->$nbsp}}"
 RPS2='%^'
 
 # intercept keymap selection
