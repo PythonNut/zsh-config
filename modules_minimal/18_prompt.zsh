@@ -13,6 +13,8 @@ else
 fi
 
 PROMPT_HOSTNAME=
+PROMPT_KEYMAP=
+
 if (( $degraded_terminal[display_host] == 1 )); then
   if (( $degraded_terminal[colors256] != 1 )); then
     if (( $+commands[md5sum] )); then
@@ -49,11 +51,10 @@ function compute_prompt () {
     PS1+=$((($SHLVL > 1)) && echo " <%L>")
 
     # vim normal/textobject mode indicator
-    local VIM_PROMPT="%B%F{black} [% N]% %b"
-    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(afu|main)/}"
+    RPS1='${${PROMPT_KEYMAP/vicmd/%B%F{black\} [% N]% %b }/(afu|main)/}'
 
   else
-    RPS1=""
+    RPS1=''
   fi
 
   # finish the prompt
@@ -70,8 +71,10 @@ RPS2='%^'
 
 # intercept keymap selection
 function zle-keymap-select () {
-  compute_prompt
-  zle && zle reset-prompt
+  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
+  PROMPT_KEYMAP=$KEYMAP
+  zle reset-prompt
+  zle -R
 }
 
 zle -N zle-keymap-select
