@@ -56,7 +56,7 @@ function go() {
         cd $fasd_target
       fi
     else
-      echo -n "zsh: teleporting: $@ →"
+      echo -n "zsh: teleporting: $@ → "
       print -P "%B%F{magenta}$teleport%F{default}%b"
       cd $fasd_target
     fi
