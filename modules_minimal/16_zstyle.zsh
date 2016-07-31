@@ -27,8 +27,13 @@ zstyle ':completion:*:messages' format '%d'           # messages
 
 # warnings
 #zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*:warnings' format \
-       "%B%F{red}── no matches found %F{default}%b"
+if (( $degraded_terminal[unicode] != 1 )); then
+  zstyle ':completion:*:warnings' format \
+         "%B%F{red}── no matches found %F{default}%b"
+else
+  zstyle ':completion:*:warnings' format \
+         "%B%F{red}-- no matches found %F{default}%b"
+fi
 
 #corrections
 zstyle ':completion:*:corrections' format '%B%d (errors %e)%b'
