@@ -70,7 +70,7 @@ PS2="\${(l:\${#\${(M)\${\${(%%S)\$(eval \"echo \${\${(q)PS1}//\\\\\$/\\\$}\")//\
 RPS2='%^'
 
 # intercept keymap selection
-function zle-keymap-select () {
+function zle-line-init zle-keymap-select () {
   emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   PROMPT_KEYMAP=$KEYMAP
   zle reset-prompt
@@ -78,3 +78,4 @@ function zle-keymap-select () {
 }
 
 zle -N zle-keymap-select
+zle -N zle-line-init
