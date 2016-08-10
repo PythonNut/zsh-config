@@ -254,7 +254,8 @@ function expand_alias() {
       done
     }
 
-    local cmd=(${(@s/;/)LBUFFER:gs/[^[:IDENT:]]/;})
+    local -a cmd
+    cmd=(${(@s/;/)LBUFFER:gs/[^[:IDENT:]]/;})
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
       expand_alias_smart_expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
 
