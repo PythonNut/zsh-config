@@ -172,3 +172,12 @@ imv() {
     [[ $src != $dst ]] && mkdir -p $dst:h && mv -n $src $dst
   done
 }
+
+wc-counter() {
+  local -i count=0
+  while read -r line ; do
+    ((count++))
+    echo -ne "\r$count"
+  done
+  echo
+}
