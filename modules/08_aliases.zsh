@@ -198,6 +198,10 @@ if (( $+commands[git] )); then
   alias -eg .B='echo $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "N/A")'
 fi
 
+if (( $+commands[git-annex] )); then
+  alias gxp='git annex proxy'
+fi
+
 if (( $+commands[emacsclient] )); then
   alias emacsd="go -Q emacs --daemon"
   alias emacsdk="emacsclient -e '(kill-emacs)'"
