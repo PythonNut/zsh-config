@@ -72,27 +72,17 @@ function parser() {
       
     # if it contains math special characters, try to evaluate it
     elif [[ ! -f "$1" && ! -d "$1" && $1 == *[\(\)\[\]/*-+%^]* ]]; then
-      local s
-      # check if it compiles
-      s=$(python3 -c "print(compile('$1','','eval').co_names)" 2> /dev/null)
-      if [[ $? == 0 ]]; then
-        # it compiled, eval it
-        alias "$1"="python -c 'print($1)'"
-        _preAlias+=($1)
-
-      elif [[ $1 == *[\(\)*+~^\&\[\]]* ]]; then
-        # it didn't. it must be some kind of glob
-        if [[ $options[globdots] == "on" ]]; then
-          alias "$1"="unsetopt globdots;LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first;setopt globdots"
-        else
-          alias "$1"="LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first"
-        fi
-        if [[ $1 == "**" ]]; then
-          # ** renders single level recursive summary
-          alias "$1"="LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -h"
-        fi
-        _preAlias+=($1)
+      # it didn't. it must be some kind of glob
+      if [[ $options[globdots] == "on" ]]; then
+        alias "$1"="unsetopt globdots;LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first;setopt globdots"
+      else
+        alias "$1"="LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first"
       fi
+      if [[ $1 == "**" ]]; then
+        # ** renders single level recursive summary
+        alias "$1"="LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -h"
+      fi
+      _preAlias+=($1)
 
     # if it's a parameter, echo it
     elif [[ -n ${(P)1} ]]; then
