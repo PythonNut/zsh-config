@@ -41,7 +41,7 @@ function _settitle() {
     return 0
   fi
 
-  print -Pn "${(%)titlestart}$* ${(%)titlefinish}"
+  print -Pn "${(%)titlestart}${(q)*} ${(%)titlefinish}"
 }
 
 # if title set manually, dont set automatically
