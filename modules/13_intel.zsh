@@ -23,8 +23,6 @@ function helpgen() {
 
 autohelp
 
-zsh-mime-setup
-
 function auto_recompile () {
   autoload -Uz zrecompile
   zrecompile $ZDOTDIR/.zshrc

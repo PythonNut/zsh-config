@@ -64,6 +64,11 @@ function parser() {
     elif [[ -d ${1/(#s)\~/$HOME} ]]; then
       alias "$1"="cd $1"
       _preAlias+=($1)
+
+    # it's a file forward to go
+    elif [[ -f "$1" && $(type $1) == (*not*) ]]; then
+      alias $1="go $1" && command_not_found=0
+      _preAlias+=("$1")
       
     # if it contains math special characters, try to evaluate it
     elif [[ ! -f "$1" && ! -d "$1" && $1 == *[\(\)\[\]/*-+%^]* ]]; then
@@ -88,11 +93,6 @@ function parser() {
         fi
         _preAlias+=($1)
       fi
-      
-    # it's a file forward to go
-    elif [[ -f "$1" && $(type $1) == (*not*)  && ! -x $1 ]]; then
-      alias $1="go $1" && command_not_found=0
-      _preAlias+=("$1")
 
     # if it's a parameter, echo it
     elif [[ -n ${(P)1} ]]; then

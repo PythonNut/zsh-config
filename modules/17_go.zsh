@@ -25,7 +25,7 @@ function go() {
       fi
     else
       # it's binary, open it with xdg-open
-      if [[ -n =xdg-open && -n "$DISPLAY" && ! -x $1 ]]; then
+      if [[ -n =xdg-open && -n "$DISPLAY" ]]; then
         (xdg-open "$1" &) &> /dev/null
       else
         # without x we try suffix aliases
