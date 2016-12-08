@@ -4,7 +4,10 @@
 typeset -a _preAlias
 
 function _accept-line() {
-  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
+  setopt local_options
+  setopt prompt_subst
+  setopt transient_rprompt
+  setopt extended_glob
   local cmd i
   
   if [[ $BUFFER == [[:space:]]##* ||  $CONTEXT == "cont" ]]; then
@@ -55,7 +58,11 @@ zle -N accept-line _accept-line
 integer command_not_found=1
 
 function parser() {
-  emulate -LR zsh -o extended_glob -o null_glob -o ksh_glob
+  setopt local_options
+  setopt extended_glob
+  setopt null_glob
+  setopt ksh_glob
+
   if [[ $(type $1) == (*not*|*suffix*) ]]; then
     # skip assignments
     if [[ $1 == (*=*) ]]; then
@@ -69,11 +76,10 @@ function parser() {
     elif [[ -f "$1" && $(type $1) == (*not*) ]]; then
       alias $1="go $1" && command_not_found=0
       _preAlias+=("$1")
-      
-    # if it contains math special characters, try to evaluate it
-    elif [[ ! -f "$1" && ! -d "$1" && $1 == *[\(\)\[\]/*-+%^]* ]]; then
-      # it didn't. it must be some kind of glob
-      if [[ $options[globdots] == "on" ]]; then
+
+    # try to evaluate it as a glob, and list files
+    elif [[ $1 == *[\(\)\[\]/*-+%^]* ]]; then
+      if [[ -o glob_dots ]]; then
         alias "$1"="unsetopt globdots;LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first;setopt globdots"
       else
         alias "$1"="LC_COLLATE='C.UTF-8' zargs $1 -- ls --color=always -dhx --group-directories-first"
