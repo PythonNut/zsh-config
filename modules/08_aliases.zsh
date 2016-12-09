@@ -203,7 +203,7 @@ if (( $+commands[git-annex] )); then
 fi
 
 if (( $+commands[emacsclient] )); then
-  alias emacsd="go -Q emacs --daemon"
+  alias emacsd="go emacs --daemon"
   alias emacsdk="emacsclient -e '(kill-emacs)'"
   function ec {
     emacsclient -t -q $@

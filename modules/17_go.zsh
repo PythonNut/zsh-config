@@ -7,7 +7,6 @@ compdef _cmd go
 
 function go() {
   emulate -LR zsh -o no_case_glob -o no_case_match -o equals
-  zparseopts -D -E Q=FLAG_Q
   cmd=(${(s/ /)1})
   # if it's a file and it's not binary and I don't need to be root
   if [[ -f "$1" ]]; then
@@ -38,11 +37,7 @@ function go() {
     
     # if it's a program, launch it in a seperate process in the background
   elif [[ $(type ${cmd[1]}) != *not* ]]; then
-    if [[ -n $FLAG_Q ]]; then
-      ($@&)>&/dev/null
-    else
-      ($@&)>/dev/null
-    fi
+    ($@&)>&/dev/null
 
     # check if dir is registered in database
   elif [[ -n $(fasd -d $@) ]]; then
