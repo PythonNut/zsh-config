@@ -16,20 +16,51 @@ zle -N increase-number _increase_number
 global_bindkey '^X^a' increase-number
 bindkey -s '^Xx' '^[-^Xa'
 
-# C-r adds to line instead of replacing it
+# C-r/s intelligently adds to line instead of replacing it or searches using it
 autoload -Uz narrow-to-region
 function _history-incremental-preserving-pattern-search-backward {
-  emulate -LR zsh
+  emulate -LR zsh -o extended_glob
   local state
-  MARK=CURSOR  # magick, else multiple ^R don't work
+
+  if [[ $LBUFFER == *(\;|\||\|\&|\&\&|\|\|)[[:space:]]# ]]; then
+    # If we are following a metacharacter, add to the current line
+    MARK=CURSOR  # magic, else multiple ^R don't work
+    narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
+    zle end-of-history
+    zle history-incremental-pattern-search-backward
+    narrow-to-region -R state
+  else
+    # Otherwise, search using the current line
+    zle -U $BUFFER
+    BUFFER=""
+    zle history-incremental-pattern-search-backward
+  fi
+}
+
+function _history-incremental-preserving-pattern-search-forward {
+  emulate -LR zsh -o extended_glob
+  local state
+
+  if [[ $LBUFFER == *(\;|\||\|\&|\&\&|\|\|)[[:space:]]# ]]; then
+  # If we are following a metacharacter, add to the current line
+  MARK=CURSOR  # magic, else multiple ^R don't work
   narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
   zle end-of-history
-  zle history-incremental-pattern-search-backward
+  zle history-incremental-pattern-search-forward
   narrow-to-region -R state
+  else
+    # Otherwise, search using the current line
+    zle -U $BUFFER
+    BUFFER=""
+    zle history-incremental-pattern-search-forward
+  fi
 }
+
 zle -N _history-incremental-preserving-pattern-search-backward
+zle -N _history-incremental-preserving-pattern-search-forward
+
 global_bindkey "^R" _history-incremental-preserving-pattern-search-backward
-global_bindkey "^S" history-incremental-pattern-search-forward
+global_bindkey "^S" _history-incremental-preserving-pattern-search-forward
 
 bindkey -M isearch "^R" history-incremental-pattern-search-backward
 

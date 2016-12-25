@@ -58,8 +58,8 @@ alias lss='lst -BFshx'
 alias lsp='\ls'
 
 # safety aliases
-alias rm='rm -i' cp='cp -i'
-alias rmf='\rm' cpf='\cp'
+alias rm='rm -i'
+alias -E cp='nocorrect cp'
 alias ln="\ln -s"
 
 # global aliases
