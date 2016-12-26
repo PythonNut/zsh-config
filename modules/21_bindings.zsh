@@ -31,8 +31,10 @@ function _history-incremental-preserving-pattern-search-backward {
     narrow-to-region -R state
   else
     # Otherwise, search using the current line
-    zle -U $BUFFER
-    BUFFER=""
+    if [[ -n $BUFFER ]]; then
+      zle -U $BUFFER
+      BUFFER=""
+    fi
     zle history-incremental-pattern-search-backward
   fi
 }
@@ -50,8 +52,10 @@ function _history-incremental-preserving-pattern-search-forward {
   narrow-to-region -R state
   else
     # Otherwise, search using the current line
-    zle -U $BUFFER
-    BUFFER=""
+    if [[ -n $BUFFER ]]; then
+      zle -U $BUFFER
+      BUFFER=""
+    fi
     zle history-incremental-pattern-search-forward
   fi
 }
