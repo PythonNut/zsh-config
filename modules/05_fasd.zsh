@@ -2,29 +2,9 @@
 # FASD - all kinds of teleportation
 # =================================
 
-function {
-  emulate -LR zsh
-  local fasd_cache=$ZDOTDIR/fasd-init-cache
-  local fasd_path=$ZDOTDIR/fasd/fasd
-
-  source $fasd_path
-
-  if [[ ! -w $fasd_cache ]]; then
-    touch $fasd_cache
-    $fasd_path --init \
-               posix-alias \
-               zsh-hook \
-               zsh-wcomp \
-               zsh-wcomp-install \
-      > $fasd_cache
-  fi
-
-  source $fasd_cache
-
-  _FASD_DATA=$ZDOTDIR/.fasd
-  _FASD_SHIFT+=(nocorrect noglob)
-  _FASD_VIMINFO=~/.vim/.viminfo
-}
+_FASD_DATA=$ZDOTDIR/.fasd
+_FASD_SHIFT+=(nocorrect noglob)
+_FASD_VIMINFO=~/.vim/.viminfo
 
 # interactive directory selection
 # interactive file selection

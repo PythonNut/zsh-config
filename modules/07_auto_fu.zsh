@@ -4,7 +4,6 @@
 
 function {
   emulate -LR zsh
-  source $ZDOTDIR/auto-fu/auto-fu.zsh
   integer -g afu_enabled=1
   integer -g afu_menu=1
 
@@ -60,8 +59,6 @@ function {
 } &>> $ZDOTDIR/startup.log
 
 {
-  source $ZDOTDIR/zsh-async/async.zsh
-  source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
   if (( $degraded_terminal[colors256] == 1 )); then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
   fi

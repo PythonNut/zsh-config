@@ -1,4 +1,0 @@
-#compdef usewithtor
-shift words
-(( CURRENT-- ))
-_normal

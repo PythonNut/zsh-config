@@ -11,7 +11,7 @@ fi
 
 zstyle :compinstall filename '~/.zshrc'
 skip_global_compinit=1
-fpath=(~/.zsh.d/completers $fpath)
+fpath=($ZPLUG_HOME/repos/zsh-users/zsh-completions/src $fpath)
 autoload -Uz compinit  && compinit -d ~/.zsh.d/zcompdump
 echo -n > ~/.zsh.d/startup.log
 setopt function_argzero

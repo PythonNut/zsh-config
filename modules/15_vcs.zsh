@@ -27,8 +27,6 @@ else
   ZSH_VCS_PROMPT_CLEAN_SIGIL='-'
 fi
 
-source ~/.zsh.d/zsh-vcs-prompt/zshrc.sh
-
 ## Git without Action.
 ZSH_VCS_PROMPT_GIT_FORMATS='%{%B%F{yellow}%}#s%{%f%b%} ' # VCS name
 ZSH_VCS_PROMPT_GIT_FORMATS+='%{%B%F{red}%}#b%{%f%b%}'    # Branch name

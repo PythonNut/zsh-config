@@ -9,6 +9,7 @@
 /macros
 /.zcalc_history
 /.zshrc
+/.zplug
 
 *.zwc
 *.zwc.old

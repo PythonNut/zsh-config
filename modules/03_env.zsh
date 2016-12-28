@@ -155,7 +155,7 @@ colors
 if (( $+commands[dircolors] )); then
   function () {
     local DIRCOLORS
-    DIRCOLORS=$ZDOTDIR/dircolors-solarized/dircolors.ansi-universal
+    DIRCOLORS=$ZPLUG_HOME/repos/seebi/dircolors-solarized/dircolors.ansi-universal
     eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
   }
 fi
