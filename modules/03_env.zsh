@@ -124,7 +124,7 @@ if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
 elif [[ $(who am i) == *\([-a-zA-Z0-9.]##*\)(#e) ]]; then
   degraded_terminal[display_host]=1
-elif [[ $(cat /proc/$PPID/cmdline) == (sshd|*/sshd|mosh-server) ]]; then
+elif [[ $(cat /proc/$PPID/cmdline) == (sshd*|*/sshd|mosh-server) ]]; then
   degraded_terminal[display_host]=1
 fi
 
