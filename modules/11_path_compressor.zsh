@@ -112,14 +112,16 @@ function minify_path_smart () {
   local cur_path glob
   local -i i
   cur_path=$(minify_path_full $1)
+
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
     glob=${(l:$i::/:)}
     cur_path=${cur_path//$glob/%U$i%u}
   done
-  cur_path=${cur_path:s/\~\//\~}
+
   for char in {a-zA-Z}; do
     cur_path=${cur_path//\/$char/%U$char%u}
   done
+
   echo $cur_path
 }
 
