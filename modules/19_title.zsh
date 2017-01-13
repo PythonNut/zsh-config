@@ -63,6 +63,9 @@ function title_async_compress_command () {
       host="${HOST%%.*} "
     fi
 
+    # strip off environment variables
+    1=${1##([^[:ident:]]##=[[:graph:]]#[[:space:]]#)#}
+
     if [[ $1 == *sudo* ]]; then
       cur_command=\!${${1##[[:space:]]#sudo[[:space:]]#}%%[[:space:]]*}
     elif [[ $1 == [[:space:]]#(noglob|nocorrect|time|builtin|command|exec)* ]]; then
@@ -70,6 +73,9 @@ function title_async_compress_command () {
     else
       cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
     fi
+
+    # strip off leading punctuation (like alias escapes)
+    cur_command=${cur_command##[[:punct:]]#}
 
     if (( $user_has_root == 1 )); then
       root=" !"
