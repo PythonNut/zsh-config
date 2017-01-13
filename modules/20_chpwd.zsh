@@ -8,8 +8,14 @@ function chpwd_async_worker () {
     kill -INT $$
   }
 
-  local chpwd_minify_smart_str="$(minify_path_smart $1)"
   local chpwd_minify_fasd_str="$(minify_path_fasd $1)"
+  local chpwd_minify_smart_str="$(minify_path_smart $1)"
+
+  if (( $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str )); then
+    if [[ -n $chpwd_minify_fasd_str ]]; then
+      chpwd_minify_smart_str+="→$chpwd_minify_fasd_str"
+    fi
+  fi
 
   typeset -p chpwd_minify_smart_str
   typeset -p chpwd_minify_fasd_str
