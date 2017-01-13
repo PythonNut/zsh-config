@@ -96,7 +96,7 @@ fi
 # sudo aliases
 if (( $+commands[sudo] )); then
   function sudo {
-    emulate -L zsh -o no_rc_expand_param
+    emulate -L zsh
     local precommands=()
     while [[ $1 == (nocorrect|noglob) ]]; do
       precommands+=$1

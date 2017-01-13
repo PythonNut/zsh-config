@@ -27,7 +27,4 @@ if ! zplug check; then
     exec zsh
 fi
 
-function {
-  setopt localoptions no_rcexpandparam
-  zplug load
-}
+zplug load
