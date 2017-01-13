@@ -5,6 +5,7 @@ if [[ ! -d $ZPLUG_HOME ]]; then
 fi
 
 source $ZPLUG_HOME/init.zsh
+unset ZPLUG_CACHE_CHECK_FOR_CHANGES
 
 zplug "zsh-users/zsh-syntax-highlighting", at:feec9f5
 zplug "zsh-users/zsh-completions"
