@@ -43,7 +43,7 @@ function go() {
   elif [[ -n $(fasd -d $@) ]]; then
     local fasd_target=$(fasd -d $@)
     local teleport
-    teleport=${(D)fasd_target}
+    teleport=${${fasd_target:A}/${HOME:A}/\~}
     if [[ $fasd_target != (*$@*) ]]; then
       read -k REPLY\?"zsh: teleport to$teleport? [ny] "
       if [[ $REPLY == [Yy]* ]]; then
