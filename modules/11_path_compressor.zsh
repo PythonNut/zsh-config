@@ -126,7 +126,7 @@ function minify_path_smart () {
 # find shortest unique fasd prefix. Heavily optimized
 function minify_path_fasd () {
   zparseopts -D -E a=ALL
-  if [[ $(type fasd) != *function* ]]; then
+  if [[ $(type fasd) != *fasd*is*fasd* ]]; then
     printf " "
     return
   fi
