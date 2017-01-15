@@ -12,7 +12,7 @@ function chpwd_async_worker () {
   local chpwd_minify_smart_str="$(minify_path_smart $1)"
 
   if (( $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str )); then
-    if [[ -n $chpwd_minify_fasd_str ]]; then
+    if [[ -n $chpwd_minify_fasd_str && $chpwd_minify_smart_str != "~" ]]; then
       chpwd_minify_smart_str+="→$chpwd_minify_fasd_str"
     fi
   fi
