@@ -2,6 +2,7 @@
 # AutoFU continuous completions
 # =============================
 
+
 function {
   emulate -LR zsh
   integer -g afu_enabled=1
@@ -59,9 +60,13 @@ function {
 } &>> $ZDOTDIR/startup.log
 
 {
+  source $ZPLUG_HOME/repos/mafredri/zsh-async/async.zsh
+  source $ZPLUG_HOME/repos/PythonNut/zsh-autosuggestions/zsh-autosuggestions.zsh
+
   if (( $degraded_terminal[colors256] == 1 )); then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
   fi
+
   ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
     "expand-or-complete"
     "pcomplete"

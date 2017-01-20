@@ -17,10 +17,10 @@ zplug "zsh-users/zaw"
 zplug "yonchu/zaw-src-git-log", on:"zsh-users/zaw", lazy:true
 zplug "yonchu/zaw-src-git-show-branch", on:"zsh-users/zaw", lazy:true
 zplug "mafredri/zsh-async"
-zplug "PythonNut/zsh-autosuggestions", on:"zsh-async"
 zplug "knu/zsh-git-escape-magic"
 zplug "coldfix/zsh-soft-history", lazy:true
 zplug "hchbaw/auto-fu.zsh", at:pu, on:"zsh-users/zsh-syntax-highlighting"
+zplug "PythonNut/zsh-autosuggestions", on:"zsh-async"
 
 if ! zplug check; then
     zplug install
