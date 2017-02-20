@@ -70,6 +70,7 @@ function minify_path_full () {
       break
     fi
     k=${#glob[$index]}
+    old_glob=${glob[$index]}
     while true; do
       seg=$glob[$index]
       temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
