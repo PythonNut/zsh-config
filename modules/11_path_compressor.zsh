@@ -129,7 +129,7 @@ function minify_path_smart () {
   setopt brace_ccl
   local cur_path glob
   local -i i
-  cur_path=$(minify_path_full $1)
+  cur_path=$1
 
   for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
     glob=${(l:$i::/:)}

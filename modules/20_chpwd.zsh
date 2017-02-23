@@ -9,7 +9,8 @@ function chpwd_async_worker () {
   }
 
   local chpwd_minify_fasd_str="$(minify_path_fasd $1)"
-  local chpwd_minify_smart_str="$(minify_path_smart $1)"
+  local chpwd_minify_full_str="$(minify_path_full $1)"
+  local chpwd_minify_smart_str="$(minify_path_smart $chpwd_minify_full_str)"
 
   if (( $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str )); then
     if [[ -n $chpwd_minify_fasd_str && $chpwd_minify_smart_str != "~" ]]; then
@@ -58,8 +59,8 @@ function prompt_async_compress () {
     chpwd_minify_smart_str=${${:-.}:A:t}
     zle && zle reset-prompt
   else
-    chpwd_minify_smart_str="$(minify_path .)"
-    chpwd_minify_fast_str="$chpwd_minify_smart_str"
+    chpwd_minify_fast_str="$(minify_path .)"
+    chpwd_minify_smart_str="$(minify_path_smart $chpwd_minify_fast_str)"
     async_job chpwd_worker chpwd_async_worker ${${:-.}:A}
     sched +10 prompt_async_timeout
   fi
