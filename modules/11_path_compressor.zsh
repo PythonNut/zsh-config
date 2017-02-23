@@ -49,6 +49,24 @@ function minify_path () {
   echo ${${ppath:s/\/\~/\~/}:-/}
 }
 
+function zsh_run_with_timeout () {
+  if [[ -n $3 ]]; then
+    COMPLETED=1
+    echo $3
+  else
+    local COMPLETED=0
+    local TIME=$SECONDS
+    async_start_worker timeout_worker -u
+    async_job timeout_worker $2
+    while (( $COMPLETED == 0 && $SECONDS - $TIME < $1 )); do
+      sleep 0.001
+      async_process_results timeout_worker zsh_run_with_timeout
+    done
+    async_flush_jobs timeout_worker
+    async_stop_worker timeout_worker
+  fi
+}
+
 # take every possible branch on the file system into account
 function minify_path_full () {
   emulate -LR zsh -o extended_glob -o null_glob -o glob_dots
@@ -76,8 +94,7 @@ function minify_path_full () {
       temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
       temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}
       temp_glob+=$limit
-      result=(${~temp_glob})
-
+      result=($(zsh_run_with_timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
       if [[ $result != $official_result ]]; then
         glob[$index]=$old_glob
         seg=$old_glob

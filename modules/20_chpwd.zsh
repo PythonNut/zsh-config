@@ -61,7 +61,7 @@ function prompt_async_compress () {
     chpwd_minify_smart_str="$(minify_path .)"
     chpwd_minify_fast_str="$chpwd_minify_smart_str"
     async_job chpwd_worker chpwd_async_worker ${${:-.}:A}
-    sched +3 prompt_async_timeout
+    sched +10 prompt_async_timeout
   fi
 }
 
