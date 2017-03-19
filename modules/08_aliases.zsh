@@ -146,6 +146,8 @@ alias -ec please='alias_create_please_command'
 if (( $+commands[yaourt] )); then
   alias y='yaourt'
   alias yi='yaourt -Sa'
+  alias yr='yaourt -Rs'
+  alias ys='yaourt -Ss'
   alias yu='yaourt -Syyua --noconfirm'
   alias yuu='yaourt -Syyua --noconfirm --devel'
 fi
