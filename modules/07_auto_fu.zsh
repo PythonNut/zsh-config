@@ -90,3 +90,9 @@ function global_bindkey () {
 }
 
 global_bindkey "^Hk" describe-key-briefly
+
+# Weird M-arrow and C-arrow codes
+bindkey -M afu "^[[1;3C" forward-word
+bindkey -M afu "^[[1;3D" backward-word
+bindkey -M afu "^[[1;5C" forward-word
+bindkey -M afu "^[[1;5D" backward-word

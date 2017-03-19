@@ -78,5 +78,9 @@ function {
 # let the terminal take care of these
 key[Left]=${terminfo[kcub1]}
 key[Right]=${terminfo[kcuf1]}
-# [[ -n ${key[Left]}      ]] && bindkey "${key[Left]}"      forward-char
-# [[ -n ${key[Right]}     ]] && bindkey "${key[Right]}"     backward-char
+
+# Weird M-arrow and C-arrow codes
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
