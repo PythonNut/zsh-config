@@ -93,6 +93,10 @@ elif (( $+commands[pkill] )); then
   alias -E killall='nocorrect \pkill'
 fi
 
+if (( $+commands[systemctl] )); then
+  alias -E systemctl='nocorrect \systemctl'
+fi
+
 # sudo aliases
 if (( $+commands[sudo] )); then
   function sudo {
