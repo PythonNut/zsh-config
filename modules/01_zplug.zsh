@@ -2,6 +2,7 @@ export ZPLUG_HOME=$ZDOTDIR/.zplug
 # Check if zplug is installed
 if [[ ! -d $ZPLUG_HOME ]]; then
   git clone https://github.com/zplug/zplug $ZPLUG_HOME
+  chmod ag-x $ZPLUG_HOME
 fi
 
 source $ZPLUG_HOME/init.zsh
