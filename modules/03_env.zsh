@@ -88,6 +88,8 @@ case $_OLD_TERM in
     # check for lack of 256color support
     if [[ $TTY == /dev/tty*  ]]; then
       export TERM='screen'
+    else
+      export TERM='screen-256color'
     fi;;
 
   (eterm*)
