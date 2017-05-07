@@ -32,8 +32,7 @@ else
 fi
 
 ## Git without Action.
-ZSH_VCS_PROMPT_GIT_FORMATS='%{%B%F{yellow}%}#s%{%f%b%} ' # VCS name
-ZSH_VCS_PROMPT_GIT_FORMATS+='%{%B%F{red}%}#b%{%f%b%}'    # Branch name
+ZSH_VCS_PROMPT_GIT_FORMATS='%{%B%F{red}%}#b%{%f%b%}'     # Branch name
 ZSH_VCS_PROMPT_GIT_FORMATS+='#c#d '                      # Ahead and Behind
 ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{blue}%}#e%{%f%b%}'     # Staged
 ZSH_VCS_PROMPT_GIT_FORMATS+='%{%F{red}%}#f%{%f%b%}'      # Conflicts
