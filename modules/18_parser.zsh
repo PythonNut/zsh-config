@@ -48,7 +48,7 @@ function _accept-line() {
   cmd=(${(s/;/)BUFFER})
   for token in $cmd; do
     # process the command, strip whitespace
-    parser "${${token##[[:space:]]#}%%[[:space:]]#}"
+    parser ${=${token##[[:space:]]#}%%[[:space:]]#}
   done
 
   zle .accept-line
@@ -74,8 +74,12 @@ function parser() {
 
     # it's a file forward to g
     elif [[ -f "$1" && $(type $1) == (*not*) ]]; then
-      alias $1="g $1" && command_not_found=0
-      _preAlias+=("$1")
+      if [[ $BUFFER == ([[:space:]]#${=@}[[:space:]]#) ]]; then
+        BUFFER="g $@"
+      else
+        alias $1="g $1" && command_not_found=0
+        _preAlias+=("$1")
+      fi
 
     # try to evaluate it as a glob, and list files
     elif [[ $1 == *[\(\)\[\]/*-+%^]* ]]; then
@@ -91,10 +95,13 @@ function parser() {
       _preAlias+=($1)
 
     # last resort, forward to teleport handler
-    elif [[ -n $(fasd -d $@) ]]; then
-      alias $@="g $@"
-      _preAlias+=($@)
-
+    elif [[ -n $(fasd -d ${=@}) ]]; then
+      if [[ $BUFFER == ([[:space:]]#${=@}[[:space:]]#) ]]; then
+        BUFFER="g $@"
+      else
+        alias $1="g $1"
+        _preAlias+=($1)
+      fi
     else
     fi
   fi
