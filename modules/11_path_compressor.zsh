@@ -153,12 +153,11 @@ function minify_path_fasd () {
   local dirs index above higher base test
   local -i escape i k
   1=${${1:A}%/}
-  dirs=${(nOa)$(fasd)##[0-9.[:space:]]##}
+  dirs=("${(@f)$(fasd -l)}")
   if ! (( ${+dirs[(r)$1]} )); then
     printf " "
     return 1
   fi
-  dirs=($(print ${(f)dirs}))
   index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
   1=$1:t
   for ((i=0; i<=$#1+1; i++)); do
