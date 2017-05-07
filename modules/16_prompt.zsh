@@ -72,7 +72,11 @@ function compute_prompt () {
   if [[ -n $TMUX ]]; then
     PS1+=" %#$nbsp"
   else
-    PS1+=" %(!.#.$)$nbsp"
+    if (( $degraded_terminal[unicode] != 1 )); then
+      PS1+=" %(!.#.❯)$nbsp"
+    else
+      PS1+=" %(!.#.$)$nbsp"
+    fi
   fi
 }
 
