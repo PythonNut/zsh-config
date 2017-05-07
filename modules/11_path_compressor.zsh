@@ -50,21 +50,23 @@ function minify_path () {
 }
 
 function zsh_run_with_timeout () {
-  if [[ -n $3 ]]; then
-    COMPLETED=1
-    echo $3
-  else
-    local COMPLETED=0
-    local TIME=$SECONDS
-    async_start_worker timeout_worker -u
-    async_job timeout_worker $2
-    while (( $COMPLETED == 0 && $SECONDS - $TIME < $1 )); do
-      sleep 0.001
-      async_process_results timeout_worker zsh_run_with_timeout
-    done
-    async_flush_jobs timeout_worker
-    async_stop_worker timeout_worker
-  fi
+  setopt local_options no_monitor
+  (eval $2) &
+  local PID=$! START_TIME=$SECONDS MTIME=$(zstat '+mtime' /proc/$!)
+  while true; do
+    sleep 0.001
+    # TODO: This probably isn't portable
+    if [[ ! -d /proc/$PID || $(zstat '+mtime' /proc/$PID) != $MTIME ]]; then
+      break
+    fi
+    if (( $SECONDS - $START_TIME > $1 )); then
+      {
+        kill $PID
+        wait $PID
+      } 2> /dev/null
+      break
+    fi
+  done
 }
 
 # take every possible branch on the file system into account
