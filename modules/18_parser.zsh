@@ -72,9 +72,9 @@ function parser() {
       alias "$1"="cd $1"
       _preAlias+=($1)
 
-    # it's a file forward to go
+    # it's a file forward to g
     elif [[ -f "$1" && $(type $1) == (*not*) ]]; then
-      alias $1="go $1" && command_not_found=0
+      alias $1="g $1" && command_not_found=0
       _preAlias+=("$1")
 
     # try to evaluate it as a glob, and list files
@@ -97,7 +97,7 @@ function parser() {
       
     # last resort, forward to teleport handler
     elif [[ -n $(fasd -d $@) ]]; then
-      alias $@="go $@"
+      alias $@="g $@"
       _preAlias+=($@)
 
     else

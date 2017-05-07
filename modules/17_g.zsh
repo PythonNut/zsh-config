@@ -2,10 +2,10 @@
 # BEGIN HOLISTIC HANDLER
 # ======================
 
-alias -E go="nocorrect go"
-compdef _cmd go
+alias -E g="nocorrect g"
+compdef _cmd g
 
-function go() {
+function g() {
   emulate -LR zsh -o no_case_glob -o no_case_match -o equals
   cmd=(${(s/ /)1})
   # if it's a file and it's not binary and I don't need to be root
