@@ -69,18 +69,46 @@ function zsh_run_with_timeout () {
   done
 }
 
+typeset -A zsh_minify_path_cache
+ZSH_MINIFY_PATH_CACHE_FILE=$ZDOTDIR/.minify-path.cache
+
 # take every possible branch on the file system into account
 function minify_path_full () {
+  zparseopts -D -E d=DEBUG
   emulate -LR zsh -o extended_glob -o null_glob -o glob_dots
   local glob temp_glob result official_result seg limit
-  glob=${${1:A}/${HOME:A}/\~}
-  glob=("${(@s:/:)glob}")
+  fullpath=${${1:A}/${HOME:A}/\~}
+  glob=("${(@s:/:)fullpath}")
 
   local -i index=$(($#glob)) k
 
   temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
   temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/oN)
   official_result=(${~temp_glob})
+
+  # open the cache file
+  if [[ ! -f $ZSH_MINIFY_PATH_CACHE_FILE ]]; then
+    touch $ZSH_MINIFY_PATH_CACHE_FILE
+    zsh_minify_path_cache=()
+  fi
+
+  source $ZSH_MINIFY_PATH_CACHE_FILE
+
+  local test_glob=("${(@)glob}")
+  local test_path=${(@j:/:)test_glob}
+  if (( ${+zsh_minify_path_cache[$test_path]} )); then
+    # verify the cache hit:
+    local -a cache_glob=("${(@s:/:)zsh_minify_path_cache[$test_path]}")
+    temp_glob=("${(s/ /)cache_glob//(#m)?/$MATCH*}")
+    temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/oN)
+    if [[ -n $DEBUG ]]; then
+      echo Testing cached: $temp_glob
+    fi
+    result=($(zsh_run_with_timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
+    if [[ $result == $official_result ]]; then
+      glob=("${(@)cache_glob}")
+    fi
+  fi
 
   # set glob short circuit level
   limit="(/Y$(( ${#official_result} + 1 )))"
@@ -119,10 +147,18 @@ function minify_path_full () {
       old_glob=${glob[$index]}
       glob[$index]=$seg[0,$(($k-1))]$seg[$(($k+1)),-1]
       ((k--))
+      if [[ -n $DEBUG ]]; then
+         echo ${(j:/:)glob}
+      fi
     done
     ((index--))
   done
-  echo ${(j:/:)glob}
+
+  local return=${(j:/:)glob}
+  zsh_minify_path_cache[$fullpath]=$return
+  typeset -p zsh_minify_path_cache > $ZSH_MINIFY_PATH_CACHE_FILE
+
+  echo $return
 }
 
 # collapse empty runs too
