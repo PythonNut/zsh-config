@@ -90,11 +90,6 @@ function parser() {
       fi
       _preAlias+=($1)
 
-    # if it's a parameter, echo it
-    elif [[ -n ${(P)1} ]]; then
-      alias "$1"="echo ${(P)1}"
-      _preAlias+=($1)
-      
     # last resort, forward to teleport handler
     elif [[ -n $(fasd -d $@) ]]; then
       alias $@="g $@"
