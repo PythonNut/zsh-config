@@ -1,7 +1,7 @@
 integer chpwd_title_manual
 
 # set the title
-function _settitle() {
+function zsh_settitle() {
   emulate -LR zsh
 
   if (( $degraded_terminal[title] == 1 )); then
@@ -48,10 +48,10 @@ function _settitle() {
 function settitle() {
   emulate -LR zsh
   chpwd_title_manual=1
-  _settitle $1
+  zsh_settitle $1
   if [[ ! -n $1 ]]; then
     chpwd_title_manual=0
-    _settitle
+    zsh_settitle
   fi
 }
 
@@ -81,7 +81,7 @@ function title_async_compress_command () {
       root=" !"
     fi
 
-    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}${cur_command}"
+    zsh_settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}${cur_command}"
   fi
 }
 
@@ -98,8 +98,7 @@ function title_async_compress () {
     if (( $user_has_root == 1 )); then
       root=" !"
     fi
-
-    _settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}"
+    zsh_settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}"
   fi
 }
 

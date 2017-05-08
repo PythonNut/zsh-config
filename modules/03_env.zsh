@@ -118,10 +118,6 @@ if [[ -n ${MC_TMPDIR+1} ]]; then
   degraded_terminal[title]=1
 fi
 
-if [[ -n ${EMACS+1} ]]; then
-    degraded_terminal[title]=1
-fi
-
 read _ZSH_PARENT_CMDLINE < /proc/$PPID/cmdline
 
 if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
