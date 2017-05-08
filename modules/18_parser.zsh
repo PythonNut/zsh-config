@@ -76,6 +76,7 @@ function parser() {
     elif [[ -f "$1" && $(type $1) == (*not*) ]]; then
       if [[ $BUFFER == ([[:space:]]#${=@}[[:space:]]#) ]]; then
         BUFFER="g $@"
+        _zsh_highlight 2>/dev/null
       else
         alias $1="g $1" && command_not_found=0
         _preAlias+=("$1")
@@ -98,6 +99,7 @@ function parser() {
     elif [[ -n $(fasd -d ${=@}) ]]; then
       if [[ $BUFFER == ([[:space:]]#${=@}[[:space:]]#) ]]; then
         BUFFER="g $@"
+        _zsh_highlight 2>/dev/null
       else
         alias $1="g $1"
         _preAlias+=($1)
