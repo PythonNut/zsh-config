@@ -33,7 +33,7 @@ function g() {
     fi
 
   elif [[ -d "$1" ]]; then \cd "$1" # directory, cd to it
-  elif [[ "" = "$1" ]]; then \cd    # nothing, go home
+  elif [[ -z $1 ]]; then \popd > /dev/null # nothing, go home
     
     # if it's a program, launch it in a seperate process in the background
   elif [[ $(type ${cmd[1]}) != *not* ]]; then
