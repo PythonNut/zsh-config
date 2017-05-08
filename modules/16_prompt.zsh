@@ -53,6 +53,9 @@ function compute_prompt () {
   # compressed_path
   PS1+='$chpwd_minify_smart_str'
 
+  # Add teleport shortcut
+  PS1+='${${$(( $#chpwd_minify_fasd_str && $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str ))%0}:+→$chpwd_minify_fasd_str}'
+
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
     if [[ $_ZSH_PARENT_CMDLINE == [[:alpha:]]#sh ]]; then
