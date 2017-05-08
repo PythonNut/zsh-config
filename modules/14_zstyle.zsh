@@ -35,7 +35,7 @@ fi
 
 #corrections
 zstyle ':completion:*:corrections' format '%B%d (errors %e)%b'
-export SPROMPT="Correct %B%F{red}%R%F{default}%b to %B%F{green}%r?%F{default}%b (Yes, No, Abort, Edit) "
+export SPROMPT="Correct %B%F{red}%R%F{default}%b to %B%r?%b (Yes, No, Abort, Edit) "
 zstyle ':completion:*' group-name ''
 
 # adaptive correction
