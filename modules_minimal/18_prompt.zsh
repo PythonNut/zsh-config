@@ -58,7 +58,8 @@ function compute_prompt () {
   # show the last error code
   RPS1+='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
 
-  PS1+='%{%(?.%F{green}.%B%F{red})%}'
+  # change the sigil color based on the return code and keymap
+  PS1+='${${${${${PROMPT_KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${PROMPT_KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
 
   # compute the sigil
   if [[ -n $TMUX ]]; then
