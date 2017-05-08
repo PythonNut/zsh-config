@@ -33,9 +33,7 @@ fi
 function compute_prompt () {
   emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local pure_ascii
-
-  # show the last error code
-  PS1=$'%{%F{red}%}%(?..Returned %?\n)'
+  PS1=
 
   # user (highlight root in red)
   if [[ -z $BORING_USERS[(R)$USER] ]]; then
@@ -67,20 +65,27 @@ function compute_prompt () {
     RPS1=$RPS1'${vcs_info_msg_0_}'
 
   else
-    RPS1=''
+    RPS1=
     PS1+=' \${vcs_info_msg_0_} '
   fi
-  
-  # finish the prompt
+
+  # show the last error code
+  RPS1+='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
+
+  PS1+='%{%(?.%F{green}.%B%F{red})%}'
+
+  # compute the sigil
   if [[ -n $TMUX ]]; then
-    PS1+=" %#$nbsp"
+    PS1+=" %#"
   else
     if (( $degraded_terminal[unicode] != 1 )); then
-      PS1+=" %(!.#.❯)$nbsp"
+    PS1+=" %(!.#.❯)"
+
     else
-      PS1+=" %(!.#.$)$nbsp"
+      PS1+=" %(!.#.$)"
     fi
   fi
+  PS1+="%{%b%F{default}%}$nbsp"
 }
 
 
