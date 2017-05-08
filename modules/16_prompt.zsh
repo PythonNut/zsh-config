@@ -48,7 +48,7 @@ function compute_prompt () {
   PS1+="$PROMPT_HOSTNAME "
 
   # show background jobs
-  PS1+='%(1j.%{%B%F{yellow}%}%j%{%F{default}%b%} .)'
+  PS1+='%(1j.%{%B%F{yellow}%}%j&%{%F{default}%b%} .)'
 
   # compressed_path
   PS1+='$chpwd_minify_smart_str'

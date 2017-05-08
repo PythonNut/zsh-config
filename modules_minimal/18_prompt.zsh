@@ -43,7 +43,7 @@ function compute_prompt () {
   PS1+='%{%b%F{default}%}'
 
   PS1+="$PROMPT_HOSTNAME "
-  PS1+='%(1j.%{%B%F{yellow}%}%j%{%F{default}%b%} .)'
+  PS1+='%(1j.%{%B%F{yellow}%}%j&%{%F{default}%b%} .)'
   PS1+='%1~'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
