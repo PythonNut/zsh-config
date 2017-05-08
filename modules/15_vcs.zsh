@@ -215,7 +215,7 @@ function vcs_async_callback () {
   typeset -g vcs_info_msg_0_
   typeset -g vcs_raw_data
   vcs_info_msg_0_=$vcs_super_info
-  vcs_raw_data=$vcs_super_raw_data
+  vcs_raw_data=($vcs_super_raw_data)
 
   zle reset-prompt
   zle -R
