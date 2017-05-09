@@ -102,3 +102,24 @@ function zle-keymap-select () {
   zle -R
 }
 zle -N zle-keymap-select
+
+function conditional_rprompt () {
+  if (( $? != 0 )); then
+    unsetopt transient_rprompt
+  else
+    setopt transient_rprompt
+  fi
+}
+
+function conditional_rprompt_finish () {
+  if [[ $options[transient_rprompt] == off ]]; then
+    local TEMP_RPS1=$RPS1
+    RPS1='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
+    zle .reset-prompt
+    zle -R
+    RPS1=$TEMP_RPS1
+  fi
+}
+
+add-zsh-hook precmd conditional_rprompt
+add-zle-hook-widget line-finish conditional_rprompt_finish
