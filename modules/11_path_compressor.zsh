@@ -184,34 +184,41 @@ function minify_path_smart () {
 # find shortest unique fasd prefix. Heavily optimized
 function minify_path_fasd () {
   zparseopts -D -E a=ALL
-  if [[ $(type fasd) != *fasd*is*fasd* ]]; then
+  setopt local_options extended_glob
+  if ! (( $+commands[fasd] )); then
     printf " "
     return
   fi
-  local dirs index above higher base test
-  local -i escape i k
+
   1=${${1:A}%/}
-  dirs=("${(@f)$(fasd -l)}")
+  local dirs=("${(@f)$(fasd -l)}")
   if ! (( ${+dirs[(r)$1]} )); then
     printf " "
     return 1
   fi
-  index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
-  1=$1:t
-  for ((i=0; i<=$#1+1; i++)); do
-    for ((k=1; k<=$#1-$i; k++)); do
-      test=${1[$k,$(($k+$i))]}
+
+  local index=${${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/}##*/}
+  local minimal_path=$1:t i
+  for ((i=0; i<=$#minimal_path+1; i++)); do
+    for ((k=1; k<=$#minimal_path-$i; k++)); do
+      test=${minimal_path[$k,$(($k+$i))]}
       if [[ -z ${index[(r)*$test*]} ]]; then
         if [[ $(type $test) == *not* && -z ${(P)temp} || -n $ALL ]]; then
           echo $test
-          escape=1
-          break
+          return
         fi
       fi
     done
-    if (( $escape == 1 )); then
-      break
+  done
+
+  index=(${${dirs[$((${dirs[(i)$1]}+1)),-1]}%/})
+  minimal_path=${1//\//\ }
+  for i in {1..$#minimal_path}; do
+    local temp=$minimal_path[$i]
+    minimal_path[$i]=" "
+    if [[ -n "$index[(r)*${minimal_path// ##/*}*]" ]]; then
+      minimal_path[$i]=$temp
     fi
   done
+  echo "${${${minimal_path// ##/ }%%[[:space:]]#}##[[:space:]]#}"
 }
-
