@@ -46,7 +46,9 @@ function compute_prompt () {
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
-    PS1+=$((($SHLVL > 1)) && echo " <%L>")
+    if [[ $_ZSH_PARENT_CMDLINE == [[:alpha:]]#sh* ]]; then
+      PS1+=$((($SHLVL > 1)) && echo " <%L>")
+    fi
 
     # vim normal/textobject mode indicator
     RPS1='${${PROMPT_KEYMAP/vicmd/%B%F{black\} [% N]% %b }/(afu|main)/}'

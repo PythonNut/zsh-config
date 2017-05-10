@@ -56,7 +56,7 @@ function compute_prompt () {
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
-    if [[ $_ZSH_PARENT_CMDLINE == [[:alpha:]]#sh ]]; then
+    if [[ $_ZSH_PARENT_CMDLINE == [[:alpha:]]#sh* ]]; then
       PS1+=" <%L>"
     fi
 
