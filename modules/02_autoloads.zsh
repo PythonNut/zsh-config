@@ -14,7 +14,6 @@
   autoload -Uz copy-earlier-word   # navigate backwards with C-. C-,
   autoload -Uz url-quote-magic     # automatically%20escape%20characters
   autoload -Uz add-zsh-hook        # a more modular way to hook
-  autoload -Uz add-zle-hook-widget # ditto, but for zle functions
   autoload -Uz is-at-least         # enable graceful regression
   autoload -Uz throw               # throw exceptions
   autoload -Uz catch               # catch exceptions

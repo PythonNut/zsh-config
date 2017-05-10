@@ -100,7 +100,7 @@ function conditional_rprompt () {
   fi
 }
 
-function conditional_rprompt_finish () {
+function zle-line-finish () {
   if [[ $options[transient_rprompt] == off ]]; then
   local TEMP_RPS1=$RPS1
   RPS1='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
@@ -111,4 +111,4 @@ function conditional_rprompt_finish () {
 }
 
 add-zsh-hook precmd conditional_rprompt
-add-zle-hook-widget line-finish conditional_rprompt_finish
+zle -N zle-line-finish
