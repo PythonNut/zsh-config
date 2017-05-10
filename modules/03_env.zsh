@@ -118,7 +118,17 @@ if [[ -n ${MC_TMPDIR+1} ]]; then
   degraded_terminal[title]=1
 fi
 
-read _ZSH_PARENT_CMDLINE < /proc/$PPID/cmdline
+if [[ -f /proc/$PPID/cmdline ]]; then
+  read _ZSH_PARENT_CMDLINE < /proc/$PPID/cmdline
+fi
+
+if [[ -f /proc/sys/kernel/osrelease ]]; then
+  read _ZSH_OSRELEASE < /proc/sys/kernel/osrelease
+fi
+
+if [[ $_ZSH_OSRELEASE == *Microsoft* && -z $DISPLAY ]]; then
+  degraded_terminal[unicode]=1
+fi
 
 if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
