@@ -77,7 +77,7 @@ function title_async_compress_command () {
     # strip off leading punctuation (like alias escapes)
     cur_command=${cur_command##[[:punct:]]#}
 
-    if (( $user_has_root == 1 )); then
+    if (( $UID == 0 )); then
       root=" !"
     fi
 
@@ -95,7 +95,7 @@ function title_async_compress () {
       host="${HOST%%.*} "
     fi
 
-    if (( $user_has_root == 1 )); then
+    if (( $UID == 0 )); then
       root=" !"
     fi
     zsh_settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}"

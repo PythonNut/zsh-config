@@ -71,7 +71,7 @@ function title_compress_command () {
       cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
     fi
 
-    if (( $user_has_root == 1 )); then
+    if (( $UID == 0 )); then
       root=" !"
     fi
 
@@ -89,7 +89,7 @@ function title_compress () {
       host="${HOST%%.*} "
     fi
 
-    if (( $user_has_root == 1 )); then
+    if (( $UID == 0 )); then
       root=" !"
     fi
 
