@@ -44,17 +44,9 @@ function g() {
     local fasd_target=$(fasd -d $@)
     local teleport
     teleport=${${fasd_target:A}/${HOME:A}/\~}
-    if [[ ${fasd_target:l} != (*${@:l}*) ]]; then
-      read -k REPLY\?"zsh: teleport to$teleport? [ny] "
-      if [[ $REPLY == [Yy]* ]]; then
-        echo " ..."
-        cd $fasd_target
-      fi
-    else
-      echo -n "zsh: teleporting: $@ → "
-      print -P "%B%F{magenta}$teleport%F{default}%b"
-      cd $fasd_target
-    fi
+    echo -n "zsh: teleporting: $@ → "
+    print -P "%B%F{magenta}$teleport%F{default}%b"
+    cd $fasd_target
   else
     command_not_found=1
     command_not_found_handler $@
