@@ -98,6 +98,8 @@ global_bindkey "^[^B" backward-word-match
 global_bindkey "^[^K" backward-kill-word-match
 global_bindkey "^[^T" transpose-words-match
 
+WORDCHARS=${WORDCHARS/\//}
+
 # M-, moves to the previous word on the current line, like M-.
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
