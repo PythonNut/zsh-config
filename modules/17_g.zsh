@@ -25,10 +25,14 @@ function g() {
     else
       # it's binary, open it with xdg-open
       if [[ -n =xdg-open && -n "$DISPLAY" ]]; then
-        (xdg-open "$1" &) &> /dev/null
+        for file in $@; do
+          (xdg-open $file &) &> /dev/null
+        done
       else
         # without x we try suffix aliases
-        ($1&)>&/dev/null
+        for file in $@; do
+            ($file &)>&/dev/null
+        done
       fi
     fi
 
