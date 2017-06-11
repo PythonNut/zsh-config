@@ -50,6 +50,9 @@ else
 fi
 alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 
+# cd aliases
+alias -- -='cd -'
+
 # ls aliases
 alias ls='lst -BFx'
 alias l='lst -lFBGh'
