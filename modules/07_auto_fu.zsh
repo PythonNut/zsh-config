@@ -82,11 +82,11 @@ function {
 } &>> $ZDOTDIR/startup.log
 
 zstyle ':auto-fu:var' autoable-function/skiplbuffers \
-       '?(sudo)+([[:space:]\\])apt-get+([[:space:]])install+([[:space:]])*' \
-       '?(sudo)+([[:space:]\\])dnf+([[:space:]])install+([[:space:]])*' \
-       '?(sudo)+([[:space:]\\])yum+([[:space:]])install+([[:space:]])*' \
-       '?(sudo)+([[:space:]\\])yaourt+([[:space:]])*' \
-       '?(sudo)+([[:space:]\\])pacman+([[:space:]])*' \
+       '?(sudo*)+([[:space:]\\])apt-get+([[:space:]])*install+([[:space:]])*' \
+       '?(sudo*)+([[:space:]\\])dnf+([[:space:]])*install+([[:space:]])*' \
+       '?(sudo*)+([[:space:]\\])yum+([[:space:]])*install+([[:space:]])*' \
+       '?(sudo*)+([[:space:]\\])yaourt+([[:space:]])*' \
+       '?(sudo*)+([[:space:]\\])pacman+([[:space:]])*' \
        '*/'
 
 function global_bindkey () {
