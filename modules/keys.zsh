@@ -65,15 +65,15 @@ function {
   }
 }
 
-[[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char
-[[ -n ${key[Insert]}    ]] && bindkey "${key[Insert]}"    overwrite-mode
-[[ -n ${key[Home]}      ]] && bindkey "${key[Home]}"      beginning-of-line
-[[ -n ${key[PageUp]}    ]] && bindkey "${key[PageUp]}"    up-line-or-history
-[[ -n ${key[Delete]}    ]] && bindkey "${key[Delete]}"    delete-char
-[[ -n ${key[End]}       ]] && bindkey "${key[End]}"       end-of-line
-[[ -n ${key[PageDown]}  ]] && bindkey "${key[PageDown]}"  down-line-or-history
-[[ -n ${key[Up]}        ]] && bindkey "${key[Up]}"        up-line-or-search
-[[ -n ${key[Down]}      ]] && bindkey "${key[Down]}"      down-line-or-search
+[[ -n ${key[Backspace]} ]] && global_bindkey "${key[Backspace]}" backward-delete-char
+[[ -n ${key[Insert]}    ]] && global_bindkey "${key[Insert]}"    overwrite-mode
+[[ -n ${key[Home]}      ]] && global_bindkey "${key[Home]}"      beginning-of-line
+[[ -n ${key[PageUp]}    ]] && global_bindkey "${key[PageUp]}"    up-line-or-history
+[[ -n ${key[Delete]}    ]] && global_bindkey "${key[Delete]}"    delete-char
+[[ -n ${key[End]}       ]] && global_bindkey "${key[End]}"       end-of-line
+[[ -n ${key[PageDown]}  ]] && global_bindkey "${key[PageDown]}"  down-line-or-history
+[[ -n ${key[Up]}        ]] && global_bindkey "${key[Up]}"        up-line-or-search
+[[ -n ${key[Down]}      ]] && global_bindkey "${key[Down]}"      down-line-or-search
 
 # let the terminal take care of these
 key[Left]=${terminfo[kcub1]}
