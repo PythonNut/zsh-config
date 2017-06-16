@@ -12,7 +12,7 @@ function g() {
   if [[ -f "$1" ]]; then
     if file $1 |& grep '\(ASCII text\|Unicode text\|no magic\)' &>/dev/null; then
       if [[ -r "$1" ]]; then
-        if ps ax |& egrep -i 'emacs.*--daemon' &>/dev/null; then
+        if ps ax |& grep -E '[e]macs.*--daemon' &>/dev/null; then
           # launch GUI editor
           emacsclient -t -a "emacs" $1
         else
