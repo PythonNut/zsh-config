@@ -17,22 +17,12 @@ function pcomplete() {
 
     # hack a local function scope using unfuction
     function pcomplete_forward_word () {
-      local -i space_index
-      space_index=${RBUFFER[(i) ]}
-      if ((space_index == 0)); then
-        zle .end-of-line
-      else
-        for ((x=0; x<$space_index-1; x+=1)); do
-          zle .forward-char
-        done
-        while [[ $RBUFFER[1] == " " ]]; do
-          zle .forward-char
-        done
-      fi
-    }
-    function pcomplete_force_auto () {
-      zle magic-space
-      zle backward-delete-char
+      local old_word_style
+      zstyle -s ':zle:*' word-style old_word_style
+      zstyle ':zle:*' word-style shell
+      autoload -Uz forward-word-match
+      zle forward-word-match
+      zstyle ':zle:*' word-style $old_word_style
     }
 
     zstyle ':completion:*' show-completer true
@@ -66,19 +56,7 @@ function pcomplete() {
     done
 
     if [[ $single_match == 1 ]]; then
-      pcomplete_forward_word
-      if [[ $#RBUFFER == 0 ]]; then
-          if [[ $LBUFFER[-1] == "/" ]]; then
-            pcomplete_force_auto
-          else
-            zle magic-space
-          fi
-      else
-        if [[ $LBUFFER[-2] == "/" ]]; then
-          zle backward-char
-          pcomplete
-        fi
-      fi
+      zle expand-or-complete
       if [[ $LBUFFER[-1] == " " ]]; then
         zle .backward-delete-char
       fi
@@ -92,7 +70,7 @@ function pcomplete() {
     zstyle ':completion:*' completer _oldlist _complete
 
   } always {
-    unfunction "pcomplete_forward_word" "pcomplete_force_auto"
+    unfunction "pcomplete_forward_word"
   }
   _zsh_highlight 2>/dev/null
 }
