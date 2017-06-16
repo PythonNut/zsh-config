@@ -13,8 +13,7 @@
   setopt function_argzero       # $0 contains the function name
   setopt interactive_comments   # shell comments (for presenting)
 
-  # correction
-  setopt correct_all            # autocorrect misspelled command
+  # completion
   setopt auto_list              # list if multiple matches
   setopt complete_in_word       # complete at cursor
   setopt menu_complete          # add first of multiple
