@@ -24,8 +24,10 @@ elif (( $+commands[vim] )); then
   export EDITOR="vim"
 elif (( $+commands[emacs] )); then
   export EDITOR="$ZDOTDIR/bin/emacs-with-flags"
-else
+elif (( $+commands[vi] )); then
   export EDITOR="vi"
+elif (( $+commands[nano] )); then
+  export EDITOR="nano"
 fi
 
 if (( $+commands[emacsclient] )); then
