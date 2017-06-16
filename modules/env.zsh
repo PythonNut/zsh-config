@@ -30,11 +30,6 @@ elif (( $+commands[nano] )); then
   export EDITOR="nano"
 fi
 
-if (( $+commands[emacsclient] )); then
-  export ALTERNATE_EDITOR="$EDITOR"
-  export EDITOR="emacsclient -t -q"
-fi
-
 export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
 export PATH
