@@ -52,7 +52,7 @@ function compute_prompt () {
   PS1+='$chpwd_minify_smart_str'
 
   # Add teleport shortcut
-  PS1+='${${${PWD:A}/#%${${:-~}:A}/}:+${${$(( $#chpwd_minify_fasd_str && $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str ))%0}:+→${chpwd_minify_fasd_str//(#m) ?/%U${MATCH# }%u}}}'
+  PS1+='${${${PWD:A}/#%(${${:-~}:A}|\/)/}:+${${$(( $#chpwd_minify_fasd_str && $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str ))%0}:+→${chpwd_minify_fasd_str//(#m) ?/%U${MATCH# }%u}}}'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
