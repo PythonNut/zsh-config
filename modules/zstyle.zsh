@@ -77,7 +77,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 # Don't prompt for a huge list, page it!
 # Don't prompt for a huge list, menu it!
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*' menu select=1 interactive
+zstyle ':completion:*' menu yes no-select
 
 # order files first by default, dirs if command operates on dirs (ls)
 zstyle ':completion:*' file-patterns \

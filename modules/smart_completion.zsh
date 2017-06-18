@@ -29,6 +29,7 @@ function pcomplete() {
     zstyle ':completion:*' extra-verbose true
     zstyle ':completion:*' verbose true
     zstyle ':completion:*' insert-unambiguous true
+    zstyle ':completion:*' menu select=1 interactive
 
     zstyle ':completion:*' completer \
       _oldlist \
@@ -68,6 +69,7 @@ function pcomplete() {
     zstyle ':completion:*' extra-verbose false
     zstyle ':completion:*' verbose false
     zstyle ':completion:*' completer _oldlist _complete
+    zstyle ':completion:*' menu yes no-select
 
   } always {
     unfunction "pcomplete_forward_word"
