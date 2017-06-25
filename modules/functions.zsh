@@ -163,7 +163,7 @@ function extract() {
   done
 }
 
-imv() {
+function imv() {
   local src dst
   for src; do
     [[ -e $src ]] || { print -u2 "$src does not exist"; continue }
@@ -173,11 +173,16 @@ imv() {
   done
 }
 
-wc-counter() {
+function wc-counter() {
   local -i count=0
   while read -r line ; do
     ((count++))
     echo -ne "\r$count"
   done
   echo
+}
+
+function mcd() {
+  mkdir -p $1
+  cd $1
 }
