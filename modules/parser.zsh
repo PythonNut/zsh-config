@@ -95,7 +95,7 @@ function parser() {
       _preAlias+=($1)
 
     # last resort, forward to teleport handler
-    elif [[ -n $(fasd -d -- ${=@} @> /dev/null) ]]; then
+    elif [[ -n $(fasd -d -- ${=@} 2> /dev/null) ]]; then
       if [[ $BUFFER == ([[:space:]]#${=@}[[:space:]]#) ]]; then
         BUFFER="g $@"
         _zsh_highlight 2>/dev/null
