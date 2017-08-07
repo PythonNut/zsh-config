@@ -8,6 +8,7 @@ fi
 source $ZPLUG_HOME/init.zsh
 unset ZPLUG_CACHE_CHECK_FOR_CHANGES
 
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zsh-users/zsh-syntax-highlighting", at:feec9f5
 zplug "zsh-users/zsh-completions"
 zplug "yonchu/zsh-vcs-prompt"
