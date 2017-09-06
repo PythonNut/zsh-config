@@ -186,7 +186,7 @@ function minify_path_fasd () {
   zparseopts -D -E a=ALL
   setopt local_options extended_glob
   if ! (( $+commands[fasd] )); then
-    printf " "
+    printf ""
     return
   fi
 
