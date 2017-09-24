@@ -44,7 +44,7 @@ function g() {
     ($@&)>&/dev/null
 
     # check if dir is registered in database
-  elif [[ -n $(fasd -d $@) ]]; then
+  elif [[ -n $commands[fasd] && -n $(fasd -d $@) ]]; then
     local fasd_target=$(fasd -d $@)
     local teleport
     teleport=${${fasd_target:A}/${HOME:A}/\~}
