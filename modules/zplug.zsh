@@ -13,7 +13,7 @@ zplug "zsh-users/zsh-syntax-highlighting", at:feec9f5
 zplug "zsh-users/zsh-completions"
 zplug "yonchu/zsh-vcs-prompt"
 zplug "seebi/dircolors-solarized"
-zplug "clvv/fasd", as:command, lazy:true
+zplug "clvv/fasd", as:command
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zaw"
 zplug "yonchu/zaw-src-git-log", on:"zsh-users/zaw", lazy:true
