@@ -43,6 +43,8 @@ typeset -U fpath
 typeset -U cdpath
 
 path+=(
+  $ZPLUG_HOME/repos/zplug/zplug/bin
+  $ZPLUG_HOME/bin
   /usr/local/bin
   /sbin
   /usr/sbin
