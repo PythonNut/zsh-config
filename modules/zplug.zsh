@@ -26,7 +26,6 @@ zplug "PythonNut/zsh-autosuggestions", on:"zsh-async"
 
 if ! zplug check; then
     zplug install
-    exec zsh
 fi
 
 zplug load
