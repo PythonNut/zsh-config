@@ -163,22 +163,8 @@ function minify_path_full () {
 
 # collapse empty runs too
 function minify_path_smart () {
-  emulate -LR zsh
-  setopt brace_ccl
-  local cur_path glob
-  local -i i
-  cur_path=$1
-
-  for ((i=${#cur_path:gs/[^\/]/}; i>1; i--)); do
-    glob=${(l:$i::/:)}
-    cur_path=${cur_path//$glob/%U$i%u}
-  done
-
-  for char in {a-zA-Z}; do
-    cur_path=${cur_path//\/$char/%U$char%u}
-  done
-
-  echo $cur_path
+  emulate -LR zsh -o brace_ccl -o extended_glob
+  echo ${${1//(#m)\/\/##/%U${#MATCH}%u}//(#m)\/[^0-9]/%U${MATCH#/}%u}
 }
 
 # find shortest unique fasd prefix. Heavily optimized
