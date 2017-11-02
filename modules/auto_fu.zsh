@@ -17,7 +17,7 @@ function {
   zle -N zle-line-init
 
   zstyle ":auto-fu:var" postdisplay ""
-  zstyle ":auto-fu:var" autoable-function/skipwords yum touch
+  zstyle ":auto-fu:var" autoable-function/skipwords yum touch brew
 
   zstyle ':completion:*' show-completer no
   zstyle ':completion:*' extra-verbose no
@@ -85,6 +85,7 @@ zstyle ':auto-fu:var' autoable-function/skiplbuffers \
        '?(sudo*)+([[:space:]\\])apt-get+([[:space:]])*install+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])dnf+([[:space:]])*install+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])yum+([[:space:]])*install+([[:space:]])*' \
+       '*([[:space:]\\])brew+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])yaourt+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])pacman+([[:space:]])*' \
        '*/'
