@@ -41,12 +41,19 @@ alias -E exit=' exit'
 
 # proxy aliases
 BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old|*.synctex.gz'
-if [[ $OSTYPE = (#i)((free|open|net)bsd|darwin)* ]]; then
+if [[ $OSTYPE = (#i)((free|open|net)bsd)* ]]; then
     # in BSD, -G is the equivalent of --color
     alias -E lst=' \ls -G'
-else
-    alias lsa='\ls --color --group-directories-first'
+elif [[ $OSTYPE = (#i)darwin* ]]; then
+  if (( $+commands[gls] )); then
+    alias lsa='\gls --color --group-directories-first'
     alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
+  else
+    alias -E lst=' \ls -G'
+   fi
+else
+  alias lsa='\ls --color --group-directories-first'
+  alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
 fi
 alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 
