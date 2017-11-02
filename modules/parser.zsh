@@ -62,7 +62,7 @@ function parser() {
   setopt extended_glob
   setopt null_glob
   setopt ksh_glob
-  if [[ $(type ${1#\\}) == (*not*|*suffix*) ]]; then
+  if [[ $(type -- ${1#\\}) == (*not*|*suffix*) ]]; then
     # skip assignments
     if [[ $1 == (*=*) ]]; then
       return 0
