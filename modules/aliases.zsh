@@ -61,10 +61,10 @@ alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 alias -- -='cd -'
 
 # ls aliases
-alias ls='lst -BFx'
-alias l='lst -lFBGh'
-alias ll='lsa -lAFGh'
-alias lss='lst -BFshx'
+alias ls='lst -BFxv'
+alias l='lst -lFBGhv'
+alias ll='lsa -lAFGhv'
+alias lss='lst -BFshxv'
 alias lsp='\ls'
 
 # safety aliases
