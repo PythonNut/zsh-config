@@ -3,7 +3,20 @@
 # ======================
 
 alias -E g="nocorrect g"
-compdef _cmd g
+
+function _g () {
+  local -a args
+  local -a _comp_priv_prefix
+  cmd="$words[1]"
+  args=( '(-)1:command: _command_names -e' '*::arguments:{ _comp_priv_prefix=( $cmd -n ) ; _normal }')
+
+  if (( $#words == 2 )); then
+    _files
+  fi
+  _arguments -s -S $args
+}
+
+compdef _g g
 
 function g() {
   emulate -LR zsh -o no_case_glob -o no_case_match -o equals
@@ -57,3 +70,4 @@ function g() {
     return 1
   fi
 }
+
