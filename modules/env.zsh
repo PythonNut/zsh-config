@@ -18,7 +18,9 @@ SAVEHIST=50000
 # Forcefully disable the bell
 ZBEEP=""
 
-if (( $+commands[gvim] )); then
+if (( $+commands[nvim] )); then
+  export EDITOR="nvim"
+elif (( $+commands[gvim] )); then
   export EDITOR="$ZDOTDIR/bin/gvim-with-flags"
 elif (( $+commands[vim] )); then
   export EDITOR="vim"
