@@ -1,13 +1,7 @@
 #!/bin/zsh
 
-# core zsh setup
-if [[ $TERM == dumb ]]; then
-  emulate sh
-  PS1="$ "
-  unsetopt prompt_cr
-  unsetopt zle
-  return 0
-fi
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
 zstyle :compinstall filename '~/.zshrc'
 skip_global_compinit=1
