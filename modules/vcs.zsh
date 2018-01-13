@@ -197,7 +197,7 @@ function vcs_async_info_worker () {
 }
 
 function vcs_async_callback () {
-  local current_pwd
+  local current_pwd=${${:-.}:A}
   local vcs_super_info
   local vcs_super_raw_data
   local vcs_root_dir
@@ -208,7 +208,6 @@ function vcs_async_callback () {
   sched -$sched_id &> /dev/null
 
   typeset -g vcs_last_root
-  current_pwd=${${:-.}:A}
 
   eval $3
 
@@ -222,10 +221,6 @@ function vcs_async_callback () {
 
   # if we're in a vcs, start an inotify process
   if [[ $current_pwd/ != $vcs_last_root/* ]]; then
-    vcs_async_cleanup
-    if [[ -n $vcs_info_msg_0_ ]]; then
-      async_job vcs_inotify vcs_inotify_watch $vcs_root_dir $$
-    fi
     vcs_async_info
   fi
 
@@ -236,47 +231,3 @@ async_start_worker vcs_prompt -u
 async_register_callback vcs_prompt vcs_async_callback
 
 add-zsh-hook precmd vcs_async_info
-
-vcs_inotify_events=(modify move create delete)
-
-function vcs_inotify_watch () {
-  emulate -LR zsh -o prompt_subst -o transient_rprompt
-  if hash inotifywait &>/dev/null; then
-    inotifywait -e ${=${(j: -e :)vcs_inotify_events}} \
-                -mqr --format %w%f $1 2>> $ZDOTDIR/startup.log | \
-    while IFS= read -r file; do
-      if [[ $file == */index.lock ]]; then
-        continue
-      fi
-      kill -USR2 $2
-    done
-  else
-    echo "inotify-tools is not installed." >> $ZDOTDIR/startup.log
-    return 1
-  fi
-}
-
-function vcs_inotify_callback () {
-  echo $1:$2:$3:$4:$5 &>> $ZDOTDIR/startup.log
-}
-
-function TRAPUSR2 () {
-  emulate -LR zsh -o prompt_subst -o transient_rprompt
-  vcs_async_info
-}
-
-function vcs_async_cleanup () {
-  emulate -LR zsh -o prompt_subst -o transient_rprompt
-  async_flush_jobs vcs_inotify
-}
-
-function vcs_pause () {
-  if [[ -n ${chpwd_functions[(r)vcs_async_info]} ]]; then
-    add-zsh-hook -d precmd vcs_async_info
-  else
-    add-zsh-hook precmd vcs_async_info
-  fi
-}
-
-async_start_worker vcs_inotify -u
-async_register_callback vcs_inotify vcs_inotify_callback
