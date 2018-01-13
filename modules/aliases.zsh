@@ -222,6 +222,11 @@ if (( $+commands[emacsclient] )); then
   alias emacsd="g emacs --daemon"
   alias emacsdk="emacsclient -e '(kill-emacs)'"
   function e {
+    for i in {1..$#@}; do
+      if [[ -f $@[#i] ]]; then
+        @[#i]=$@[#i]:A
+      fi
+    done
     if [[ $EDITOR == *WITH-EDITOR* ]]; then
       eval ${EDITOR} $@
     elif [[ -S /tmp/emacs${UID}/server ]]; then
