@@ -79,7 +79,6 @@ alias -g Lr='|& less'
 alias -g D='>&/dev/null'
 alias -g W='|& wc'
 alias -g Q='>&/dev/null&'
-alias -E -g ,,=';=read -n1 -rp "Press any key to continue..."'
 
 # regular aliases
 alias su='su -'
