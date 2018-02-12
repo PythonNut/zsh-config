@@ -168,6 +168,10 @@ typeset -F SECONDS
 function vcs_async_timeout () {
   echo vcs status timed out! >> $ZDOTDIR/startup.log
   async_flush_jobs vcs_prompt
+
+  async_stop_worker vcs_prompt
+  async_start_worker vcs_prompt -u
+  async_register_callback vcs_prompt vcs_async_callback
 }
 
 function vcs_async_info () {

@@ -44,6 +44,10 @@ async_register_callback chpwd_worker chpwd_callback
 function prompt_async_timeout () {
   echo chpwd compressor timed out! >> $ZDOTDIR/startup.log
   async_flush_jobs chpwd_worker
+
+  async_stop_worker chpwd_worker
+  async_start_worker chpwd_worker -u
+  async_register_callback chpwd_worker chpwd_callback
 }
 
 function prompt_async_compress () {
