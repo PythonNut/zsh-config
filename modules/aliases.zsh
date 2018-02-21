@@ -268,14 +268,12 @@ fi
 
 # expand aliases on space
 function expand_alias() {
-  emulate -LR zsh -o hist_subst_pattern
+  emulate -LR zsh -o hist_subst_pattern -o extended_glob
   {
     # hack a local function scope using unfuction
     function expand_alias_smart_space () {
       if [[ $RBUFFER[1] != ' ' ]]; then
-        if [[ ! "$1" == "no_space" ]]; then
-          zle magic-space
-        fi
+        zle magic-space
       else
         # we aren't at the end of the line so squeeze spaces
         
@@ -300,6 +298,20 @@ function expand_alias() {
         zle backward-char
       done
     }
+
+    # skip inside quotes
+    local -a match mbegin mend
+    for param in $region_highlight; do
+      if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)[[:space:]]#(*) ]]; then
+        if (($match[2] - $match[1] > 0 && $match[1] > 1)); then
+          if [[ $match[3] == ${ZSH_HIGHLIGHT_STYLES[double-quoted-argument]} ||
+                $match[3] == ${ZSH_HIGHLIGHT_STYLES[single-quoted-argument]} ]]; then
+            zle magic-space
+            return
+          fi
+        fi
+      fi
+    done
 
     local -a cmd
     cmd=(${(@s/;/)LBUFFER:gs/[^\\[:IDENT:]]/;})
