@@ -215,6 +215,12 @@ fi
 
 if (( $+commands[git-annex] )); then
   alias gxp='git annex proxy'
+  alias gxa='git annex add'
+  alias gxg='git annex get'
+  alias gxs='git annex sync'
+  alias gxd='git annex drop'
+  alias gxc='git annex copy'
+  alias gxm='git annex move'
 fi
 
 if (( $+commands[emacsclient] )); then
