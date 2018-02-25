@@ -264,10 +264,6 @@ if (( $+commands[thefuck] )); then
   }
 fi
 
-if (( $+commands[julia] )); then
-  alias julia='julia -p auto'
-fi
-
 # ==============
 # Expand aliases
 # ==============
