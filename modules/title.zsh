@@ -28,12 +28,8 @@ function zsh_settitle() {
       titlestart='\033k'
       titlefinish='\033\';;
     (*)
-      if {hash tput && tput longname} &>/dev/null; then
-        titlestart="$(tput tsl)"
-        titlefinish="$(tput fsl)"
-      else
-        degraded_terminal[title]=1
-      fi
+      titlestart=$terminfo[tsl]
+      titlefinish=$terminfo[fsl]
   esac
 
   if [[ -z "${titlestart}" ]]; then
