@@ -41,7 +41,7 @@ function zsh_settitle() {
     return 0
   fi
 
-  print -Pn "${(%)titlestart}${(q)*} ${(%)titlefinish}"
+  print -Pn "${(%)titlestart}${(q)*}${(%)titlefinish}"
 }
 
 # if title set manually, dont set automatically
