@@ -131,8 +131,6 @@ fi
 
 if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
-elif [[ $(who am i) == *\([-a-zA-Z0-9.]##*\)(#e) ]]; then
-  degraded_terminal[display_host]=1
 elif [[ $_ZSH_PARENT_CMDLINE == (sshd*|*/sshd|mosh-server) ]]; then
   degraded_terminal[display_host]=1
 fi
