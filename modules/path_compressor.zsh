@@ -177,6 +177,12 @@ function minify_path_fasd () {
   fi
 
   1=${${1:A}%/}
+  if [[ $1 == ${${:-~}:A} ]]; then
+    printf ""
+    return
+  fi
+
+
   local dirs=("${(@f)$(fasd -l)}")
   if ! (( ${+dirs[(r)$1]} )); then
     printf ""
