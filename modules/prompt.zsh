@@ -66,7 +66,7 @@ function compute_prompt () {
 
   else
     RPS1=
-    PS1+=' \${vcs_info_msg_0_} '
+    PS1+='${${${#vcs_info_msg_0_}%0}:+ ${vcs_info_msg_0_}}'
   fi
 
   # show the last error code
