@@ -174,6 +174,12 @@ if (( $+commands[yaourt] )); then
   alias yuu='yaourt -Syyua --noconfirm --devel'
 fi
 
+if (( $+commands[aurman] )); then
+  alias a='aurman'
+  alias ai='aurman -Syu'
+  alias au='aurman -Syyu --noconfirm --noedit'
+fi
+
 # dnf aliases
 if (( $+commands[dnf] )); then
   alias -E dnf='nocorrect noglob \dnf'
