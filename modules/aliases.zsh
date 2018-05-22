@@ -61,11 +61,22 @@ alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 alias -- -='cd -'
 
 # ls aliases
-alias ls='lst -BFxv'
-alias l='lst -lFBGhv'
-alias ll='lsa -lAFGhv'
-alias lss='lst -BFshxv'
-alias lsp='\ls'
+if (( $+commands[exa] )); then
+  alias -E exa="exa --group-directories-first -I '"${BORING_FILES//\|/\' -I \'}"'"
+  alias ls='exa -Fx'
+  alias ll='exa -FGlx --git'
+else
+  alias ls='lst -BFxv'
+  alias l='lst -lFBGhv'
+  alias ll='lsa -lAFGhv'
+  alias lss='lst -BFshxv'
+  alias lsp='\ls'
+fi
+
+# bat alias
+if (( $+commands[bat] )); then
+  alias cat=bat
+fi
 
 # safety aliases
 alias rm='rm -i'
