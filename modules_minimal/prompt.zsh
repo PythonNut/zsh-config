@@ -65,14 +65,14 @@ function compute_prompt () {
 
   # compute the sigil
   if [[ -n $TMUX ]]; then
-  PS1+=" %#"
-  else
     if (( $degraded_terminal[unicode] != 1 )); then
-    PS1+=" %(!.#.❯)"
+      PS1+=" %(!.#.❯)"
 
     else
       PS1+=" %(!.#.$)"
     fi
+  else
+    PS1+=" %#"
   fi
   PS1+="%{%b%F{default}%}$nbsp"
 }
