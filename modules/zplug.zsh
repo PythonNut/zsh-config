@@ -22,7 +22,7 @@ zplug "mafredri/zsh-async"
 zplug "knu/zsh-git-escape-magic"
 zplug "coldfix/zsh-soft-history", lazy:true
 zplug "hchbaw/auto-fu.zsh", at:pu, on:"zsh-users/zsh-syntax-highlighting"
-zplug "PythonNut/zsh-autosuggestions", on:"zsh-async"
+zplug "PythonNut/zsh-autosuggestions", on:"zsh-async", use:"*.zsh"
 
 if ! zplug check; then
     zplug install
