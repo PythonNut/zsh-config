@@ -199,3 +199,5 @@ function detect_sudo_type {
     echo none
   fi
 }
+
+BORING_USERS=(pythonnut pi)

@@ -2,8 +2,6 @@
 # Prompt
 # ======
 
-BORING_USERS=(pythonnut pi)
-
 if (( $degraded_terminal[unicode] != 1 )); then
   # a prompt that commits suicide when pasted
   nbsp=$'\u00A0'
