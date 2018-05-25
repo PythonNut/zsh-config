@@ -186,3 +186,7 @@ function mcd() {
   mkdir -p $1
   cd $1
 }
+
+function ix() {
+  curl -F 'f:1=<-' ix.io
+}
