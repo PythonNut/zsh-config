@@ -46,22 +46,13 @@ if [[ $OSTYPE = (#i)((free|open|net)bsd)* ]]; then
     alias -E lst=' \ls -G'
 elif [[ $OSTYPE = (#i)darwin* ]]; then
   if (( $+commands[gls] )); then
-    if (( $degraded_terminal[unicode] == 1 )); then
-      alias lsa='\gls --color --group-directories-first'
-    else
-      alias lsa='\gls --color --group-directories-first --hyperlink=auto'
-    fi
-
+    alias lsa='\gls --color --group-directories-first'
     alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
   else
     alias -E lst=' \ls -G'
    fi
 else
-  if (( $degraded_terminal[unicode] == 1 )); then
-    alias lsa='\ls --color --group-directories-first'
-  else
-    alias lsa='\ls --color --group-directories-first --hyperlink=auto'
-  fi
+  alias lsa='\ls --color --group-directories-first'
   alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
 fi
 alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
