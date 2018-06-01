@@ -62,7 +62,7 @@ alias -- -='cd -'
 
 # ls aliases
 if (( $+commands[exa] )); then
-  alias -E exa="exa --group-directories-first -I '"${BORING_FILES//\|/\' -I \'}"'"
+  alias exa="exa --group-directories-first -I \"${BORING_FILES}\""
   alias ls='exa -Fx'
   alias ll='exa -FGlx --git'
   alias lss='exa -FGlx'
