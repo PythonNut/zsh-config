@@ -65,7 +65,7 @@ if (( $+commands[exa] )); then
   alias exa="exa --group-directories-first -I \"${BORING_FILES}\""
   alias ls='exa -Fx'
   alias ll='exa -FGlx --git'
-  alias lss='exa -FGlx'
+  alias lss='exa -FGlxrs size'
   alias lsp='\ls'
 else
   alias ls='lst -BFxv'
