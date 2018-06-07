@@ -271,19 +271,6 @@ if (( $+commands[emacsclient] )); then
   }
 fi
 
-if (( $+commands[thefuck] )); then
-  function gg {
-    TF_PREVIOUS=$(fc -ln -1 | tail -n 1);
-    TF_CMD=$(
-      TF_ALIAS=gg
-      TF_SHELL_ALIASES=$(alias)
-      PYTHONIOENCODING=utf-8
-      thefuck $TF_PREVIOUS THEFUCK_ARGUMENT_PLACEHOLDER $*
-    ) && eval $TF_CMD;
-    test -n "$TF_CMD" && print -s $TF_CMD
-  }
-fi
-
 # ==============
 # Expand aliases
 # ==============
