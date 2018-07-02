@@ -4,7 +4,7 @@
 
 # increments the last number on the line
 function _increase_number() {
-  emulate -LR zsh
+  emulate -LR zsh -o prompt_subst
   local -a match mbegin mend
   while [[ ! $LBUFFER =~ '([0-9]+)[^0-9]*$' ]]; do
     zle up-line-or-search
@@ -19,7 +19,7 @@ bindkey -s '^Xx' '^[-^Xa'
 # C-r/s intelligently adds to line instead of replacing it or searches using it
 autoload -Uz narrow-to-region
 function _history-incremental-preserving-pattern-search-backward {
-  emulate -LR zsh -o extended_glob
+  emulate -LR zsh -o extended_glob -o prompt_subst
   local state
 
   if [[ $LBUFFER == *(\;|\||\|\&|\&\&|\|\|)[[:space:]]# ]]; then
@@ -40,7 +40,7 @@ function _history-incremental-preserving-pattern-search-backward {
 }
 
 function _history-incremental-preserving-pattern-search-forward {
-  emulate -LR zsh -o extended_glob
+  emulate -LR zsh -o extended_glob -o prompt_subst
   local state
 
   if [[ $LBUFFER == *(\;|\||\|\&|\&\&|\|\|)[[:space:]]# ]]; then
@@ -108,7 +108,7 @@ global_bindkey "^[." insert-last-word
 
 # rationalize dots
 rationalise_dot () {
-  emulate -LR zsh
+  emulate -LR zsh -o prompt_subst
   # typing .... becomes ../../../ etc.
   local MATCH # keep the regex match from leaking to the environment
   if [[ $LBUFFER =~ '(^|/| |      |'$'\n''|\||;|&)\.\.$' ]]; then
