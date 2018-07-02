@@ -75,11 +75,6 @@ else
   alias lsp='\ls'
 fi
 
-# bat alias
-if (( $+commands[bat] )); then
-  alias cat=bat
-fi
-
 # safety aliases
 alias rm='rm -i'
 alias -E cp='nocorrect cp'
