@@ -240,30 +240,8 @@ fi
 
 if (( $+commands[emacsclient] )); then
   alias emacsd="g emacs --daemon"
-  alias emacsdk="emacsclient -e '(kill-emacs)'"
-  function e {
-    for i in {1..$#@}; do
-      if [[ -f $@[#i] ]]; then
-        @[#i]=$@[#i]:A
-      fi
-    done
-    if [[ $EDITOR == *WITH-EDITOR* ]]; then
-      eval ${EDITOR} $@
-    elif [[ -S /tmp/emacs${UID}/server ]]; then
-      emacsclient -t -q $@
-    else
-      emacs -nw $@
-    fi
-  }
-  function ecg {
-    # Try handing the file to an existing emacs frame
-    local -a servers=(${TMPDIR:-/tmp}/emacs${UID}/*(=On))
-    if (( $# > 0 )); then
-      emacsclient -n -q -s $servers[1] $@
-    else
-      emacsclient -c -n -q -s $servers[1]
-    fi
-  }
+  alias emacsdk="emacsclient -e '(kill-emacs)'"j
+  alias -E e='emacsclient -n -q -a $EDITOR'
 fi
 
 # ==============
