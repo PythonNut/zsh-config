@@ -214,7 +214,7 @@ if (( $+commands[git] )); then
   alias gck='git checkout'
   alias -ec gfork='echo -E git checkout -b {} $(git rev-parse --abbrev-ref HEAD 2>/dev/null)'
 
-  alias gb='git branch'
+  alias gb='git branch -vvv'
   alias gm='git merge'
   alias gma='git merge --autostash'
   alias gr='git rebase'
