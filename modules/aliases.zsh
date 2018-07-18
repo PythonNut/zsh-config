@@ -244,6 +244,10 @@ if (( $+commands[emacsclient] )); then
   alias -E e='emacsclient -n -q -a $EDITOR'
 fi
 
+if (( $+commands[ranger] )); then
+  alias f=ranger
+fi
+
 # ==============
 # Expand aliases
 # ==============
