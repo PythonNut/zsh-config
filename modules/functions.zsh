@@ -163,7 +163,7 @@ function extract() {
   done
 }
 
-function imv() {
+function mv-edit() {
   local src dst
   for src; do
     [[ -e $src ]] || { print -u2 "$src does not exist"; continue }
