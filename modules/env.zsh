@@ -53,6 +53,7 @@ path+=(
   /usr/local/sbin
   ~/bin
   ~/usr/bin
+  ~/.local/bin
 )
 
 path=( ${(u)^path:A}(N-/) )
