@@ -67,6 +67,8 @@ global_bindkey "^R" _history-incremental-preserving-pattern-search-backward
 global_bindkey "^S" _history-incremental-preserving-pattern-search-forward
 
 bindkey -M isearch "^R" history-incremental-pattern-search-backward
+bindkey -s -M isearch " " "*"
+bindkey -M isearch "^ " magic-space
 
 autoload -Uz cycle-completion-positions
 zle -N cycle-completion-positions
