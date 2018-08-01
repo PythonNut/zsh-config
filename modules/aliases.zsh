@@ -177,6 +177,7 @@ if (( $+commands[aurman] )); then
   alias a='aurman'
   alias ai='aurman -S'
   alias au='aurman -Syyu --noconfirm --noedit'
+  alias auu='aurman -Syyu --noconfirm --noedit --devel'
 fi
 
 # dnf aliases
